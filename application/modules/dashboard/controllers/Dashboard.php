@@ -5209,7 +5209,7 @@ function searchForId($name, $array) {
 
            $get_remark =  $remark_history == 'false' ? array() : $remark_history;
 
-           echo json_encode(array_merge($history_agent, $get_remark, $lead_history));       
+           echo json_encode(array_merge($history_agent, $get_remark));       
 
       }
 

@@ -1857,8 +1857,10 @@
                  $this->db->group_end();  //group ed
 
                }
-                $this->db->group_by('lead.project_id');
-                $this->db->order_by('lead.project_id','ASC');
+                 $this->db->group_by('lead.project_id');
+                 $this->db->order_by('lead.lead_date_agent_assign','ASC');
+                 $this->db->limit($rowperpage, $rowno); 
+
 
            $query=$this->db->get();
 
@@ -1909,6 +1911,8 @@
                  $this->db->or_like('lead.lead_owner', $search);
                  $this->db->group_end();  //group ed
             }
+                 $this->db->group_by('lead.project_id');
+                 $this->db->order_by('lead.lead_date_agent_assign','ASC');
 
           $query = $this->db->get();
  

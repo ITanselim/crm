@@ -2874,7 +2874,7 @@
       $(document).on('click','.viewleadremark_history1',function(e) {
 
             var project_id= $(this).data('project_id');
-              // alert(project_id);
+            // alert(project_id);
             dataEdit = 'project_id='+ project_id;
             var tr= '';
             var tr_status_lead= '';
