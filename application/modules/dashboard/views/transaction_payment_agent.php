@@ -1115,6 +1115,7 @@
         //Set column definition initialisation properties.
         "sPaginationType": "listbox",
           "order": [], //Initial no order.
+            "lengthChange": false,
           columns: [
               { data: 'project_id',
                     "render" : function( data, type, full ) {

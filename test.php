@@ -1,1 +1,5 @@
-dddddffffffffdddddddded
+<?php
+
+echo phpinfo();
+
+?>
