@@ -3838,6 +3838,7 @@ function searchForId($name, $array) {
      public function collection_payment($id=""){
         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
         $records['activities']= $this->Remark_Model->user_remarks($this->session->userdata['userlogin']['user_id']);
+        $records['user_managers']= $this->User_Model->select_user_manager();
         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
@@ -5193,6 +5194,7 @@ function searchForId($name, $array) {
          $history_agent=array();
 
          $remark_history=array();
+         $appointment_history=array();
 
       if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
 
@@ -5200,16 +5202,16 @@ function searchForId($name, $array) {
 
            $remark_history = $this->Lead_Model->select_lead_history($this->input->get('project_id'));
 
+           $appointment_history = $this->Appointment_Model->view_appointment_history($this->input->get('project_id'));
+
            $lead_history = $this->Lead_Model->view_lead_status_history($this->input->get('project_id'));
 
            $get_lead_history =  $lead_history == 'false'?  array() : $lead_history;
 
-
-           //                 $this->Payment_Model->sales_lead_byid($this->session->userdata['userlogin']['user_id']);
-
            $get_remark =  $remark_history == 'false' ? array() : $remark_history;
+           $get_appointment =  $appointment_history == 'false' ? array() : $appointment_history;
 
-           echo json_encode(array_merge($history_agent, $get_remark));       
+           echo json_encode(array_merge($history_agent, $get_remark, $get_appointment));       
 
       }
 

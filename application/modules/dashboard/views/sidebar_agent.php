@@ -117,6 +117,7 @@
                     </ul>
                   </li>
                   <li><a href="<?php echo site_url("dashboard/collection_payment")?>"><i class="fa fa-dollar"></i>Create New Sale</a></li>
+                  <li><a href="<?php echo site_url("appointment")?>"><i class="fa fa-calendar"></i>Appointment</a></li>
                   <li><a><i class="fa fa-fire"></i> Performance Task <span class="fa fa-chevron-down"></span></0>
                      <ul class="nav child_menu">    
                        <li><a href="<?php echo site_url("dashboard/attendance")?>"><i class="fa fa-clock-o"></i> Attendance</a> </li>
