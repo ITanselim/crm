@@ -22,7 +22,7 @@ class Appointment extends MY_Controller {
       
      if($this->session->userdata['userlogin']['usertype'] == "Admin"){
 
-      $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
+      $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->sessiona->userdata['userlogin']['lastname'];
       $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['team_evaluations']= $this->Evaluation_Model->view_teamevaluation_admin();
@@ -52,253 +52,133 @@ class Appointment extends MY_Controller {
      else if($this->session->userdata['userlogin']['usertype'] == "Agent"){
 
       $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
+      $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
+      $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['appointments']= $this->Appointment_Model->view_list_appointment($this->session->userdata['userlogin']['user_id']);
 
-
-      $this->load->view('dashboard', $records);
-
-     
-     }
-
-
+      $this->load->view('appointment_list_agent', $records);
+  
+       }
 
     }
 
-  public function createEvaluation(){
+    public function appointment_detail($id=""){
 
 
-    /*$records['fullname'] = $this->session->userdata['userlogin']['firstname']. ' ' . $this->session->userdata['userlogin']['lastname'];
-    $records['user_id'] = $this->session->userdata['userlogin']['user_id'];
-    $records['position'] = $this->session->userdata['userlogin']['usertype'];*/
+      if($this->session->userdata['userlogin']['usertype'] == "Agent"){
+   
+       $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
+       $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
+       $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
+       $records['appointments']= $this->Appointment_Model->view_appointment_detail($this->uri->segment(3));
+       $records['comments'] = $this->Appointment_Model->select_appointment_remarks($this->uri->segment(3));
+       $records['status_appointment']= $this->Appointment_Model->select_appointment_status($this->uri->segment(3));
 
-    $records['all_users']= $this->User_Model->select_user_all_active();
+ 
+       $this->load->view('appointment_detail_agent', $records);
+ 
+      }
+ 
+   }
+
+   public function add_appointment_remark(){
+
+    $history_agent=array();
 
     $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-    $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-    $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
+
+    $usertype = $this->session->userdata['userlogin']['usertype'];
+
+    $this->form_validation->set_rules('remark','Remark','trim|required|xss_clean');        
 
 
-    $this->load->view('template/evaluation_header', $records);
-    $this->load->view('template/evaluation_sidebar', $records);
-    $this->load->view('create_evaluation', $records);
-    $this->load->view('template/evaluation_footer', $records);
-  }
-  //add create evaluation
-  public function add_appointment(){
+  if ($this->form_validation->run() == FALSE){
 
-        $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
+       echo json_encode(array("response" => "error", "message" => validation_errors()));
 
-       $this->form_validation->set_rules('manager_id','Closer Name','trim|required|xss_clean');          
+  } 
 
-       $this->form_validation->set_rules('appointment_status','Appointment Status','trim|xss_clean|required');  
+  else{
+        $receive_user_notify = $this->User_Model->select_user_specify_notify_remark($this->session->userdata['userlogin']['user_id']);
+        $receive_agent_notification = $this->Lead_Model->select_project_id($this->input->post('project_id'));
 
+       $data =  array(
 
-       $this->form_validation->set_rules('date_appointment','Date Appointment','trim|required|xss_clean');   
+                            'appt_id' => $this->input->post('appt_id'),
+                            'user_id'  => $this->session->userdata['userlogin']['user_id'],
+                            'appt_remark'  => $this->input->post('remark'),
+                            'unread' => 1,
 
-       $this->form_validation->set_rules('starttime','Time Appointment','trim|xss_clean|required');  
+                        );
 
-       
-       if ($this->form_validation->run() == FALSE){
-         echo json_encode(array("response" => "error", "message" => validation_errors()));
-      } 
-     else{
-         $data= array(
-             'appt_closer_id' => $this->input->post('manager_id'),
-             'appt_agent_id' => $this->session->userdata['userlogin']['user_id'],
-             'appt_project_id' => $this->input->post('project_id'),
-             'appt_schedule' => date('Y-m-d H:i:s',  strtotime($this->input->post('date_appointment'))),
-             'appt_start_time' => date('H:i:s', strtotime($this->input->post('starttime'))),
-             'appt_end_time' => date('H:i:s', strtotime('+30 minutes', strtotime($this->input->post('starttime')))),
-             'appt_status'  =>  $this->input->post('appointment_status'),   
-             'appt_date_create' => date('Y-m-d H:i:s', strtotime($this->input->post('session_date')))
-           );
+       $this->Appointment_Model->insert_appointment_remark($data);
 
 
-          $this->Appointment_Model->insert($data);
-              // $receive_user_notify_form = $this->User_Model->select_user_notify_coaching_form($this->session->userdata['userlogin']['user_id']);
+        foreach ($receive_user_notify as $value) {
 
-              // foreach ($receive_user_notify_form as $value) {
-              //                 $data_notification= array(
-              //                      'from_user' => $user_charge,
-              //                      'to_user' => 'All',
-              //                      'message' => 'Added Coaching Form',
-              //                      'unread' => 1,
-              //                      'date_notify' => date('Y-m-d H:i:s'),
-              //                      'to_user_id' => $value['user_id'],
-              //                      'from_usertype' => $this->session->userdata['userlogin']['usertype'],
-      
-              //                    );
-              //          $this->Notification_Model->insert($data_notification);
-              //      }
+                 $data_notification = array(
 
+                      'from_user' => $user_charge,
+                      'to_user' => 'All',
+                      'message' => "Added Remark on Appointment's",
+                      'unread' => 1,
+                      'date_notify' => date('Y-m-d H:i:s'),
+                      'link' =>  dirname(base_url(uri_string())),
+                      'to_user_id' => $value['user_id'],
+                      'from_usertype' => $this->session->userdata['userlogin']['usertype'],
 
-
-         echo json_encode(array("response" =>   "success", "message" => "Successfully Plotted Appointment Schedule"));
-
-         }
+                    );
+              $this->Notification_Model->insert($data_notification);
       }
+   
+      echo json_encode(array("response" =>   "success", "message" => "Successfully Added Remark", "redirect" => base_url('dashboard')));
+
+      }
+ }
+
+ public function update_appointment_status(){
+
+  $history_agent=array();
+
+  $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
+
+  $usertype = $this->session->userdata['userlogin']['usertype'];
 
 
 
-      
-       
-  public function view_teamEvaluation(){
+      $receive_user_notify = $this->User_Model->select_user_specify_notify_remark($this->session->userdata['userlogin']['user_id']);
+      $receive_agent_notification = $this->Lead_Model->select_project_id($this->input->post('project_id'));
 
-    $evaluation_id = $_GET['id'];
-    $class_id = $_GET['classid'];
+     $data =  array(
 
-     if($this->session->userdata['userlogin']['usertype'] == "Admin"){
-  
-         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         //$records['all_agents']= $this->User_Model->select_user_agent();
+                          'appt_id' => $this->input->post('appt_id'),
+                          'appt_status'  => $this->input->post('appt_status'),
+                      );
 
-          $records['evaluations']= $this->Evaluation_Model->view_evaluation($evaluation_id);
-          $records['criterias']= $this->Evaluation_Model->view_criteria($evaluation_id);
-          $records['points']= $this->Evaluation_Model->view_points($evaluation_id);
+     $this->Appointment_Model->update_appointmet_status($data, $this->input->post('appt_id'));
 
-          $records['class_comments']= $this->Evaluation_Model->view_evaluation_class_comments($class_id, 'Class Comment');
-          $records['manager_comments']= $this->Evaluation_Model->view_evaluation_comments($evaluation_id, 'Manager Comment');
 
-         $this->load->view('team_evaluation_manager', $records);
+      foreach ($receive_user_notify as $value) {
 
-     }    
+               $data_notification = array(
+
+                    'from_user' => $user_charge,
+                    'to_user' => 'All',
+                    'message' => "Updated Appointment Status",
+                    'unread' => 1,
+                    'date_notify' => date('Y-m-d H:i:s'),
+                    'link' =>  dirname(base_url(uri_string())),
+                    'to_user_id' => $value['user_id'],
+                    'from_usertype' => $this->session->userdata['userlogin']['usertype'],
+
+                  );
+            $this->Notification_Model->insert($data_notification);
+    }
  
-     else if($this->session->userdata['userlogin']['usertype'] == "Manager"){
-  
-         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         //$records['all_agents']= $this->User_Model->select_user_agent();
+    echo json_encode(array("response" =>   "success", "message" => "Successfully Updated Appointment Status", "redirect" => base_url('dashboard')));
 
-          $records['evaluations']= $this->Evaluation_Model->view_evaluation($evaluation_id);
-          $records['criterias']= $this->Evaluation_Model->view_criteria($evaluation_id);
-          $records['points']= $this->Evaluation_Model->view_points($evaluation_id);
+}
 
-          $records['class_comments']= $this->Evaluation_Model->view_evaluation_class_comments($class_id, 'Class Comment');
-          $records['manager_comments']= $this->Evaluation_Model->view_evaluation_comments($evaluation_id, 'Manager Comment');
-
-         $this->load->view('team_evaluation_manager', $records);  
-
-     }
-
-     else if($this->session->userdata['userlogin']['usertype'] == "Agent"){
-  
-         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         //$records['all_agents']= $this->User_Model->select_user_agent();
-
-          $records['evaluations']= $this->Evaluation_Model->view_evaluation_agent($evaluation_id);
-          $records['criterias']= $this->Evaluation_Model->view_criteria($evaluation_id);
-          $records['points']= $this->Evaluation_Model->view_points($evaluation_id);
-
-          $records['class_comments']= $this->Evaluation_Model->view_evaluation_class_comments($class_id, 'Class Comment');
-          $records['manager_comments']= $this->Evaluation_Model->view_evaluation_comments($evaluation_id, 'Manager Comment');
-
-         $this->load->view('team_evaluation_agent', $records);
-
-     }
-
-
-  }
-
-
-  public function view_companyEvaluation(){
-
-    $evaluation_id = $_GET['id'];
-
-     if($this->session->userdata['userlogin']['usertype'] == "Admin"){
-  
-         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         //$records['all_agents']= $this->User_Model->select_user_agent();
-
-          $records['evaluations']= $this->Evaluation_Model->view_evaluation($evaluation_id);
-          $records['criterias']= $this->Evaluation_Model->view_criteria($evaluation_id);
-          $records['points']= $this->Evaluation_Model->view_points($evaluation_id);
-
-          $records['class_comments']= $this->Evaluation_Model->view_evaluation_comments($evaluation_id, 'Class Comment');
-          $records['manager_comments']= $this->Evaluation_Model->view_evaluation_comments($evaluation_id, 'Manager Comment');
-
-         $this->load->view('company_evaluation_agent', $records);
-
-     } 
-
-    else if($this->session->userdata['userlogin']['usertype'] == "Agent"){
-  
-         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         //$records['all_agents']= $this->User_Model->select_user_agent();
-
-          $records['evaluations']= $this->Evaluation_Model->view_evaluation($evaluation_id);
-          $records['criterias']= $this->Evaluation_Model->view_criteria($evaluation_id);
-          $records['points']= $this->Evaluation_Model->view_points($evaluation_id);
-
-          $records['class_comments']= $this->Evaluation_Model->view_evaluation_comments($evaluation_id, 'Class Comment');
-          $records['manager_comments']= $this->Evaluation_Model->view_evaluation_comments($evaluation_id, 'Manager Comment');
-
-         $this->load->view('company_evaluation_agent', $records);
-
-     }
-
-     // else if($this->session->userdata['userlogin']['usertype'] == "Agent"){
-  
-     //     $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-     //     $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-     //     $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-     //     //$records['all_agents']= $this->User_Model->select_user_agent();
-
-     //      $records['evaluations']= $this->Evaluation_Model->view_evaluation($evaluation_id);
-     //      $records['criterias']= $this->Evaluation_Model->view_criteria($evaluation_id);
-     //      $records['points']= $this->Evaluation_Model->view_points($evaluation_id);
-
-     //      $records['class_comments']= $this->Evaluation_Model->view_evaluation_comments($evaluation_id, 'Class Comment');
-     //      $records['manager_comments']= $this->Evaluation_Model->view_evaluation_comments($evaluation_id, 'Manager Comment');
-
-     //     $this->load->view('team_evaluation_agent', $records);
-
-     // }
-
-
-  }
-
-
-  public function teamEvaluation(){
-
-     if($this->session->userdata['userlogin']['usertype'] == "Manager"){
-  
-      $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-      $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-      $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-      $records['team_evaluations']= $this->Evaluation_Model->view_teamevaluation_manager($this->session->userdata['userlogin']['user_id']);
-
-
-
-
-      $this->load->view('template/evaluation_header', $records);
-      $this->load->view('template/evaluation_sidebar', $records);
-      $this->load->view('team_evaluation_list_manager', $records);
-      $this->load->view('template/evaluation_footer', $records);
-     }
-
-     else if($this->session->userdata['userlogin']['usertype'] == "Agent"){
-  
-      $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-      $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-      $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-      $records['team_evaluations']= $this->Evaluation_Model->view_teamevaluation_agent($this->session->userdata['userlogin']['user_id']);
-
-
-
-      $this->load->view('team_evaluation_list_agent', $records);
-
-     }
-
-  }
 
   public function companyEvaluation(){
 
@@ -318,165 +198,7 @@ class Appointment extends MY_Controller {
 
   }
 
-    /*public function add_evaluation(){
-
-    
-    if($this->session->userdata['userlogin']['usertype'] == "Manager"){
-         $from_user_id = $this->session->userdata['userlogin']['user_id'];
-
-         $usertype = $this->session->userdata['userlogin']['usertype'];
-
-         $this->form_validation->set_rules('to_agent','Agent','trim|required|xss_clean');
-         $this->form_validation->set_rules('score1','Clarity','trim|required|xss_clean');  
-         $this->form_validation->set_rules('score2','Tone and Enthusiasm','trim|required|xss_clean');
-         $this->form_validation->set_rules('score3','Vocabulary','trim|required|xss_clean'); 
-         $this->form_validation->set_rules('score4','Uses Complete Sentence','trim|required|xss_clean');  
-         $this->form_validation->set_rules('score5','Consistency','trim|required|xss_clean');          
-
-
-
-       if ($this->form_validation->run() == FALSE){
-
-            echo json_encode(array("response" => "error", "message" => validation_errors()));
-
-       } 
-
-       else{
-
-            $data =  array(
-
-                             'from_user_id' => $from_user_id,
-
-                             'to_user_id' => $this->input->post('to_agent'),
-
-                             'score1'  => $this->input->post('score1'),
-
-                             'score2'  => $this->input->post('score2'),
-
-                             'score3'  => $this->input->post('score3'),
-
-                             'score4'  => $this->input->post('score4'),
-
-                             'score5'  => $this->input->post('score5'),
-
-                             'evaluation_type'  => 'Team',
-
-                             // 'evaluation_date_created'  => date('Y-m-d H:i:s'),
-
-                         );
-
-            $this->Evaluation_Model->insert($data);
-
-             echo json_encode(array("response" =>   "success", "message" => "Successfully Added Team Evaluation_Model", "redirect" => base_url('evaluation')));
-
-
-
-           }
-
-      }
-      
-    else if($this->session->userdata['userlogin']['usertype'] == "Agent"){
-         $from_user_id = $this->session->userdata['userlogin']['user_id'];
-
-         $usertype = $this->session->userdata['userlogin']['usertype'];
-
-         $this->form_validation->set_rules('to_agent','Agent','trim|required|xss_clean');
-         $this->form_validation->set_rules('score1','Clarity','trim|required|xss_clean');  
-         $this->form_validation->set_rules('score2','Tone and Enthusiasm','trim|required|xss_clean');
-         $this->form_validation->set_rules('score3','Vocabulary','trim|required|xss_clean'); 
-         $this->form_validation->set_rules('score4','Uses Complete Sentence','trim|required|xss_clean');  
-         $this->form_validation->set_rules('score5','Consistency','trim|required|xss_clean');          
-
-
-
-       if ($this->form_validation->run() == FALSE){
-
-            echo json_encode(array("response" => "error", "message" => validation_errors()));
-
-       } 
-
-       else{
-
-            $data =  array(
-
-                             'from_user_id' => $from_user_id,
-
-                             'to_user_id' => $this->input->post('to_agent'),
-
-                             'score1'  => $this->input->post('score1'),
-
-                             'score2'  => $this->input->post('score2'),
-
-                             'score3'  => $this->input->post('score3'),
-
-                             'score4'  => $this->input->post('score4'),
-
-                             'score5'  => $this->input->post('score5'),
-
-                             'evaluation_type'  => 'Company',
-
-                             // 'evaluation_date_created'  => date('Y-m-d H:i:s'),
-
-                         );
-
-            $this->Evaluation_Model->insert($data);
-
-             echo json_encode(array("response" =>   "success", "message" => "Successfully Added Team Evaluation_Model", "redirect" => base_url('evaluation/company_evaluation')));
-
-
-
-           }
-
-      }
-
-
-      }
-
-
-      public function company_evaluation(){
-
-      modules::run("account/is_logged_in");
-      
-     if($this->session->userdata['userlogin']['usertype'] == "Agent"){
-
-      $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-      $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-      $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-      $records['team_evaluations']= $this->Evaluation_Model->view_teamevaluation_manager($this->session->userdata['userlogin']['user_id']);
-
-      $this->load->view('company_evaluation_list_agent', $records);
-     
-     }
-
-     else if($this->session->userdata['userlogin']['usertype'] == "Admin"){
-
-      $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-      $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-      $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-      $records['team_evaluations']= $this->Evaluation_Model->view_teamevaluation_agent($this->session->userdata['userlogin']['user_id']);
-
-      $this->load->view('team_evaluation_list_agent', $records);
-
-     
-     }
-    
-    }
-
-      public function companyEvaluationform(){
-
-     if($this->session->userdata['userlogin']['usertype'] == "Agent"){
-  
-         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-         $records['all_agents']= $this->User_Model->select_user_agent();
-
-         $this->load->view('company_evaluation_agent', $records);
-
-     }
-
-
-  }*/
+   
 
   //add and/or update evaluation score
   public function add_evaluation_score(){
@@ -552,461 +274,6 @@ class Appointment extends MY_Controller {
             }
           
     }
-
-  public function test_rc($id=''){
-    date_default_timezone_set('America/New_York');
-
-     $get_extension_number = 0;
-
-        $id = $this->uri->segment(3);
-        $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-        $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-        $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-        $records['get_id'] = $id;  
-      if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
-
-     // date_default_timezone_set('America/New_York');
-      $attendance = $this->Attendance_Model->view_single_attendance1($this->session->userdata['userlogin']['user_id'], date('Y-m-d'));
-
-      // if($attendance['status_log'] == ''){
-      //   attendance($this->session->userdata['userlogin']['user_id']);
-      // }
-      // else{
-         $get_point_absents = 0;
-         $lacking_hour_points = 0.0;
-         $get_excess_lunch= 0;
-         $get_excess_break= 0; 
-         $get_total_of_excess = 0;
-         $get_total_of_work = 0;
-         $data = array();
-
-         //  $get_duty_log = $this->Attendance_Model->select_duty_log($this->session->userdata['userlogin']['user_id'], date('Y-m-d'));
-         //  $get_duty_log_yesterday = $this->Attendance_Model->select_duty_log($this->session->userdata['userlogin']['user_id'], date('Y-m-d', strtotime("-1 day")));
-         //  if($get_duty_log  == false &&  date('H:i:s') >=  "22:30:00"){
-         //         $data= array(
-         //                       'user_id' => $this->session->userdata['userlogin']['user_id'],
-         //                       'duty_log'  =>  date("Y-m-d H:i:s"),  
-         //                     );
-
-         //         $this->Attendance_Model->insert($data);
-
-         //   }
-         //  elseif($get_duty_log_yesterday == false && $get_duty_log == false){
-         //         $data= array(
-         //                       'user_id' => $this->session->userdata['userlogin']['user_id'],
-         //                       'duty_log'  =>  date('Y/m/d', strtotime("-1 day")),  
-         //                     );
-         //         $this->Attendance_Model->insert($data);
-         // }
-
-          // echo date('Y-m-d');
-
-          require APPPATH.'vendor/autoload.php';
-
-          $RECIPIENT = '+9738142372';
-
-          $RINGCENTRAL_CLIENTID = 'iEbMxA7gQs6izB6AvBDVHQ';
-
-          $RINGCENTRAL_CLIENTSECRET = '7WIxpzSLSDuG0oyQ2JO2Lg65BSRTBuSuOHD3S1umuAkQ';
-
-          $RINGCENTRAL_SERVER = 'https://platform.ringcentral.com';
-
-          $RINGCENTRAL_USERNAME = '+18006915131';
-
-          $RINGCENTRAL_PASSWORD = 'HLMSales2021';
-
-          $RINGCENTRAL_EXTENSION = '101';
-
-
-
-          $rcsdk = new RingCentral\SDK\SDK($RINGCENTRAL_CLIENTID, $RINGCENTRAL_CLIENTSECRET, $RINGCENTRAL_SERVER);
-
-          $platform = $rcsdk->platform();
-          // date_default_timezone_set('America/New_York');
-
-          $platform->login($RINGCENTRAL_USERNAME, $RINGCENTRAL_EXTENSION, $RINGCENTRAL_PASSWORD);
-
-         $last_seven_days = date('Y-m-d', strtotime('-7 days'));
-          // echo date('Y-m-d');
-          // echo date('Y-m-d', strtotime('-1 day'));
-         // exit();
-         // echo date('Y-m-d');dd
-         // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d'));
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d'));
-         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed');
-         
-         //print_r(json_encode($resp));
-         //print_r($resp_prev->json()->records);
-
-          // $datetime = new DateTime();
-          // $datetime->setTimeZone(new DateTimeZone('Zulu'));
-          // $datetime->setTimeZone(new DateTimeZone('UTC'));
-          // $date_to = $datetime->format('Y-m-d\TH:i:s.u\Z');
-          // $date_from = $datetime->modify('-1 day')->format('Y-m-d\TH:i:s.u\Z');
-          // $date_from_prev = $datetime->modify('-1 day')->format('Y-m-d\TH:i:s.u\Z');
-
-
-          //echo $date_from;
-
-
-
-           //$resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$date_from.'&dateTo='.$date_to.'&view=Detailed');
-
-         // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d').'&dateTo='.date('Y-m-d'),
-
-         //     array(
-
-         //  //   'from' => array('phoneNumber' => $RINGCENTRAL_USERNAME),
-
-          //  //   'to' => array('phoneNumber' => $RECIPIENT),
-         //   // 'extensionNumber' => array('105')
-         //  ));
-
-           //$resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$date_from_prev.'&dateTo='.$date_from.'&view=Detailed');
-
-          $count_call_log = 0;
-          $count_call_log_prev = 0;
-          $agent_name = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-          $current_date  = date('Y-m-06');
-          $adv_date  = date('Y-m-07', strtotime("+ 1 month"));
-          $prev_date  = date('Y-m-06', strtotime("- 1 month"));
-         
-
-         $get_overall_quota = $this->Payment_Model->sales_lead_qouta_over_all($this->session->userdata['userlogin']['user_id'], date('Y'));
-         $attendance_users = $this->Attendance_Model->get_all_totalattendance_point($this->session->userdata['userlogin']['user_id'],date('Y-m-d H:i:s'), date('Y-m-01'), date('Y-m-t'));
-         $total_points = 0;
-         // if($attendance_users > 0){
-         //  foreach ($attendance_users as $attendance_user) {
-         //     $get_total_of_excess = $this->CalculateTime($attendance_user['excess_lunch'], $attendance_user['excess_break']);
-         //     $total_lunch_start = $attendance_user['total_lunch_start'];
-         //     $total_lunch_end =  $attendance_user['total_lunch_end'];
-         //     $total_break_in = $attendance_user['total_break_in'];
-         //     $total_break_out =  $attendance_user['total_break_out'];
-         //     $total_out = $attendance_user['total_out'] > 8 ? "8.00" : (float)$attendance_user['total_out'];
-
-
-                
-         //                 if($attendance_user['time_in'] == NULL  &&  $attendance_user['time_out'] == NULL  &&  $attendance_user['break_in'] == NULL  &&  $attendance_user['break_out'] == NULL  &&  $attendance_user['lunch_start'] == NULL  &&  $attendance_user['lunch_end'] == NULL){
-         //                        $get_total_of_work = 0.0;
-         //                        $get_point_absents = 1; 
-
-         //                 }
-         //                elseif($attendance_user['time_in'] != NULL  &&  $attendance_user['time_out'] == NULL  &&  $attendance_user['break_in'] == NULL  &&  $attendance_user['break_out'] == NULL  &&  $attendance_user['lunch_start'] == NULL  &&  $attendance_user['lunch_end'] == NULL){
-         //                        $get_total_of_work = 0.0;
-         //                        $get_point_absents = 0; 
-
-         //                 }
-         //                elseif($attendance_user['time_in'] != NULL  && $attendance_user['time_out'] != NULL){
-         //                        $get_total_of_work = (float)$total_out - (float)$get_total_of_excess;
-         //                        $get_point_absents = 0;
-
-
-         //                 }
-         //                elseif($attendance_user['time_in'] != NULL  && $attendance_user['time_out'] == NULL && $attendance_user['break_out'] != NULL){
-         //                        $get_total_of_work = (float)$total_break_out - (float)$get_total_of_excess;
-         //                        $get_point_absents = 0;
-
-
-         //                 }
-         //                 elseif($attendance_user['time_in'] != NULL  && $attendance_user['break_out'] == NULL && $attendance_user['break_in'] != NULL){
-         //                        $get_total_of_work = (float)$total_break_in - (float)$get_total_of_excess;
-         //                        $get_point_absents = 0;
-
-
-         //                 }
-         //                 elseif($attendance_user['time_in'] != NULL  &&  $attendance_user['break_in'] == NULL && $attendance_user['lunch_end'] != NULL){
-         //                        $get_total_of_work = (float)$total_lunch_end - (float)$get_total_of_excess;
-         //                        $get_point_absents = 0;
-
-
-         //                 }
-         //                elseif($attendance_user['time_in'] != NULL  &&  $attendance_user['lunch_end'] == NULL && $attendance_user['lunch_start'] != NULL){
-         //                        $get_total_of_work = (float)$total_lunch_start - (float)$get_total_of_excess;
-         //                        $get_point_absents = 0;
-
-
-         //                 }
-         //                if($attendance_user['time_in'] != NULL && $attendance_user['time_out'] == NULL){
-         //                      $lacking_hour_points = 0.5;
-         //                 }
-         //                 elseif(date('H:i:s', strtotime($attendance_user['time_out'])) < "07:00:00"  && $attendance_user['time_out'] != NULL &&  $attendance_user['time_in'] != NULL  &&  $attendance_user['approve_status'] == "Declined"){
-         //                      $lacking_hour_points = 0.5;
-         //                 }
-         //                 else{
-         //                      $lacking_hour_points = 0.0;
-         //                 }
-         //         $total_points += $get_point_absents + $attendance_user['point_late'] + $lacking_hour_points + $attendance_user['excess_break_point'] + $attendance_user['excess_lunch_point'];
-         //       }
-         //   }
-          // $key = array_search('OUFYz3SG0MTXzUA', array_column(json_decode($count_call_log), 'id'));
-         // $code = json_encode($resp->json(), JSON_PRETTY_PRINT);
-         // echo($code);
-         // echo json_encode($resp->json());
-         // exit();
-          foreach ($resp->json()->records as $record ) {
-
-              if (!empty($record->from->name)) {         
-
-                $prevdate = date('Y-m-d', strtotime($record->startTime));
-
-                  if($record->from->name == 'Collin Maxwell'){
-
-                        $get_extension_number = '101';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($record->result == 'Call connected' || $record->result == 'Voicemail' || $record->result == 'Accepted'){
-                            $count_call_log += count((array)$record->from->name);  
-                          }
-                       }
-
-                    }
-
-                     else if($record->from->name == 'Chris Davis'){
-
-
-                          $get_extension_number = '102';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($record->result == 'Call connected' || $record->result == 'Voicemail' || $record->result == 'Accepted'){
-                            $count_call_log += count((array)$record->from->name);  
-                          }
-                       }
-
-                    }
-
-
-                      else if($record->from->name == 'Elon Robbins'){
-
-
-
-                          $get_extension_number = '103';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($record->result == 'Call connected' || $record->result == 'Voicemail' || $record->result == 'Accepted'){
-                            $count_call_log += count((array)$record->from->name);  
-                          }
-                       }
-
-                    }
-
-
-                      else if($record->from->name == 'Lourie Sanchez'){
-                    
-                        $get_extension_number = '104';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($record->result == 'Call connected' || $record->result == 'Voicemail' || $record->result == 'Accepted'){
-                            $count_call_log += count((array)$record->from->name);  
-                          }
-                       }
-
-                    }
-
-
-
-                      else if($record->from->name == 'Jade Smith'){
-
-                        $get_extension_number = '105';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($record->result == 'Call connected' || $record->result == 'Voicemail' || $record->result == 'Accepted'){;
-                            $count_call_log += count((array)$record->from->name);  
-                          }
-                       }
-
-                    }
-
-
-
-                      else if($record->from->name == 'Blake Williams'){
-
-                        $get_extension_number = '106';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($record->result == 'Call connected' || $record->result == 'Voicemail' || $record->result == 'Accepted'){
-                            $count_call_log += count((array)$record->from->name);  
-                          }
-                       }
-
-                    }
-
-                       else if($record->from->name == 'Ezekiel Wilson'){
-
-                        $get_extension_number = '107';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($record->result == 'Call connected' || $record->result == 'Voicemail' || $record->result == 'Accepted'){
-                            $count_call_log += count((array)$record->from->name);  
-                          }
-                       }
-
-                    }      
-
-              }
-
-              }
-        
-
-
-
-                     
-          foreach ($resp_prev->json()->records as $recordt) {
-
-              if (!empty($recordt->from->name)) {         
-
-                $prevdate = date('Y-m-d', strtotime($recordt->startTime));
-                  if($recordt->from->name == 'Collin Maxwell'){
-
-                        $get_extension_number = '101';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($recordt->result == 'Call connected' || $recordt->result == 'Voicemail' || $recordt->result == 'Accepted'){
-                            $count_call_log_prev += count((array)$recordt->from->name);  
-                          }
-                       }
-
-                    }
-
-                     else if($recordt->from->name == 'Chris Davis'){
-
-
-                          $get_extension_number = '102';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($recordt->result == 'Call connected' || $recordt->result == 'Voicemail' || $recordt->result == 'Accepted'){
-                            $count_call_log_prev += count((array)$recordt->from->name);  
-                          }
-                       }
-
-                    }
-
-
-                      else if($recordt->from->name == 'Elon Robbins'){
-
-
-
-                          $get_extension_number = '103';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($recordt->result == 'Call connected' || $recordt->result == 'Voicemail' || $recordt->result == 'Accepted'){
-                            $count_call_log_prev += count((array)$recordt->from->name);  
-                          }
-                       }
-
-                    }
-
-
-                      else if($recordt->from->name == 'Lourie Sanchez'){
-                    
-                        $get_extension_number = '104';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($recordt->result == 'Call connected' || $recordt->result == 'Voicemail' || $recordt->result == 'Accepted'){
-                            $count_call_log_prev += count((array)$recordt->from->name);  
-                          }
-                       }
-
-                    }
-
-
-
-                      else if($recordt->from->name == 'Jade Smith'){
-
-                        $get_extension_number = '105';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($recordt->result == 'Call connected' || $recordt->result == 'Voicemail' || $recordt->result == 'Accepted'){;
-                            $count_call_log_prev += count((array)$recordt->from->name);  
-                          }
-                       }
-
-                    }
-
-
-
-                      else if($recordt->from->name == 'Blake Williams'){
-
-                        $get_extension_number = '106';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($recordt->result == 'Call connected' || $recordt->result == 'Voicemail' || $recordt->result == 'Accepted'){
-                            $count_call_log_prev += count((array)$recordt->from->name);  
-                          }
-                       }
-
-                    }
-
-                       else if($recordt->from->name == 'Ezekiel Wilson'){
-
-                        $get_extension_number = '107';
-
-                        if ($get_extension_number == $this->session->userdata['userlogin']['extension_number']) {
-                           if($recordt->result == 'Call connected' || $recordt->result == 'Voicemail' || $recordt->result == 'Accepted'){
-                            $count_call_log_prev += count((array)$recordt->from->name);  
-                          }
-                       }
-
-                    }      
-
-              }
-            }
-    
-          //print_r($resp_prev->json()->records);
-/*          exit();
-*/
-           // date_default_timezone_set('America/New_York');
-         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-            //  if ($count_call_log == 0){
-            //       $get_count_call_log = 0;
-            //  }
-            // else if ($count_call_log == 1){
-            //       $get_count_call_log = 1;
-            //  }
-
-            //  else{
-            //       $get_count_call_log = $count_call_log + 1;
-            //  }
-
-
-
-          $records['current_activities'] =  $this->Remark_Model->select_count_remarks_agent($this->session->userdata['userlogin']['user_id'], date('Y-m-d'));
-          $records['prev_activities'] =  $this->Remark_Model->select_count_remarks_agent($this->session->userdata['userlogin']['user_id'], date('Y-m-d', strtotime('-1 day')));
-          $records['leads']= $this->Lead_Model->view_leads_agent($this->session->userdata['userlogin']['user_id']);
-          // $records['leads']= $this->Lead_Model->view_leads_agent($this->session->userdata['userlogin']['user_id']);
-          $records['current_call_logs'] =  $count_call_log;
-          $records['prev_call_logs'] =  $count_call_log_prev;
-          $records['current_pipes'] =  $this->Lead_Model->select_count_pipes_agent($user_charge, date('Y-m-d'));
-          $records['prev_pipes'] =  $this->Lead_Model->select_count_pipes_agent($user_charge, date('Y-m-d', strtotime('-1 day')));
-          $records['current_quota'] =  $this->Payment_Model->sales_lead_qouta_date($user_charge, $current_date, $adv_date);
-          $deduction =  $this->Deduction_Model->total_deduction($this->session->userdata['userlogin']['user_id'], $prev_date, $adv_date);
-          $records['current_deduction'] =  $deduction['total_deduction'];
-          $data =  $this->Payment_Model->sales_lead_qouta_date($user_charge, $current_date, $adv_date);
-          $records['current_sales'] =  $data['total_amount'];
-          $records['commission_receivable'] =  $data['total_amount'] - $deduction['total_deduction'] - 500;
-
-          //
-
-          $records['prev_quota'] =  $this->Payment_Model->sales_lead_qouta_date($this->session->userdata['userlogin']['user_id'], $prev_date, $current_date);
-          $records['over_all_quota'] = $get_overall_quota;  
-          $records['total_points'] =  number_format($total_points, 1);  
-          $records['notifications']  = $this->Notification_Model->view_notification_user1($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-          $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-          $records['penalties']= $this->Penalty_Model->select_user_penalty($this->session->userdata['userlogin']['user_id']);
-          
-          //date_default_timezone_set('Asia/Manila');
-          //$records['attendance_user']= $this->Attendance_Model->view_single_attendance($this->session->userdata['userlogin']['user_id'], date('Y-m-d H:i:s'));
-         
-          //modified by marz
-          //date_default_timezone_set('America/New_York');
-          $records['attendance_user']= $this->Attendance_Model->view_single_attendance1($this->session->userdata['userlogin']['user_id'], date('Y-m-d'));
-
-
-          $this->load->view('dashboard', $records);
-
-       // }
-
-      }
-  }
 
 
 }

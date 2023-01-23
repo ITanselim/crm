@@ -71,9 +71,9 @@
 
         ->join('tbllead as lead', 'appointment.appt_project_id = lead.project_id', 'inner')
         ->join('tbluser as user', 'appointment.appt_closer_id = user.user_id', 'inner')
-        ->join('tbluser as agent', 'appointment.appt_agent_id = user.user_id', 'inner')
+        ->join('tbluser as agent', 'appointment.appt_agent_id = agent.user_id', 'inner')
 
-        ->where('lead.project_id', $project_id)
+        ->where('appointment.appt_agent_id', $user_id)
         ->group_by('appointment.appt_project_id')
         ->group_by('appointment.appt_schedule')
         ->order_by('appointment.appt_date_create','desc');
@@ -86,54 +86,54 @@
 
       } 
    
+      public function view_appointment_detail($appt_id){ 
 
-      public function view_teamevaluation_admin(){
+        $this->db->select('appointment.*, lead.*, user.firstname as m_fname, user.lastname as m_lname, agent.firstname as a_fname,agent.lastname as a_name')->from('tblappointment as appointment')
 
-         $this->db->select('evaluation.*, user.*')->from('tblevaluation as evaluation')
+        ->join('tbllead as lead', 'appointment.appt_project_id = lead.project_id', 'inner')
+        ->join('tbluser as user', 'appointment.appt_closer_id = user.user_id', 'inner')
+        ->join('tbluser as agent', 'appointment.appt_agent_id = agent.user_id', 'inner')
 
-        ->join('tbluser as user', 'evaluation.to_user_id = user.user_id', 'inner');
-
-        $query=$this->db->get();
-
-
-
-        if ($query->num_rows() > 0){
-
-          return $query->result_array();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-
-        public function select_max_evaluation_id(){ 
-
-         $this->db->select('class_id')->from('tblevaluation')
-        ->order_by('class_id','DESC')
-        ->limit(1);
+        ->where('appointment.appt_id', $appt_id)
+        ->group_by('appointment.appt_project_id')
+        ->group_by('appointment.appt_schedule')
+        ->order_by('appointment.appt_date_create','desc');
 
         $query=$this->db->get();
 
-       if ($query->num_rows() > 0){
-
-            $row = $query->row(); 
-            return $row->class_id;
-        }
-
-        else{
-            return 0;
-        }
+        return $query->result_array();
 
         $this->db->close();
 
+      } 
+   
+      public function select_appointment_remarks($appt_id){ 
+        $this->db->select('*')->from('tblappointment_remark as remark')
+        ->join('tbluser as user', 'user.user_id = remark.user_id')
+        ->where('remark.appt_id', $appt_id);
+        $query=$this->db->get();
+        return $query->result_array();
+        $this->db->close();
       }
+      
+      public function select_appointment_status($appt_id){ 
+        $this->db->select('tblappointment.appt_status')->from('tblappointment')
+        ->where('tblappointment.appt_id', $appt_id);
+        $query=$this->db->get();
+        return $query->row_array();
+        $this->db->close();
+      }
+
+   
+      public function update_appointmet_status($data, $appt_id) { 
+
+        $this->db->set($data); 
+
+        $this->db->where("appt_id", $appt_id); 
+
+        $this->db->update("tblappointment"); 
+
+     }
 
 
 
