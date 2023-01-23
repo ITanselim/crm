@@ -226,7 +226,8 @@
                                $("#update_lead_form .alert-success").css("display", "none");
                                $("#update_lead_form .alert-success p").html('');
                                $("#update_lead_form")[0].reset();
-                               $('#updateleadmodal').modal('hide');
+                               $("#update_lead_form #appointment_button").attr('data-target', '#addapointment_Modal');
+                              //  $('#updateleadmodal').modal('hide');
                                 //loader
                                 $("#loader_1").css("display", "none");
                                 $("#loader_2").css("display", "none");
@@ -918,7 +919,6 @@
       // view update lead form
        $(document).on("click", ".view_update_leaddetail", function(e){
               e.preventDefault();
-                $('#update_lead_form')[0].reset();
              $("#update_lead_form .status option[value='In Progress']").removeAttr('selected').text('In Progress').change();
              $("#update_lead_form .status option[value='Assigned Low']").removeAttr('selected').text('Assigned Low').change();
              $("#update_lead_form .status option[value='Assigned Mid']").removeAttr('selected').text('Assigned Mid').change();
@@ -928,6 +928,9 @@
 
               var project_id= $(this).data('project_id');
               $("#addappointmentform input[name='project_id']").val(project_id);
+              $("#update_lead_form input[name='project_id']").val(project_id);
+
+
 
               dataEdit = 'project_id='+ project_id;
                 var getstatus = "";
@@ -944,7 +947,6 @@
                 var get_total_amount = 0;
                 var isFirst = true;
                 var get_installment_term ='';
-
                   $.ajax({
                   type:'GET',
                   data:dataEdit,
@@ -960,7 +962,6 @@
                          $("#update_lead_form input[name='product_name']").val(data[i].product_name);
                          $("#update_lead_form input[name='author_name']").val(data[i].author_name);
                          $("#update_lead_form input[name='title_name']").val(data[i].book_title);
-                         $("#update_lead_form input[name='project_id']").val(data[i].project_id);
 
                          $("#update_lead_form input[name='area_code']").val(data[i].area_code);
                          $("#update_lead_form input[name='email_address']").val(data[i].email_address);
@@ -996,11 +997,12 @@
                       // var get_last_date = $('#updateleadmodal .view_all_lead').find('.date_collection:last').text();
                       // var get_last_amount = $('#updateleadmodal .view_all_lead').find('.amount_paid:last').text();
                       // $("#update_lead_form input[name='initial_payment']").val(get_last_amount);
-                      if(get_status  =='' ){
-                        $("#update_lead_form #appointment_button").prop('disable', true);
+                      if(get_status  =='' || get_status  =='Recycled'  || get_status  =='Dead'  || get_status  =='Assigned Low'){
+                            $("#update_lead_form #appointment_button").removeAttr('data-target');
+                        
                       }
-                      else{
-                        $("#update_lead_form #appointment_button").prop('disable', true);
+                      else{ 
+                           $("#update_lead_form #appointment_button").attr('data-target', '#addapointment_Modal');
                       }
                       if(usertype != 'Admin'){
                            // $("#update_lead_form input[name='brand_name']").prop('readonly', true);
@@ -2917,7 +2919,7 @@
 
                         for (var i = 0; i < data.length; i++) {
                           tr_appointment  += '<tr>'+
-                                   '<td>'+data[i].m_fname + ' ' + data[i].m_lname +'</td>'+
+                                   '<td><a href="'+base_url+'appointment" target="blank">'+data[i].m_fname + ' ' + data[i].m_lname +'</a></td>'+
                                    '<td>'+moment(data[i].appt_schedule).format('YYYY/MM/DD')+'</td>'+
                                    '<td>'+moment(data[i].appt_start_time, "HH:mm:ss").format('hh:mm a') + ' - ' + moment(data[i].appt_end_time, "HH:mm:ss").format('hh:mm A') +'</td>'+
                                    '<td>'+data[i].appt_status+'</td>'+

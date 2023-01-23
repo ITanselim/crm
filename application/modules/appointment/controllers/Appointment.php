@@ -40,12 +40,9 @@ class Appointment extends MY_Controller {
       $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
       $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-      $records['team_evaluations']= $this->Evaluation_Model->view_teamevaluation_manager($this->session->userdata['userlogin']['user_id']);
+      $records['appointments']= $this->Appointment_Model->view_list_appointment($this->session->userdata['userlogin']['user_id']);
 
-      $this->load->view('template/evaluation_header', $records);
-      $this->load->view('template/evaluation_sidebar', $records);
-      $this->load->view('team_evaluation_list_manager', $records);
-      $this->load->view('template/evaluation_footer', $records);
+         $this->load->view('appointment_list_manager', $records);
      
      }
 
@@ -78,8 +75,78 @@ class Appointment extends MY_Controller {
        $this->load->view('appointment_detail_agent', $records);
  
       }
+      else if($this->session->userdata['userlogin']['usertype'] == "Manager"){
+   
+        $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
+        $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
+        $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
+        $records['appointments']= $this->Appointment_Model->view_appointment_detail($this->uri->segment(3));
+        $records['comments'] = $this->Appointment_Model->select_appointment_remarks($this->uri->segment(3));
+        $records['status_appointment']= $this->Appointment_Model->select_appointment_status($this->uri->segment(3));
+ 
+  
+        $this->load->view('appointment_detail_manager', $records);
+  
+       }
+  
  
    }
+
+   //add appointment
+  public function add_appointment(){
+
+    $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
+
+   $this->form_validation->set_rules('manager_id','Closer Name','trim|required|xss_clean');          
+
+   $this->form_validation->set_rules('appointment_status','Appointment Status','trim|xss_clean|required');  
+
+
+   $this->form_validation->set_rules('date_appointment','Date Appointment','trim|required|xss_clean');   
+
+   $this->form_validation->set_rules('starttime','Time Appointment','trim|xss_clean|required');  
+
+
+   if ($this->form_validation->run() == FALSE){
+     echo json_encode(array("response" => "error", "message" => validation_errors()));
+  } 
+ else{
+     $data= array(
+         'appt_closer_id' => $this->input->post('manager_id'),
+         'appt_agent_id' => $this->session->userdata['userlogin']['user_id'],
+         'appt_project_id' => $this->input->post('project_id'),
+         'appt_schedule' => date('Y-m-d H:i:s',  strtotime($this->input->post('date_appointment'))),
+         'appt_start_time' => date('H:i:s', strtotime($this->input->post('starttime'))),
+         'appt_end_time' => date('H:i:s', strtotime('+30 minutes', strtotime($this->input->post('starttime')))),
+         'appt_status'  =>  $this->input->post('appointment_status'),   
+         'appt_date_create' => date('Y-m-d H:i:s')
+       );
+
+
+      $this->Appointment_Model->insert($data);
+          // $receive_user_notify_form = $this->User_Model->select_user_notify_coaching_form($this->session->userdata['userlogin']['user_id']);
+
+          // foreach ($receive_user_notify_form as $value) {
+          //                 $data_notification= array(
+          //                      'from_user' => $user_charge,
+          //                      'to_user' => 'All',
+          //                      'message' => 'Added Coaching Form',
+          //                      'unread' => 1,
+          //                      'date_notify' => date('Y-m-d H:i:s'),
+          //                      'to_user_id' => $value['user_id'],
+          //                      'from_usertype' => $this->session->userdata['userlogin']['usertype'],
+
+          //                    );
+          //          $this->Notification_Model->insert($data_notification);
+          //      }
+
+
+
+     echo json_encode(array("response" =>   "success", "message" => "Successfully Plotted Appointment Schedule"));
+
+     }
+  }
+
 
    public function add_appointment_remark(){
 
@@ -135,6 +202,27 @@ class Appointment extends MY_Controller {
 
       }
  }
+
+ public function set_appointment_time(){
+
+  $history_agent=array();
+
+  $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
+
+  $usertype = $this->session->userdata['userlogin']['usertype'];
+
+   $get_time = $this->Appointment_Model->select_schedule_appointment(date('Y-m-d', strtotime($this->input->post('date_appointment'))), date("H:i:s", strtotime($this->input->post('starttime'))));
+
+   if($get_time == true){
+    echo json_encode(array("response" => "error", "message" => "This time is not available to you. Please choose another appointment time."));
+   }
+
+
+ 
+    echo json_encode(array("response" =>   "success", "message" => "Ok"));
+
+}
+
 
  public function update_appointment_status(){
 

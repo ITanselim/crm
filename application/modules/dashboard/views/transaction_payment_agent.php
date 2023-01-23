@@ -429,7 +429,7 @@
                                 <option value="Recycled">Recycle</option>
                                 <option value="Dead">Dead</option>
                               </select>
-                             <input type="hidden" class="form-control" style="height:50px;"  name="project_id"  placeholder="Title Name" aria-describedby="inputGroupPrepend" required>
+                             <input type="hidden" class="form-control" style="height:50px;"  name="project_id"  required>
                          </div>
                          <div class="col mb-3">
                             <label for="validationCustom05">Installment Term</label>
@@ -1046,7 +1046,6 @@
                                   <option value="">Please Select a Status</option>
                                   <option value="Open">Open</option>
                                   <option value="Reschedule">Reschedule</option>
-                                  <option value="Follow Up">Follow Up</option>
                                 </select>
                            </div>
                              <input type="hidden" name="project_id" value="">
@@ -1063,7 +1062,7 @@
                            </div>
                            <div class="form-group">
                            <label for="Time">Time:</label>
-                           <select multiple name="starttime" class="form-control" id="sel2" name="sellist2">
+                           <select multiple name="starttime" class="form-control starttime" id="sel2" name="sellist2">
                                     <option value="01:00:00">1:00 AM - 1:30 AM</option>
                                     <option value="01:30:00">1:30 AM - 2:00 AM</option>
                                     <option value="02:00:00">2:00 AM - 2:30 AM</option>

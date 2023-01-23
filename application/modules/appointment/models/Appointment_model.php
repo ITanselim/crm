@@ -1,10 +1,6 @@
   <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
-
    class Appointment_Model extends CI_Model {
-
-      
 
       function __construct() {
 
@@ -64,19 +60,24 @@
 
       }  
 
-      // history of appointment
+      // history of appointment agent
       public function view_list_appointment($user_id){ 
 
         $this->db->select('appointment.*, lead.*, user.firstname as m_fname, user.lastname as m_lname, agent.firstname as a_fname,agent.lastname as a_name')->from('tblappointment as appointment')
 
         ->join('tbllead as lead', 'appointment.appt_project_id = lead.project_id', 'inner')
         ->join('tbluser as user', 'appointment.appt_closer_id = user.user_id', 'inner')
-        ->join('tbluser as agent', 'appointment.appt_agent_id = agent.user_id', 'inner')
+        ->join('tbluser as agent', 'appointment.appt_agent_id = agent.user_id', 'inner');
 
-        ->where('appointment.appt_agent_id', $user_id)
-        ->group_by('appointment.appt_project_id')
-        ->group_by('appointment.appt_schedule')
-        ->order_by('appointment.appt_date_create','desc');
+        if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
+            $this->db->where('appointment.appt_agent_id', $user_id);
+        }
+        else if($this->session->userdata['userlogin']['usertype'] == "Manager"){
+            $this->db->where('appointment.appt_closer_id', $user_id);
+        }
+            $this->db->group_by('appointment.appt_project_id');
+            $this->db->group_by('appointment.appt_schedule');
+            $this->db->order_by('appointment.appt_date_create','desc');
 
         $query=$this->db->get();
 
@@ -106,6 +107,24 @@
         $this->db->close();
 
       } 
+
+      public function select_schedule_appointment($date, $time){ 
+        $this->db->select('*')->from('tblappointment')
+        ->where('appt_schedule', $date)
+        ->where('appt_start_time', $time);
+        // ->where('appt_start_time BETWEEN "'. date('H:i:s', strtotime($time)). '" and "'. date('H:i:s', strtotime($time)).'"');
+        if ($query->num_rows() == 1){
+
+            return true;
+
+        }
+        else{
+
+            return false;
+
+        }
+
+      }
    
       public function select_appointment_remarks($appt_id){ 
         $this->db->select('*')->from('tblappointment_remark as remark')

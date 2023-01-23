@@ -2351,7 +2351,7 @@
 
         $this->db->select('lead.*, collection.*')->from('tbllead as lead')
 
-        ->join('tblcollection as collection', 'lead.project_id = collection.project_id', 'inner')
+        ->join('tblcollection as collection', 'lead.project_id = collection.project_id', 'left')
 
         ->where('lead.project_id', $project_id)->limit(1)->order_by('collection.collection_id','DESC');
 
