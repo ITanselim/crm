@@ -84,6 +84,54 @@
 
 // set appointment time
 $('#addappointmentform .starttime').on('change', function () {
+      $.ajax({
+
+        type: "POST",
+
+        url: base_url +  "appointment/set_appointment_time",
+
+        dataType: 'json',
+
+        data: $("#addappointmentform").serialize(),
+
+        success: function(res) {
+
+      if (res.response=="success"){
+
+          $("#addappointmentform .alert-danger").removeClass("alert-danger").addClass("alert-success");
+
+          $("#addappointmentform .alert-success").css("display", "none");
+
+          $("#addappointmentform .alert-success p").html(res.message);
+
+
+      }
+
+        else{
+
+          $("#addappointmentform .alert-success").removeClass("alert-success").addClass("alert-danger");
+
+          $("#addappointmentform .alert-danger").css("display", "block");
+
+          $("#addappointmentform .alert-danger p").html(res.message);
+
+          setTimeout(function(){
+
+              $("#addappointmentform .alert-danger").css("display", "none");
+
+          },3000);
+
+
+      }
+
+    },
+
+    });
+
+});
+
+// set appointment date
+$('#addappointmentform .date_appointment').on('change', function () {
   $.ajax({
 
     type: "POST",
@@ -96,43 +144,36 @@ $('#addappointmentform .starttime').on('change', function () {
 
     success: function(res) {
 
-   if (res.response=="success"){
+  if (res.response=="success"){
 
-       $("#addappointmentform .alert-danger .message").removeClass("alert-danger").addClass("alert-success");
+      $("#addappointmentform .alert-success").removeClass("alert-success").addClass("alert-danger");
 
-       $("#addappointmentform  .message").css("display", "block");
+      $("#addappointmentform .alert-danger").css("display", "none");
 
-       $("#addappointmentform .alert-success p").html(res.message);
- 
-       setTimeout(function(){
+      $("#addappointmentform .alert-danger p").html(res.message);
 
-        $("#addappointmentform .alert-success").css("display", "none");
-
-      },3000);
-   }
+  }
 
     else{
 
-       $("#addappointmentform .alert-success").removeClass("alert-success").addClass("alert-danger");
+      $("#addappointmentform .alert-success").removeClass("alert-success").addClass("alert-danger");
 
-       $("#addappointmentform .message").css("display", "block");
+      $("#addappointmentform .alert-danger").css("display", "block");
 
-       $("#addappointmentform .message p").html(res.message);
+      $("#addappointmentform .alert-danger").html(res.message);
 
-       setTimeout(function(){
+      setTimeout(function(){
 
-         $("#addappointmentform .alert-danger").css("display", "none");
+          $("#addappointmentform .alert-danger").css("display", "none");
 
-       },3000);
+      },3000);
 
 
-   }
+  }
 
 },
 
 });
-
-
 
 });
 

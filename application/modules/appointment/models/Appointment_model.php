@@ -48,8 +48,6 @@
         ->join('tbluser as user', 'appointment.appt_closer_id = user.user_id', 'inner')
 
         ->where('lead.project_id', $project_id)
-        ->group_by('appointment.appt_project_id')
-        ->group_by('appointment.appt_schedule')
         ->order_by('appointment.appt_date_create','desc');
 
         $query=$this->db->get();
@@ -111,7 +109,8 @@
       public function select_schedule_appointment($date, $time){ 
         $this->db->select('*')->from('tblappointment')
         ->where('appt_schedule', $date)
-        ->where('appt_start_time', $time);
+        ->where('appt_start_time', $time)
+        ->where('appt_start_time !=', "Closed");
         // ->where('appt_start_time BETWEEN "'. date('H:i:s', strtotime($time)). '" and "'. date('H:i:s', strtotime($time)).'"');
         $query=$this->db->get();
 

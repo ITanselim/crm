@@ -109,11 +109,10 @@ class Appointment extends MY_Controller {
 
 
    if ($this->form_validation->run() == FALSE){
-     echo json_encode(array("response" => "error", "message" => validation_errors()));
+      echo json_encode(array("response" => "error", "message" => validation_errors()));
    } 
-  
   else if($get_time == true){
-    echo json_encode(array("response" => "error", "message" => "This time is not available to you. Please choose another appointment time."));
+     echo json_encode(array("response" => "error", "message" => "This time is not available to you. Please choose another appointment time."));
    }
  else{
      $data= array(
@@ -145,10 +144,6 @@ class Appointment extends MY_Controller {
           //                    );
           //          $this->Notification_Model->insert($data_notification);
           //      }
-
-
-
-
      }
   }
 
@@ -221,6 +216,10 @@ class Appointment extends MY_Controller {
    if($get_time == true){
     echo json_encode(array("response" => "error", "message" => "This time is not available to you. Please choose another appointment time."));
    }
+  else{
+    echo json_encode(array("response" => "success", "message" => ""));
+
+  }
 
 }
 

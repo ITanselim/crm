@@ -1052,7 +1052,7 @@
                           <div class="form-group">
                           <label for="Date">Date:</label>
                               <div class="input-group date" id="id_4">
-                                <input type="text" name="date_appointment" value="<?php echo date('Y/m/d');?>" class="form-control" required="">
+                                <input type="text" name="date_appointment" value="<?php echo date('Y/m/d');?>" class="form-control date_appointment" required="">
                                 <div class="input-group-addon input-group-append">
                                     <div class="input-group-text">
                                         <i class="fa fa-calendar"></i>
@@ -1061,7 +1061,7 @@
                               </div>
                            </div>
                            <div class="form-group">
-                           <div class="alert alert-success message"><p class="message_response"></p></div>
+                           <!-- <div class="alert alert-success" id="message-response"><p></p></div> -->
                            <label for="Time">Time:</label>
                            <select multiple name="starttime" class="form-control starttime" id="sel2" name="sellist2">
                                     <option value="01:00:00">1:00 AM - 1:30 AM</option>
@@ -1356,7 +1356,7 @@ $(function () {
             "showClose": true,
             "showClear": true,
             "showTodayButton": true,
-            "format": "MM/DD/YYYY",
+            "format": "YYYY/MM/DD",
         });
     </script>
   </body>
