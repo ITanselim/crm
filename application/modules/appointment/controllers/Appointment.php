@@ -96,6 +96,7 @@ class Appointment extends MY_Controller {
   public function add_appointment(){
 
     $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
+    $get_time = $this->Appointment_Model->select_schedule_appointment(date('Y-m-d', strtotime($this->input->post('date_appointment'))), date("H:i:s", strtotime($this->input->post('starttime'))));
 
    $this->form_validation->set_rules('manager_id','Closer Name','trim|required|xss_clean');          
 
@@ -109,7 +110,11 @@ class Appointment extends MY_Controller {
 
    if ($this->form_validation->run() == FALSE){
      echo json_encode(array("response" => "error", "message" => validation_errors()));
-  } 
+   } 
+  
+  else if($get_time == true){
+    echo json_encode(array("response" => "error", "message" => "This time is not available to you. Please choose another appointment time."));
+   }
  else{
      $data= array(
          'appt_closer_id' => $this->input->post('manager_id'),
@@ -122,8 +127,9 @@ class Appointment extends MY_Controller {
          'appt_date_create' => date('Y-m-d H:i:s')
        );
 
+           $this->Appointment_Model->insert($data);
+           echo json_encode(array("response" =>   "success", "message" => "Successfully Plotted Appointment Schedule"));
 
-      $this->Appointment_Model->insert($data);
           // $receive_user_notify_form = $this->User_Model->select_user_notify_coaching_form($this->session->userdata['userlogin']['user_id']);
 
           // foreach ($receive_user_notify_form as $value) {
@@ -142,7 +148,6 @@ class Appointment extends MY_Controller {
 
 
 
-     echo json_encode(array("response" =>   "success", "message" => "Successfully Plotted Appointment Schedule"));
 
      }
   }
@@ -216,10 +221,6 @@ class Appointment extends MY_Controller {
    if($get_time == true){
     echo json_encode(array("response" => "error", "message" => "This time is not available to you. Please choose another appointment time."));
    }
-
-
- 
-    echo json_encode(array("response" =>   "success", "message" => "Ok"));
 
 }
 

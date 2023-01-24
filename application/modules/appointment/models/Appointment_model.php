@@ -113,6 +113,8 @@
         ->where('appt_schedule', $date)
         ->where('appt_start_time', $time);
         // ->where('appt_start_time BETWEEN "'. date('H:i:s', strtotime($time)). '" and "'. date('H:i:s', strtotime($time)).'"');
+        $query=$this->db->get();
+
         if ($query->num_rows() == 1){
 
             return true;

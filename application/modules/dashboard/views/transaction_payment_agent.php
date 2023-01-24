@@ -1061,6 +1061,7 @@
                               </div>
                            </div>
                            <div class="form-group">
+                           <div class="alert alert-success message"><p class="message_response"></p></div>
                            <label for="Time">Time:</label>
                            <select multiple name="starttime" class="form-control starttime" id="sel2" name="sellist2">
                                     <option value="01:00:00">1:00 AM - 1:30 AM</option>

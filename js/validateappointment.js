@@ -98,12 +98,12 @@ $('#addappointmentform .starttime').on('change', function () {
 
    if (res.response=="success"){
 
-       $("#addappointmentform .alert-danger").removeClass("alert-danger").addClass("alert-success");
+       $("#addappointmentform .alert-danger .message").removeClass("alert-danger").addClass("alert-success");
 
-       $("#addappointmentform .alert-success").css("display", "block");
+       $("#addappointmentform  .message").css("display", "block");
 
        $("#addappointmentform .alert-success p").html(res.message);
-
+ 
        setTimeout(function(){
 
         $("#addappointmentform .alert-success").css("display", "none");
@@ -113,18 +113,17 @@ $('#addappointmentform .starttime').on('change', function () {
 
     else{
 
-       $("#update_appointment_form .alert-success").removeClass("alert-success").addClass("alert-danger");
+       $("#addappointmentform .alert-success").removeClass("alert-success").addClass("alert-danger");
 
-       $("#update_appointment_form .alert-danger").css("display", "block");
+       $("#addappointmentform .message").css("display", "block");
 
-       $("#update_appointment_form .alert-danger p").html(res.message);
-         $("html, body").animate({ scrollTop: 0 }, "slow");
+       $("#addappointmentform .message p").html(res.message);
 
        setTimeout(function(){
 
-               $("#update_appointment_form .alert-danger").css("display", "none");
+         $("#addappointmentform .alert-danger").css("display", "none");
 
-           },3000);
+       },3000);
 
 
    }
