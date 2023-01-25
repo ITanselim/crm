@@ -1052,7 +1052,7 @@
                           <div class="form-group">
                           <label for="Date">Date:</label>
                               <div class="input-group date" id="id_4">
-                                <input type="text" name="date_appointment" value="<?php echo date('Y/m/d');?>" class="form-control date_appointment" required="">
+                                <input type="text" name="date_appointment" value="<?php echo date('d/m/Y');?>" class="form-control date_appointment" required="">
                                 <div class="input-group-addon input-group-append">
                                     <div class="input-group-text">
                                         <i class="fa fa-calendar"></i>
@@ -1064,20 +1064,20 @@
                            <!-- <div class="alert alert-success" id="message-response"><p></p></div> -->
                            <label for="Time">Time:</label>
                            <select multiple name="starttime" class="form-control starttime" id="sel2" name="sellist2">
-                                    <option value="01:00:00">1:00 AM - 1:30 AM</option>
-                                    <option value="01:30:00">1:30 AM - 2:00 AM</option>
-                                    <option value="02:00:00">2:00 AM - 2:30 AM</option>
-                                    <option value="02:30:00">2:30 AM - 3:00 AM</option>
-                                    <option value="03:00:00">3:00 AM - 3:30 AM</option>
-                                    <option value="03:30:00">3:30 AM - 4:00 AM</option>
-                                    <option value="04:00:00">4:00 AM - 4:30 AM</option>
-                                    <option value="04:30:00">4:30 AM - 5:00 AM</option>
-                                    <option value="05:00:00">5:00 AM - 5:30 AM</option>
-                                    <option value="05:30:00">5:30 AM - 6:00 AM</option>
-                                    <option value="06:00:00">6:00 AM - 6:30 AM</option>
-                                    <option value="06:30:00">6:30 AM - 7:00 AM</option>
-                                    <option value="07:00:00">7:00 AM - 7:30 AM</option>
-                                    <option value="07:30:00">7:30 AM - 8:00 AM</option>
+                                    <option disabled value="01:00:00">1:00 AM - 1:30 AM</option>
+                                    <option disabled  value="01:30:00">1:30 AM - 2:00 AM</option>
+                                    <option disabled  value="02:00:00">2:00 AM - 2:30 AM</option>
+                                    <option disabled  value="02:30:00">2:30 AM - 3:00 AM</option>
+                                    <option disabled  value="03:00:00">3:00 AM - 3:30 AM</option>
+                                    <option disabled  value="03:30:00">3:30 AM - 4:00 AM</option>
+                                    <option disabled  value="04:00:00">4:00 AM - 4:30 AM</option>
+                                    <option disabled  value="04:30:00">4:30 AM - 5:00 AM</option>
+                                    <option disabled  value="05:00:00">5:00 AM - 5:30 AM</option>
+                                    <option disabled  value="05:30:00">5:30 AM - 6:00 AM</option>
+                                    <option disabled  value="06:00:00">6:00 AM - 6:30 AM</option>
+                                    <option disabled  value="06:30:00">6:30 AM - 7:00 AM</option>
+                                    <option disabled  value="07:00:00">7:00 AM - 7:30 AM</option>
+                                    <option disabled  value="07:30:00">7:30 AM - 8:00 AM</option>
                                   </select>
                           </div>
 
@@ -1356,7 +1356,7 @@ $(function () {
             "showClose": true,
             "showClear": true,
             "showTodayButton": true,
-            "format": "YYYY/MM/DD",
+            "format": "DD/MM/YYYY",
         });
     </script>
   </body>

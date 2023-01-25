@@ -127,6 +127,26 @@
         }
 
       }
+
+      public function select_schedule_exist_appointment($closer_id, $date){ 
+        $this->db->select('*')->from('tblappointment')
+        ->where('appt_closer_id', $closer_id)
+        ->where('appt_schedule', $date)
+        ->where('appt_status !=', "Closed");
+        // ->where('appt_start_time BETWEEN "'. date('H:i:s', strtotime($time)). '" and "'. date('H:i:s', strtotime($time)).'"');
+        $query=$this->db->get();
+
+        if ($query->num_rows() == 1){
+            return $query->row_array();
+
+        }
+        else{
+
+            return false;
+
+        }
+
+      }
    
       public function select_appointment_remarks($appt_id){ 
         $this->db->select('*')->from('tblappointment_remark as remark')

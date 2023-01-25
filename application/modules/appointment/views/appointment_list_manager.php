@@ -390,7 +390,7 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
           <div class="card-body">
             <div class="alert alert-success"><p></p></div>
           <div class="table-responsive">
-            <table class="table table-bordered" id="userdataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered" id="appointmentdataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
                   <th>Project ID</th>
@@ -668,6 +668,7 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
  <script>  
  
  $('#leaddataTable').DataTable();
+ $('#appointmentdataTable').DataTable();
 </script>
 
   </body>
