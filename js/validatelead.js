@@ -212,6 +212,7 @@
         //loader
         $("#loader_1").css("display", "block");
         $("#loader_2").css("display", "block");
+        var status_lead = $('#update_lead_form').find(".status").val();
         $.ajax({
                type: "POST",
                url: base_url +  "dashboard/update_lead",
@@ -222,11 +223,22 @@
                   $("#update_lead_form .alert-danger").removeClass("alert-danger").addClass("alert-success");
                   $("#update_lead_form .alert-success").css("display", "block");
                   $("#update_lead_form .alert-success p").html(res.message);
-                  setTimeout(function(){
+
+               setTimeout(function(){
                                $("#update_lead_form .alert-success").css("display", "none");
                                $("#update_lead_form .alert-success p").html('');
                                $("#update_lead_form")[0].reset();
-                               $("#update_lead_form #appointment_button").attr('data-target', '#addapointment_Modal');
+                           if(status_lead  =='' || status_lead  =='Recycled'  || status_lead  =='Dead'  || status_lead  =='Assigned Low'){
+                                $("#update_lead_form #appointment_button").removeAttr('data-target');
+                                $("#update_lead_form #appointment_button").addClass('disabled');
+                            }
+                            else{ 
+                              $("#update_lead_form #appointment_button").removeClass('disabled');
+                              $("#update_lead_form #appointment_button").attr('data-target', '#addapointment_Modal');
+
+        
+                          }
+                          
                               //  $('#updateleadmodal').modal('hide');
                                 //loader
                                 $("#loader_1").css("display", "none");
@@ -999,10 +1011,11 @@
                       // $("#update_lead_form input[name='initial_payment']").val(get_last_amount);
                       if(get_status  =='' || get_status  =='Recycled'  || get_status  =='Dead'  || get_status  =='Assigned Low'){
                             $("#update_lead_form #appointment_button").removeAttr('data-target');
-                        
+                            $("#update_lead_form #appointment_button").addClass('disabled');
                       }
                       else{ 
-                           $("#update_lead_form #appointment_button").attr('data-target', '#addapointment_Modal');
+                        $("#update_lead_form #appointment_button").removeClass('disabled');
+
                       }
                       if(usertype != 'Admin'){
                            // $("#update_lead_form input[name='brand_name']").prop('readonly', true);

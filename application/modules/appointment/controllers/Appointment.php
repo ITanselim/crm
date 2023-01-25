@@ -96,7 +96,7 @@ class Appointment extends MY_Controller {
   public function add_appointment(){
 
     $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
-    $get_time = $this->Appointment_Model->select_schedule_appointment(date('Y-m-d', strtotime($this->input->post('date_appointment'))), date("H:i:s", strtotime($this->input->post('starttime'))));
+    $get_time = $this->Appointment_Model->select_schedule_appointment($this->session->userdata['userlogin']['user_id'] ,$this->input->post('manager_id'), date('Y-m-d', strtotime($this->input->post('date_appointment'))), date("H:i:s", strtotime($this->input->post('starttime'))));
 
    $this->form_validation->set_rules('manager_id','Closer Name','trim|required|xss_clean');          
 
@@ -211,13 +211,13 @@ class Appointment extends MY_Controller {
 
   $usertype = $this->session->userdata['userlogin']['usertype'];
 
-   $get_time = $this->Appointment_Model->select_schedule_appointment(date('Y-m-d', strtotime($this->input->post('date_appointment'))), date("H:i:s", strtotime($this->input->post('starttime'))));
+   $get_time = $this->Appointment_Model->select_schedule_appointment($this->input->post('manager_id'), date('Y-m-d', strtotime($this->input->post('date_appointment'))), date("H:i:s", strtotime($this->input->post('starttime'))));
 
    if($get_time == true){
     echo json_encode(array("response" => "error", "message" => "This time is not available to you. Please choose another appointment time."));
    }
   else{
-    echo json_encode(array("response" => "success", "message" => ""));
+    echo json_encode(array("response" => "success", "message" =>  date("H:i:s", strtotime($this->input->post('starttime')))));
 
   }
 

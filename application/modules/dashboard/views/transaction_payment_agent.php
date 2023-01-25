@@ -475,7 +475,7 @@
                         </div>
                     </div>
                   <button class="btn btn-success" id="update_lead" type="button">Update</button>
-                  <button class="btn btn-secondary" id="appointment_button" data-toggle='modal' data-target='#addapointment_Modal' data-backdrop='static' data-keyboard='false'  type="button">Appointment Schedule</button>
+                  <button class="btn btn-secondary disabled" id="appointment_button" data-toggle='modal' data-target='#addapointment_Modal' data-backdrop='static' data-keyboard='false'  type="button">Appointment Schedule</button>
 
                   
                 </form>
@@ -1033,7 +1033,7 @@
                         <p class="hint-text">Create appointment Schedule.</p>
                            
                          <div class="form-group">
-                            <select class="form-control manager_id" name="manager_id">
+                            <select class="form-control manager_id closer_name" name="manager_id">
                                 <option value="">Please Select A Manager Name</option>
                                 <?php foreach ($user_managers as  $manager):?>
                                     <option  value="<?php echo $manager['user_id']; ?>"><?php echo $manager['firstname'] .' '. $manager['lastname']  ; ?></option>

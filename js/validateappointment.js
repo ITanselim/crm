@@ -83,7 +83,7 @@
   
 
 // set appointment time
-$('#addappointmentform .starttime').on('change', function () {
+$('#addappointmentform .starttime, #addappointmentform .closer_name, #addappointmentform .date_appointment').on('change', function () {
       $.ajax({
 
         type: "POST",
@@ -130,52 +130,7 @@ $('#addappointmentform .starttime').on('change', function () {
 
 });
 
-// set appointment date
-$('#addappointmentform .date_appointment').on('change', function () {
-  $.ajax({
 
-    type: "POST",
-
-    url: base_url +  "appointment/set_appointment_time",
-
-    dataType: 'json',
-
-    data: $("#addappointmentform").serialize(),
-
-    success: function(res) {
-
-  if (res.response=="success"){
-
-      $("#addappointmentform .alert-success").removeClass("alert-success").addClass("alert-danger");
-
-      $("#addappointmentform .alert-danger").css("display", "none");
-
-      $("#addappointmentform .alert-danger p").html(res.message);
-
-  }
-
-    else{
-
-      $("#addappointmentform .alert-success").removeClass("alert-success").addClass("alert-danger");
-
-      $("#addappointmentform .alert-danger").css("display", "block");
-
-      $("#addappointmentform .alert-danger").html(res.message);
-
-      setTimeout(function(){
-
-          $("#addappointmentform .alert-danger").css("display", "none");
-
-      },3000);
-
-
-  }
-
-},
-
-});
-
-});
 
 // update status
 $('#update_appointment_form .appt_status').on('change', function () {

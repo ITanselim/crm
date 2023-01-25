@@ -106,11 +106,12 @@
 
       } 
 
-      public function select_schedule_appointment($date, $time){ 
+      public function select_schedule_appointment($closer_id, $date, $time){ 
         $this->db->select('*')->from('tblappointment')
+        ->where('appt_closer_id', $closer_id)
         ->where('appt_schedule', $date)
         ->where('appt_start_time', $time)
-        ->where('appt_start_time !=', "Closed");
+        ->where('appt_status !=', "Closed");
         // ->where('appt_start_time BETWEEN "'. date('H:i:s', strtotime($time)). '" and "'. date('H:i:s', strtotime($time)).'"');
         $query=$this->db->get();
 

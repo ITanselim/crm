@@ -204,6 +204,8 @@
        });
       // update Lead form
       $(document).on('click','#update_lead_form #update_lead',function(e) {
+        var status_lead = $('#update_lead_form').find(".status").val();
+
         $.ajax({
                type: "POST",
                url: base_url +  "dashboard/update_lead",
@@ -214,6 +216,8 @@
                   $("#update_lead_form .alert-danger").removeClass("alert-danger").addClass("alert-success");
                   $("#update_lead_form .alert-success").css("display", "block");
                   $("#update_lead_form .alert-success p").html(res.message);
+                  alert(status_lead);
+
                   setTimeout(function(){
                                location.reload();
                       },4000);
