@@ -83,7 +83,8 @@
   
 
 // set appointment time
-$('#addappointmentform .starttime, #addappointmentform .closer_name, #addappointmentform .date_appointment').on('change', function () {
+$('#addappointmentform .closer_name, #addappointmentform .date_appointment').on('change', function () {
+    $('#addappointmentform .starttime option').prop('disabled', false);
       $.ajax({
 
         type: "POST",
@@ -95,34 +96,21 @@ $('#addappointmentform .starttime, #addappointmentform .closer_name, #addappoint
         data: $("#addappointmentform").serialize(),
 
         success: function(res) {
+        if (res.response=="success"){
+          $('#addappointmentform  .starttime').each(function() {
+            var val = res.get_time;
+            $('#addappointmentform .starttime').find('option').filter(function() {
+                return this.value === val;
+            }).prop('disabled', true);
+        });
+        }
+        // else{
+        //     $('#addappointmentform .starttime option').prop('disabled', true);
 
-      if (res.response=="success"){
-
-          $("#addappointmentform .alert-danger").removeClass("alert-danger").addClass("alert-success");
-
-          $("#addappointmentform .alert-success").css("display", "none");
-
-          $("#addappointmentform .alert-success p").html(res.message);
-
-
-      }
-
-        else{
-
-          $("#addappointmentform .alert-success").removeClass("alert-success").addClass("alert-danger");
-
-          $("#addappointmentform .alert-danger").css("display", "block");
-
-          $("#addappointmentform .alert-danger p").html(res.message);
-
-          setTimeout(function(){
-
-              $("#addappointmentform .alert-danger").css("display", "none");
-
-          },3000);
+        // }
 
 
-      }
+      
 
     },
 
@@ -157,8 +145,10 @@ $('#update_appointment_form .appt_status').on('change', function () {
        setTimeout(function(){
 
         $("#update_appointment_form .alert-success").css("display", "none");
+             location.reload();
 
-      },3000);
+
+      },2000);
    }
 
     else{
@@ -168,13 +158,12 @@ $('#update_appointment_form .appt_status').on('change', function () {
        $("#update_appointment_form .alert-danger").css("display", "block");
 
        $("#update_appointment_form .alert-danger p").html(res.message);
-         $("html, body").animate({ scrollTop: 0 }, "slow");
 
        setTimeout(function(){
 
                $("#update_appointment_form .alert-danger").css("display", "none");
 
-           },3000);
+           },1000);
 
 
    }

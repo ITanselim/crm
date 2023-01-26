@@ -486,10 +486,19 @@
               <div class="form-group">
                 <input class="form-control" type="hidden" name="manager_id" value="<?=$closer_id;?>" />
                 <input class="form-control" type="hidden" name="appt_id" value="<?=$appt_id;?>"/>
-                <input class="form-control" type="text" placeholder="Your comments" name="remark" id="remark" required/>
+                <?php if($status_appointment['appt_status'] != "Closed"):?>
+                    <input class="form-control" type="text" placeholder="Your comments" name="remark" id="remark" required/>
+                <?php else: ?>
+                  <input class="form-control" disabled  type="text" placeholder="Your comments" name="remark" id="remark" required/>
+
+                <?php endif; ?>
               </div>
               <div class="form-group">
-                  <button style="position: relative; top:3px;" type="button" class="btn btn-secondary btn-sm" id="add_comment"> Add</button>
+              <?php if($status_appointment['appt_status'] != "Closed"):?>
+                <button style="position: relative; top:3px;" type="button" class="btn btn-secondary btn-sm" id="add_comment"> Add</button>
+                <?php else: ?>
+                  <button style="position: relative; top:3px;" type="button" class="btn btn-secondary btn-sm disabled"> Add</button>
+                <?php endif; ?>
               </div>
           </form>
       </div>

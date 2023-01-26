@@ -235,12 +235,7 @@
                             else{ 
                               $("#update_lead_form #appointment_button").removeClass('disabled');
                               $("#update_lead_form #appointment_button").attr('data-target', '#addapointment_Modal');
-
-        
-                          }
-                          
-                              //  $('#updateleadmodal').modal('hide');
-                                //loader
+                            }
                                 $("#loader_1").css("display", "none");
                                 $("#loader_2").css("display", "none");
                       },3000);

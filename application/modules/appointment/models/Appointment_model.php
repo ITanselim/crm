@@ -136,7 +136,7 @@
         // ->where('appt_start_time BETWEEN "'. date('H:i:s', strtotime($time)). '" and "'. date('H:i:s', strtotime($time)).'"');
         $query=$this->db->get();
 
-        if ($query->num_rows() == 1){
+        if ($query->num_rows() > 0){
             return $query->row_array();
 
         }
@@ -156,12 +156,33 @@
         return $query->result_array();
         $this->db->close();
       }
+      public function select_appointment_remark_status($appt_id){ 
+        $this->db->select('*')->from('tblappointment_remark as remark')
+        ->join('tbluser as user', 'user.user_id = remark.user_id')
+        ->where('remark.appt_id', $appt_id);
+        $query=$this->db->get();
+        if ($query->num_rows() > 0){
+            return $query->row_array();
+        }
+        else{
+            return false;
+
+        }
+        $this->db->close();
+      }
+      
       
       public function select_appointment_status($appt_id){ 
         $this->db->select('tblappointment.appt_status')->from('tblappointment')
         ->where('tblappointment.appt_id', $appt_id);
         $query=$this->db->get();
-        return $query->row_array();
+        if ($query->num_rows() > 0){
+          return $query->row_array();
+      }
+        else{
+           return false;
+
+      }
         $this->db->close();
       }
 
@@ -175,396 +196,17 @@
         $this->db->update("tblappointment"); 
 
      }
+    
+     public function update_appointment_remark($appt_id) { 
 
+      $this->db->set('status_remark', 1); 
 
+      $this->db->where("appt_id", $appt_id); 
 
+      $this->db->update("tblappointment_remark"); 
 
-      public function view_teamevaluation_agent($agent_id){
+   }
 
-         $this->db->select('evaluation.*, user.*')->from('tblevaluation as evaluation')
-
-        ->join('tbluser as user', 'evaluation.to_user_id = user.user_id', 'inner')
-        ->where(array('to_user_id' => $agent_id, 'form_type' => 'Employee Evaluation', 'total_score !=' => '0'));
-
-        $query=$this->db->get();
-
-
-
-        if ($query->num_rows() > 0){
-
-          return $query->result_array();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-
-      public function view_teamevaluation_detail($evaluation_id){
-
-        $this->db->select('*')->from('tblevaluation')
-      
-        ->where('evaluation_id',$evaluation_id);
-
-        $query=$this->db->get();
-
-        if ($query->num_rows() > 0){
-
-          return $query->result_array();
-
-        }
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-
-      public function select_evaluation_id($evaluation_id){
-
-        $this->db->select('*')->from('tblevaluation')
-      
-        ->where('evaluation_id',$evaluation_id);
-
-        $query=$this->db->get();
-
-        if ($query->num_rows() > 0){
-
-          return $query->row_array();
-
-        }
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-
-      public function view_forms_coaching(){
-
-        $this->db->select('*')->from('tblcoaching ')
-      
-        ->order_by('date_session','DESC');
-
-        $query=$this->db->get();
-
-        if ($query->num_rows() > 0){
-
-          return $query->result_array();
-
-        }
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-
-       public function insert_userlog($data) {
-
-         if ($this->db->insert("tblcoachinglog", $data)) {
-
-            return true;
-
-         }
-
-      }
-
-       public function insert_evaluation_comment($data) {
-
-         if ($this->db->insert("tblevaluationcomment", $data)) {
-
-            return true;
-
-         }
-
-      }
-
-      public function insert_assign_user($data) {
-
-         if ($this->db->insert("tblassignuser", $data)) {
-
-            return true;
-
-         }
-
-      }
-
-      public function login($emailaddress, $password, $usertype){
-
-        $key = $this->config->item('encryption_key');
-
-        $salt1 = hash('sha512', $key . $password);
-
-        $salt2 = hash('sha512', $password . $key);
-
-        $hashed_password = hash('sha512', $salt1 . $password . $salt2);
-
-       
-
-        $this->db->select('*')->from('tblcoaching')->where(array('emailaddress' => $emailaddress, 'password' => $hashed_password, 'usertype' => $usertype));
-
-        
-
-        $query=$this->db->get();
-
-
-
-        if ($query->num_rows() == 1){
-
-            return $query->result();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-
-
-        $this->db->close();
-
-      }
-
-
-
-        public function loginAs($emailaddress, $usertype){
-
-
-       
-
-        $this->db->select('*')->from('tblcoaching')->where(array('emailaddress' => $emailaddress, 'usertype' => $usertype));
-
-        
-
-        $query=$this->db->get();
-
-
-
-        if ($query->num_rows() == 1){
-
-            return $query->result();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-
-
-        $this->db->close();
-
-      }
-
-      public function view_evaluation_comments($evaluation_id, $comment_type){
-
-        $this->db->select('*')
-        ->from('tblevaluationcomment')
-        ->where(array('evaluation_id' => $evaluation_id, 'comment_type' => $comment_type));
-
-        $query=$this->db->get();
-
-
-
-        if ($query->num_rows() > 0){
-
-          return $query->result_array();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-
-      public function view_evaluation_class_comments($class_id, $comment_type){
-
-        $this->db->select('*')
-        ->from('tblevaluationcomment')
-        ->where(array('comment_type' => $comment_type, "class_id" => $class_id))
-        //->group_by('class_id')
-        ->order_by('evaluation_id','desc');;
-
-        $query=$this->db->get();
-
-
-
-        if ($query->num_rows() > 0){
-
-          return $query->result_array();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-
-      public function view_accountype(){
-
-        $this->db->select('DISTINCT(usertype)')->from('tblcoaching')->where('status', 'Active');
-
-        $query=$this->db->get();
-
-
-
-        if ($query->num_rows() == 1){
-
-        	return $query->result_array();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-
-      public function select_user($usertype){
-
-        $this->db->select('*')->from('tblcoaching')->where(array('usertype ' => $usertype, 'status' => 'Active'));
-
-        $query=$this->db->get();
-
-
-
-        if ($query->num_rows() == 1){
-
-        	return $query->result_array();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-      public function select_user_coverdesigner(){
-
-        $this->db->select('*')->from('tblcoaching')->where(array('usertype ' => 'Cover Designer', 'status_user' => 'Active'));
-
-        $query=$this->db->get();
-
-        if ($query->num_rows() > 0){
-
-          return $query->result_array();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-       public function select_user_publisher(){
-
-        $this->db->select('*')->from('tblcoaching')->where(array('usertype ' => "Publishing/Marketing", 'status_user' => 'Active'));
-
-        $query=$this->db->get();
-
-        if ($query->num_rows() > 0){
-
-          return $query->result_array();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-       public function select_user_all(){
-
-        $this->db->select('*')->from('tblcoaching')
-        ->where('usertype !=', 'Admin')
-        ->where('status_user', 'Active');
-
-        $query=$this->db->get();
-
-        if ($query->num_rows() > 0){
-
-          return $query->result_array();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
-      public function select_user_admin(){
-
-        $this->db->select('*')->from('tblcoaching')
-        ->where('usertype', 'Admin')
-        ->where('status_user', 'Active');
-
-        $query=$this->db->get();
-
-        if ($query->num_rows() > 0){
-
-          return $query->result_array();
-
-        }
-
-        else{
-
-            return false;
-
-        }
-
-        $this->db->close();
-
-      }
       public function select_user_specify_notify(){
 
         $this->db->select('*')->from('tblcoaching')

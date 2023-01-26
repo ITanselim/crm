@@ -69,6 +69,7 @@ class Appointment extends MY_Controller {
        $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
        $records['appointments']= $this->Appointment_Model->view_appointment_detail($this->uri->segment(3));
        $records['comments'] = $this->Appointment_Model->select_appointment_remarks($this->uri->segment(3));
+       $records['remark_status'] = $this->Appointment_Model->select_appointment_status($this->uri->segment(3));
        $records['status_appointment']= $this->Appointment_Model->select_appointment_status($this->uri->segment(3));
 
  
@@ -82,6 +83,7 @@ class Appointment extends MY_Controller {
         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
         $records['appointments']= $this->Appointment_Model->view_appointment_detail($this->uri->segment(3));
         $records['comments'] = $this->Appointment_Model->select_appointment_remarks($this->uri->segment(3));
+
         $records['status_appointment']= $this->Appointment_Model->select_appointment_status($this->uri->segment(3));
  
   
@@ -111,9 +113,9 @@ class Appointment extends MY_Controller {
    if ($this->form_validation->run() == FALSE){
       echo json_encode(array("response" => "error", "message" => validation_errors()));
    } 
-  else if($get_time == true){
-     echo json_encode(array("response" => "error", "message" => "This time is not available to you. Please choose another appointment time."));
-   }
+  // else if($get_time == true){
+  //    echo json_encode(array("response" => "error", "message" => "This time is not available to you. Please choose another appointment time."));
+  //  }
  else{
      $data= array(
          'appt_closer_id' => $this->input->post('manager_id'),
@@ -128,23 +130,7 @@ class Appointment extends MY_Controller {
 
            $this->Appointment_Model->insert($data);
            echo json_encode(array("response" =>   "success", "message" => "Successfully Plotted Appointment Schedule"));
-
-          // $receive_user_notify_form = $this->User_Model->select_user_notify_coaching_form($this->session->userdata['userlogin']['user_id']);
-
-          // foreach ($receive_user_notify_form as $value) {
-          //                 $data_notification= array(
-          //                      'from_user' => $user_charge,
-          //                      'to_user' => 'All',
-          //                      'message' => 'Added Coaching Form',
-          //                      'unread' => 1,
-          //                      'date_notify' => date('Y-m-d H:i:s'),
-          //                      'to_user_id' => $value['user_id'],
-          //                      'from_usertype' => $this->session->userdata['userlogin']['usertype'],
-
-          //                    );
-          //          $this->Notification_Model->insert($data_notification);
-          //      }
-     }
+      }
   }
 
 
@@ -211,14 +197,13 @@ class Appointment extends MY_Controller {
 
   $usertype = $this->session->userdata['userlogin']['usertype'];
 
-   $get_time = $this->Appointment_Model->select_schedule_appointment($this->input->post('manager_id'), date('Y-m-d', strtotime($this->input->post('date_appointment'))), date("H:i:s", strtotime($this->input->post('starttime'))));
+   $get_time = $this->Appointment_Model->select_schedule_exist_appointment($this->input->post('manager_id'), date('Y-m-d', strtotime($this->input->post('date_appointment'))));
 
    if($get_time == true){
-    echo json_encode(array("response" => "error", "message" => "This time is not available to you. Please choose another appointment time."));
+    echo json_encode(array("response" => "success", "get_time" => $get_time['appt_start_time']));
    }
   else{
-    echo json_encode(array("response" => "success", "message" =>  date("H:i:s", strtotime($this->input->post('starttime')))));
-
+     echo json_encode(array("response" => "error", "get_time" =>  '00:00:00'));
   }
 
 }
@@ -244,7 +229,7 @@ class Appointment extends MY_Controller {
                       );
 
      $this->Appointment_Model->update_appointmet_status($data, $this->input->post('appt_id'));
-
+  
 
       foreach ($receive_user_notify as $value) {
 
