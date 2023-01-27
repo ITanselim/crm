@@ -192,6 +192,7 @@ $(document).on('click','#attendancedataTable .view_attendance_detail',function(e
                         $("#update_attendance_form  .status_log option[value='"+data[i].status_log+"']").remove(); 
                         $("#update_attendance_form  .status_log option[value='Lunch End']").remove(); 
                         $("#update_attendance_form  .status_log option[value='Break Out']").remove(); 
+                        $("#update_attendance_form  .status_log option[value='Break In']").remove(); 
 
                     }
                     else if (data[i].status_log == "Break In"){

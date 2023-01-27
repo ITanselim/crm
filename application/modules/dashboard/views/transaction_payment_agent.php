@@ -1342,10 +1342,11 @@ $(function () {
         startDate: '01/01/2020',
     }).datepicker("setDate", dateToday);
 
-    $('#id_4').datepicker({
+    $('#id_4').datepicker({           
+        minDate: dateToday,
         clearBtn: true,
         format: "yyyy/mm/dd",
-        startDate: '01/01/2021',
+        startDate: new Date()
     }).datepicker("setDate", dateToday);
     
 })
