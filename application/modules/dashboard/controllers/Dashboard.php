@@ -1236,6 +1236,9 @@ public function get_phone(){
         $user_charge2 = $this->session->userdata['userlogin']['sub_name'];
         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
+        $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
+        $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
+        $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
         $records['get_id'] = $id;  
       if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
 
@@ -1649,7 +1652,7 @@ public function get_phone(){
           // $records['leads']= $this->Lead_Model->select_lead_manager($this->session->userdata['userlogin']['user_id']);
           $records['leads']= $this->Lead_Model->select_lead_manager_all_lead();
 
-   date_default_timezone_set('America/New_York');
+         date_default_timezone_set('America/New_York');
           // echo date('Y-m-d');
 
           require APPPATH.'vendor/autoload.php';

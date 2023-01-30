@@ -152,45 +152,27 @@
           </div>
 
         </div>
-
-
-
-        <!-- top navigation -->
-
-        <div class="top_nav">
-
+        
+          <!-- top navigation -->
+          <div class="top_nav">
           <div class="nav_menu">
-
               <div class="nav toggle">
-
                 <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-
               </div>
-
               <nav class="nav navbar-nav">
-
               <ul class=" navbar-right">
-
                 <li class="nav-item dropdown open" style="padding-left: 15px;">
-
                   <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-
                     <?=ucfirst($this->session->userdata['userlogin']['firstname']) .' '. ucfirst($this->session->userdata['userlogin']['lastname']);?>
-
                   </a>
-
                   <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-
                     <a class="dropdown-item view_accountprofile" aria-hidden="true" data-toggle="modal" data-target="#editUserModal" data-backdrop="static" data-keyboard="false" data-userid=<?=ucfirst($this->session->userdata['userlogin']['user_id']);?>> Profile</a>
-
                     <a class="dropdown-item view_account_password" aria-hidden="true" data-toggle="modal" data-target="#editUserPasswordModal" data-backdrop="static" data-keyboard="false" data-userid=<?=ucfirst($this->session->userdata['userlogin']['user_id']);?>> Change Password</a>
-
                     <a class="dropdown-item"  href="<?=site_url('account/logout');?>"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
-
                   </div>
-
                 </li>
 
+                
                 <li role="presentation" class="nav-item dropdown open">
 
                   <a href="javascript:;" class="dropdown-toggle info-number number_of_notification" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
@@ -221,7 +203,7 @@
                    <?php if($notifications > 0):?>
                            <li class="nav-item">
                               <div class="text-center">
-                                <a href="<?=site_url('dashboard/view_notification');?>" class="dropdown-item">
+                                <a  href="<?=site_url('dashboard/view_notification');?>" class="dropdown-item">
                                   <strong>See All Alerts</strong>
                                   <i class="fa fa-angle-right"></i>
                                 </a>
@@ -233,13 +215,43 @@
                   </ul>
 
                 </li>
+                <li role="presentation" class="nav-item dropdown open"  style="margin-right: 20px;">
+                 <a href="javascript::void(0);" class="dropdown-toggle info-number number_of_appointmentnotification" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
 
+                 <i class="fa fa-bell"></i>
+                 
+                     <span class="badge rounded-pill badge-notification bg-danger count_appointmentnotification"><?=$count_apointmentnotifications == 0 ? '': $count_apointmentnotifications;?></span>
+                 </a>
+                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <?php if($notification_appointment > 0):?>
+                              <?php foreach($notification_appointment as $notification):?>
+                                    <li class="nav-item">
+                                      <a class="dropdown-item" href="<?php echo base_url('appointment/'.$notification['id'].'')?>">
+                                        <span>
+                                          <span><?=$notification['a_fname'] .' '. $notification['a_lname'];?></span>
+                                          <span class="time"><?=modules::run("dashboard/time_ago",$notification['date_notify']);?></span>
+                                        </span>
+                                        <span class="message" style="display:block;">
+                                          <?=$notification['message'];?>
+                                        </span>
+                                      </a>
+                                  </li>
+                            <?php endforeach;?>
+                          <?php endif;?>
+
+                          <?php if($notifications > 0):?>
+                            <li class="nav-item">
+                                <div class="text-center">
+                                  <a  href="<?=site_url('dashboard/view_notification');?>" class="dropdown-item">
+                                    <strong>See All Alerts</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                  </a>
+                                </div>
+                            </li>
+                          <?php endif;?>
+                       </ul>
+                   </li>
               </ul>
-
             </nav>
-
           </div>
-
         </div>
-
-        <!-- /top navigation -->

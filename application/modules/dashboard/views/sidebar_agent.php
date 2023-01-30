@@ -277,7 +277,41 @@
                   </ul>
 
                 </li>
+                <li role="presentation" class="nav-item dropdown open"  style="margin-right: 20px;">
+                 <a href="javascript::void(0);" class="dropdown-toggle info-number number_of_notification" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
 
+                 <i class="fa fa-bell"></i>
+                     <span class="badge rounded-pill badge-notification bg-danger">1</span>
+                 </a>
+                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <?php if($notifications > 0):?>
+                              <?php foreach($notifications as $notification):?>
+                                    <li class="nav-item">
+                                      <a class="dropdown-item">
+                                        <span>
+                                          <span><?=$notification['from_user'];?></span>
+                                          <span class="time"><?=modules::run("dashboard/time_ago",$notification['date_notify']);?></span>
+                                        </span>
+                                        <span class="message" style="display:block;">
+                                          <?=$notification['message'];?>
+                                        </span>
+                                      </a>
+                                  </li>
+                            <?php endforeach;?>
+                          <?php endif;?>
+
+                          <?php if($notifications > 0):?>
+                            <li class="nav-item">
+                                <div class="text-center">
+                                  <a  href="<?=site_url('dashboard/view_notification');?>" class="dropdown-item">
+                                    <strong>See All Alerts</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                  </a>
+                                </div>
+                            </li>
+                          <?php endif;?>
+                       </ul>
+                   </li>
               </ul>
             </nav>
           </div>

@@ -666,9 +666,9 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
      <script src="<?php echo base_url('js/validateevaluation.js');?>"></script>
 
  <script>  
- 
- $('#leaddataTable').DataTable();
- $('#appointmentdataTable').DataTable();
+var lead_id = "<?=$status_appointment !=false ? "LEAD".$status_appointment['appt_project_id'] : ""; ?>";
+
+$('#appointmentdataTable').DataTable({"oSearch":  {"sSearch":  lead_id}});
 </script>
 
   </body>
