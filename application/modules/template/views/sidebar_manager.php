@@ -222,13 +222,19 @@
                  
                      <span class="badge rounded-pill badge-notification bg-danger count_appointmentnotification"><?=$count_apointmentnotifications == 0 ? '': $count_apointmentnotifications;?></span>
                  </a>
-                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                 <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdownMenuLink">
                       <?php if($notification_appointment > 0):?>
                               <?php foreach($notification_appointment as $notification):?>
                                     <li class="nav-item">
-                                      <a class="dropdown-item" href="<?php echo base_url('appointment/'.$notification['id'].'')?>">
+                                    <?php if($notification['link'] == "direct"): ?>
+                                      <span>
+
+                                         <a class="dropdown-item" href="<?php echo base_url('appointment/index/'.$notification['id'].'')?>">
+                                      <?php else: ?>
+                                        <a class="dropdown-item" href="<?php echo $notification['link'];?>">
+                                      <?php endif; ?>
                                         <span>
-                                          <span><?=$notification['a_fname'] .' '. $notification['a_lname'];?></span>
+                                          <span><?=$notification['from_user'];?></span>
                                           <span class="time"><?=modules::run("dashboard/time_ago",$notification['date_notify']);?></span>
                                         </span>
                                         <span class="message" style="display:block;">

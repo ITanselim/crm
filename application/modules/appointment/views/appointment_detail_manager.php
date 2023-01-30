@@ -259,73 +259,92 @@
                   </div>
                 </li>
                 <li role="presentation" class="nav-item dropdown open">
-                  <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
+
+                  <a href="javascript:;" class="dropdown-toggle info-number number_of_notification" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
+
                     <i class="fa fa-envelope-o"></i>
-                    <span class="badge bg-green">6</span>
+
+                    <span class="badge bg-green count_notification"><?=$count_notifications == 0 ? '': $count_notifications;?></span>
+
                   </a>
+
                   <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
-                    <li class="nav-item">
-                      <a class="dropdown-item">
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="dropdown-item">
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="dropdown-item">
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="dropdown-item">
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <div class="text-center">
-                        <a class="dropdown-item">
-                          <strong>See All Alerts</strong>
-                          <i class="fa fa-angle-right"></i>
-                        </a>
-                      </div>
-                    </li>
+                    <?php if($notifications > 0):?>
+                        <?php foreach($notifications as $notification):?>
+                              <li class="nav-item">
+                                <a class="dropdown-item">
+                                  <span>
+                                    <span><?=$notification['from_user'];?></span>
+                                    <span class="time"><?=modules::run("dashboard/time_ago",$notification['date_notify']);?></span>
+                                  </span>
+                                  <span class="message">
+                                    <?=$notification['message'];?>
+                                  </span>
+                                </a>
+                            </li>
+                      <?php endforeach;?>
+                    <?php endif;?>
+
+                  <?php if($notifications > 0):?>
+                          <li class="nav-item">
+                              <div class="text-center">
+                                <a  href="<?=site_url('dashboard/view_notification');?>" class="dropdown-item">
+                                  <strong>See All Alerts</strong>
+                                  <i class="fa fa-angle-right"></i>
+                                </a>
+                              </div>
+                          </li>
+                    <?php endif;?>
+
+
                   </ul>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
+
+                  </li>
+                  <li role="presentation" class="nav-item dropdown open"  style="margin-right: 20px;">
+                  <a href="javascript::void(0);" class="dropdown-toggle info-number number_of_appointmentnotification" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
+
+                  <i class="fa fa-bell"></i>
+
+                    <span class="badge rounded-pill badge-notification bg-danger count_appointmentnotification"><?=$count_apointmentnotifications == 0 ? '': $count_apointmentnotifications;?></span>
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <?php if($notification_appointment > 0):?>
+                              <?php foreach($notification_appointment as $notification):?>
+                                    <li class="nav-item">
+                                  ``  <?php if($notification['link'] == "direct"): ?>
+                                         <a class="dropdown-item" href="<?php echo base_url('appointment/index/'.$notification['id'].'')?>">
+                                      <?php else: ?>
+                                        <a class="dropdown-item" href="<?php echo $notification['link'];?>">
+                                      <?php endif; ?>
+                                        <span>
+                                        <span><?=$notification['from_user'];?></span>``
+                                          <span class="time"><?=modules::run("dashboard/time_ago",$notification['date_notify']);?></span>
+                                        </span>
+                                        <span class="message" style="display:block;">
+                                          <?=$notification['message'];?>
+                                        </span>
+                                      </a>
+                                  </li>
+                            <?php endforeach;?>
+                          <?php endif;?>
+
+                          <?php if($notifications > 0):?>
+                            <li class="nav-item">
+                                <div class="text-center">
+                                  <a  href="<?=site_url('dashboard/view_notification');?>" class="dropdown-item">
+                                    <strong>See All Alerts</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                  </a>
+                                </div>
+                            </li>
+                          <?php endif;?>
+                      </ul>
+                  </li>
+                  </ul>
+                  </nav>
+                  </div>
+                  </div>  
+
         <!-- /top navigation -->
 
         <!-- page content -->
@@ -389,9 +408,9 @@
           <div class="col-md-3">
           <table class="table no-margin project-overview-table">
           <tbody>
-       <?php $project_id =  0; $appt_id = 0; $closer_id = 0;?>
+          <?php $project_id =  0; $appt_id = 0; $closer_id = 0; $agent_id = 0;?>
         <?php foreach ($appointments as $row):?>
-           <?php $project_id =  $row['project_id']; $appt_id = $row['appt_id']; $closer_id = $row['appt_closer_id']?>
+         <?php $project_id =  $row['project_id']; $appt_id = $row['appt_id']; $closer_id = $row['appt_closer_id']; $agent_id = $row['appt_agent_id'];?>
           <tr class="project-overview-customer">
           <td class="bold">Author Name</td>
           <td><?=$row['author_name'];?></td>
@@ -433,7 +452,10 @@
           </tr>
           <tr>
           <td class="bold">Time Schedule</td>
+          <input class="form-control" type="hidden"  name="manager_id" value="<?=$closer_id;?>" />
           <input class="form-control" type="hidden" name="appt_id" value="<?=$appt_id;?>"/>
+          <input class="form-control" type="hidden" name="agent_id" value="<?=$agent_id;?>"/>
+
           <td><?=$row['appt_start_time'] .' - ' .$row['appt_end_time'] ;?></td>
           </tr>
           <tr>
@@ -484,8 +506,10 @@
           </ul>
           <form class="form-inline" id="comment_form">
               <div class="form-group">
-                <input class="form-control" type="hidden" name="manager_id" value="<?=$closer_id;?>" />
-                <input class="form-control" type="hidden" name="appt_id" value="<?=$appt_id;?>"/>
+              <input class="form-control" type="hidden"  name="manager_id" value="<?=$closer_id;?>" />
+              <input class="form-control" type="hidden" name="appt_id" value="<?=$appt_id;?>"/>
+              <input class="form-control" type="hidden" name="agent_id" value="<?=$agent_id;?>"/>
+
                 <?php if($status_appointment['appt_status'] != "Closed"):?>
                     <input class="form-control" type="text" placeholder="Your comments" name="remark" id="remark" required/>
                 <?php else: ?>
@@ -974,6 +998,7 @@
      <script src="<?php echo base_url('js/validateuser.js');?>"></script>
      <script src="<?php echo base_url('js/validateappointment.js');?>"></script>
      <script src="<?php echo base_url('js/dropzone.js');?>"></script>
+     <script src="<?php echo base_url('js/notification.js');?>"></script>
 
  <script>  
 

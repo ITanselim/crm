@@ -278,16 +278,21 @@
 
                 </li>
                 <li role="presentation" class="nav-item dropdown open"  style="margin-right: 20px;">
-                 <a href="javascript::void(0);" class="dropdown-toggle info-number number_of_notification" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
+                 <a href="javascript::void(0);" class="dropdown-toggle info-number number_of_appointmentnotification" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
 
                  <i class="fa fa-bell"></i>
-                     <span class="badge rounded-pill badge-notification bg-danger">1</span>
+                 
+                     <span class="badge rounded-pill badge-notification bg-danger count_appointmentnotification"><?=$count_apointmentnotifications == 0 ? '': $count_apointmentnotifications;?></span>
                  </a>
-                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <?php if($notifications > 0):?>
-                              <?php foreach($notifications as $notification):?>
+                 <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdownMenuLink">
+                      <?php if($notification_appointment > 0):?>
+                              <?php foreach($notification_appointment as $notification):?>
                                     <li class="nav-item">
-                                      <a class="dropdown-item">
+                                      <?php if($notification['link'] == "direct"): ?>
+                                         <a class="dropdown-item" href="<?php echo base_url('appointment/index'.$notification['id'].'')?>">
+                                      <?php else: ?>
+                                        <a class="dropdown-item" href="<?php echo $notification['link'];?>">
+                                      <?php endif; ?>
                                         <span>
                                           <span><?=$notification['from_user'];?></span>
                                           <span class="time"><?=modules::run("dashboard/time_ago",$notification['date_notify']);?></span>

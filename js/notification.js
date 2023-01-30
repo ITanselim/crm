@@ -21,3 +21,5 @@ if ($('.dropdown-menu  .nav-item ').length > 10){
 else if ($('.dropdown-menu  .nav-item ').length == 0){
     $('.dropdown-menu  .nav-item ').html("No notification Found");
 }
+
+

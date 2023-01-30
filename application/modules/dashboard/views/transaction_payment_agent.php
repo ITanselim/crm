@@ -1226,7 +1226,7 @@
         },
 
         //Set column definition initialisation properties.
-        "sPaginationType": "listbox",
+         "sPaginationType": "listbox",
           "order": [], //Initial no order.
             "lengthChange": false,
           columns: [

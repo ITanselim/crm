@@ -186,27 +186,18 @@
       public function select_count_notification($user_id){ 
 
         $this->db->select('*')->from('tblnotification_appointment');
-        if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
-          $this->db->where('tblnotification_appointment.from_user_id', $user_id);
-        }
-        else if($this->session->userdata['userlogin']['usertype'] == "Manager"){
-          $this->db->where('tblnotification_appointment.to_user_id', $user_id);
-       }
-          $this->db->where('unread', 1);
+        $this->db->where('to_user_id', $user_id);
+        $this->db->where('unread', 1);
+
+       
           $query=$this->db->get();
           return $query->num_rows();
           $this->db->close();
       }
 
       public function update_notification($user_id) { 
-
-        $this->db->set("unread", 0); 
-        if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
-          $this->db->where('from_user_id', $user_id);
-        }
-        else if($this->session->userdata['userlogin']['usertype'] == "Manager"){
-          $this->db->where('to_user_id', $user_id);
-       }
+        $this->db->set('unread', 0); 
+        $this->db->where('to_user_id', $user_id);
         $this->db->update("tblnotification_appointment"); 
 
      } 
@@ -234,17 +225,11 @@
 
    public function view_notification_user($user_id){
 
-    $this->db->select('notification_appointment.*, user.firstname as a_fname, user.lastname as 
-    a_lname, manager.firstname as m_name, manager.lastname as  m_lname')->from('tblnotification_appointment as notification_appointment')
-    ->join('tbluser as user', 'notification_appointment.from_user_id = user.user_id')
-    ->join('tbluser as manager', 'notification_appointment.to_user_id = manager.user_id');
+    $this->db->select('notification_appointment.*, user.*')->from('tblnotification_appointment as notification_appointment')
+    ->join('tbluser as user', 'notification_appointment.to_user_id = user.user_id');
 
-    if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
-        $this->db->where('notification_appointment.from_user_id', $user_id);
-    }
-   else if($this->session->userdata['userlogin']['usertype'] == "Manager"){
-       $this->db->where('notification_appointment.to_user_id', $user_id);
-    }
+     $this->db->where('user.user_id', $user_id);
+
        $this->db->order_by('notification_appointment.date_notify','DESC');
 
     $query=$this->db->get();

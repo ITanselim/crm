@@ -16,13 +16,17 @@ class Appointment extends MY_Controller {
   public function index($id=""){
 
       modules::run("account/is_logged_in");
+      $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
+      $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
+
+      $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
      if($this->session->userdata['userlogin']['usertype'] == "Manager"){
 
       $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
       $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['appointments']= $this->Appointment_Model->view_list_appointment($this->session->userdata['userlogin']['user_id']);
-      $records['status_appointment']= $this->Appointment_Model->select_appointment_status($this->uri->segment(2));
+      $records['status_appointment']= $this->Appointment_Model->select_appointment_status($this->uri->segment(3));
 
          $this->load->view('appointment_list_manager', $records);
      
@@ -34,6 +38,7 @@ class Appointment extends MY_Controller {
       $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['appointments']= $this->Appointment_Model->view_list_appointment($this->session->userdata['userlogin']['user_id']);
+      $records['status_appointment']= $this->Appointment_Model->select_appointment_status($this->uri->segment(3));
 
       $this->load->view('appointment_list_agent', $records);
   
@@ -43,7 +48,8 @@ class Appointment extends MY_Controller {
 
     public function appointment_detail($id=""){
 
-
+      $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
+      $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
       if($this->session->userdata['userlogin']['usertype'] == "Agent"){
    
        $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
@@ -112,11 +118,11 @@ class Appointment extends MY_Controller {
            echo json_encode(array("response" =>   "success", "message" => "Successfully Plotted Appointment Schedule"));
 
                   $data_notification= array(
-                               'from_user_id' => $this->session->userdata['userlogin']['user_id'],
                                'to_user_id' => $this->input->post('manager_id'),
+                               'from_user' => $user_charge,
                                'id' => $this->db->insert_id(),
                                'message' => 'Added Schedule Appointment',
-                               'link' =>  dirname(base_url(uri_string())),
+                               'link' =>  'direct',
                                'unread' => 1,
                                'date_notify' => date('Y-m-d H:i:s'),
                              );
@@ -158,25 +164,19 @@ class Appointment extends MY_Controller {
 
        $this->Appointment_Model->insert_appointment_remark($data);
 
+            $data_notification= array(
+              'to_user_id' => $this->session->userdata['userlogin']['usertype'] =="Agent" ? $this->input->post('manager_id') : $this->input->post('agent_id'),
+              'from_user' => $user_charge,
+              'id' => $this->db->insert_id(),
+              'message' => 'Added Remark On Appointment',
+              'link' =>   $this->agent->referrer(),
+              'unread' => 1,
+              'date_notify' => date('Y-m-d H:i:s'),
+            );
+            
+            $this->Appointment_Model->insertnotification_points($data_notification);
 
-        foreach ($receive_user_notify as $value) {
-
-                 $data_notification = array(
-
-                      'from_user' => $user_charge,
-                      'to_user' => 'All',
-                      'message' => "Added Remark on Appointment's",
-                      'unread' => 1,
-                      'date_notify' => date('Y-m-d H:i:s'),
-                      'link' =>  dirname(base_url(uri_string())),
-                      'to_user_id' => $value['user_id'],
-                      'from_usertype' => $this->session->userdata['userlogin']['usertype'],
-
-                    );
-              $this->Notification_Model->insert($data_notification);
-      }
-   
-      echo json_encode(array("response" =>   "success", "message" => "Successfully Added Remark", "redirect" => base_url('dashboard')));
+            echo json_encode(array("response" =>   "success", "message" => "Successfully Added Remark", "redirect" => base_url('dashboard')));
 
       }
  }
@@ -235,23 +235,20 @@ class Appointment extends MY_Controller {
 
      $this->Appointment_Model->update_appointmet_status($data, $this->input->post('appt_id'));
 
+        $data_notification= array(
+          'to_user_id' => $this->session->userdata['userlogin']['usertype'] =="Agent" ? $this->input->post('manager_id') : $this->input->post('agent_id'),
+          'from_user' => $user_charge,
+          'id' => $this->db->insert_id(),
+          'message' => 'Updated Status On Appointment',
+          'link' =>   $this->agent->referrer(),
+          'unread' => 1,
+          'date_notify' => date('Y-m-d H:i:s'),
+        );
+        
+        $this->Appointment_Model->insertnotification_points($data_notification);
 
-      foreach ($receive_user_notify as $value) {
-
-               $data_notification = array(
-
-                    'from_user' => $user_charge,
-                    'to_user' => 'All',
-                    'message' => "Updated Appointment Status",
-                    'unread' => 1,
-                    'date_notify' => date('Y-m-d H:i:s'),
-                    'link' =>  dirname(base_url(uri_string())),
-                    'to_user_id' => $value['user_id'],
-                    'from_usertype' => $this->session->userdata['userlogin']['usertype'],
-
-                  );
-            $this->Notification_Model->insert($data_notification);
-    }
+   
+    
  
     echo json_encode(array("response" =>   "success", "message" => "Successfully Updated Appointment Status", "redirect" => base_url('dashboard')));
 
