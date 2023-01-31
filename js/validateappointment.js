@@ -98,10 +98,10 @@ $('#addappointmentform .closer_name, #addappointmentform .date_appointment').on(
         success: function(res) {
         if (res.response=="success"){
           $('#addappointmentform  .starttime').each(function() {
-            var val = res.get_time;
+            var val = res.start_time;
             $('#addappointmentform .starttime').find('option').filter(function() {
                 return this.value === val;
-            }).prop('disabled', true);
+            }).prop('disabled', true).css("color", "#5b5555").css("background", "#661a1a");
         });
         }
         // else{
