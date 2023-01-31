@@ -1230,14 +1230,13 @@ public function get_phone(){
      public function index($id=''){
        
              $get_extension_number = 0;
-
+    $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
+      $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
         $id = $this->uri->segment(3);
         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
         $user_charge2 = $this->session->userdata['userlogin']['sub_name'];
         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
-        $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
-        $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
         $records['get_id'] = $id;  
       if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
 
@@ -1387,7 +1386,7 @@ public function get_phone(){
 
                 $prevdate = date('Y-m-d', strtotime($record->startTime));
 
-                  if($record->from->name == $user_charge2){
+                  if($record->from->name == $user_charge){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
@@ -1411,7 +1410,7 @@ public function get_phone(){
               if (!empty($recordt->from->name)) {         
 
                 $prevdate = date('Y-m-d', strtotime($recordt->startTime));
-                  if($recordt->from->name == $user_charge2){
+                  if($recordt->from->name == $user_charge){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
@@ -1579,7 +1578,7 @@ public function get_phone(){
           foreach ($resp->json()->records as $record) {
 
             if (!empty($record->from->name)) {
-                if($record->from->name == $agent_name2){
+                if($record->from->name == $agent_name){
                      $count_call_log += count((array)$record->from->name);
                  }
 
@@ -1651,7 +1650,7 @@ public function get_phone(){
           // $records['leads']= $this->Lead_Model->select_lead_manager($this->session->userdata['userlogin']['user_id']);
           $records['leads']= $this->Lead_Model->select_lead_manager_all_lead();
 
-         date_default_timezone_set('America/New_York');
+   date_default_timezone_set('America/New_York');
           // echo date('Y-m-d');
 
           require APPPATH.'vendor/autoload.php';
@@ -1698,7 +1697,7 @@ public function get_phone(){
           foreach ($resp->json()->records as $record) {
 
             if (!empty($record->from->name)) {
-                if($record->from->name == $agent_name2){
+                if($record->from->name == $agent_name){
                      $count_call_log += count((array)$record->from->name);
                  }
 
@@ -1804,7 +1803,7 @@ public function get_phone(){
           foreach ($resp->json()->records as $record) {
 
             if (!empty($record->from->name)) {
-                if($record->from->name == $agent_name2){
+                if($record->from->name == $agent_name){
                      $count_call_log += count($record->from->name);
                  }
 
@@ -1979,7 +1978,7 @@ function searchForId($name, $array) {
           foreach ($resp->json()->records as $record) {
 
             if (!empty($record->from->name)) {
-                if($record->from->name == $agent_name2){
+                if($record->from->name == $agent_name){
                      $count_call_log += count($record->from->name);
                  }
 
@@ -2082,7 +2081,7 @@ function searchForId($name, $array) {
           // foreach ($resp->json()->records as $record) {
 
           //   if (!empty($record->from->name)) {
-          //       if($record->from->name == $agent_name2){
+          //       if($record->from->name == $agent_name){
           //            $count_call_log += count((array)$record->from->name);
           //        }
 
@@ -2097,7 +2096,7 @@ function searchForId($name, $array) {
 
                 $prevdate = date('Y-m-d', strtotime($record->startTime));
 
-                  if($record->from->name == $agent_name2){
+                  if($record->from->name == $agent_name){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
@@ -3838,11 +3837,10 @@ function searchForId($name, $array) {
 
 
      public function collection_payment($id=""){
-      $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
+        $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
       $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
         $records['activities']= $this->Remark_Model->user_remarks($this->session->userdata['userlogin']['user_id']);
-        $records['user_managers']= $this->User_Model->select_user_manager();
         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
         $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
@@ -4432,7 +4430,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                         else if($from_name == 'The Greendot Films2'){
+                                         else if($from_name == 'Olivia Turner'){
 
                                               $get_extension_number = 104;
                                                if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
@@ -4567,7 +4565,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                           else if($from_name == 'Kylie Summers'){
+                                           else if($from_name == 'Robert Pierce'){
 
                                               $get_extension_number = 110;
                                                if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
@@ -4752,7 +4750,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                          if($from_name == $user_charge2){
+                                          if($from_name == $user_charge){
 
                                               $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
                                                if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted"){
@@ -5198,7 +5196,6 @@ function searchForId($name, $array) {
          $history_agent=array();
 
          $remark_history=array();
-         $appointment_history=array();
 
       if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
 
@@ -5206,16 +5203,16 @@ function searchForId($name, $array) {
 
            $remark_history = $this->Lead_Model->select_lead_history($this->input->get('project_id'));
 
-           $appointment_history = $this->Appointment_Model->view_appointment_history($this->input->get('project_id'));
-
            $lead_history = $this->Lead_Model->view_lead_status_history($this->input->get('project_id'));
 
            $get_lead_history =  $lead_history == 'false'?  array() : $lead_history;
 
-           $get_remark =  $remark_history == 'false' ? array() : $remark_history;
-           $get_appointment =  $appointment_history == 'false' ? array() : $appointment_history;
 
-           echo json_encode(array_merge($history_agent, $get_remark, $get_appointment));       
+           //                 $this->Payment_Model->sales_lead_byid($this->session->userdata['userlogin']['user_id']);
+
+           $get_remark =  $remark_history == 'false' ? array() : $remark_history;
+
+           echo json_encode(array_merge($history_agent, $get_remark));       
 
       }
 
@@ -13558,10 +13555,7 @@ public function update_submission(){
 
 
 
-
     }
 
 }
 
-
-  
