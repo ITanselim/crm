@@ -117,6 +117,7 @@
                     </ul>
                   </li>
                   <li><a href="<?php echo site_url("dashboard/collection_payment")?>"><i class="fa fa-dollar"></i>Create New Sale</a></li>
+                  <li><a href="<?php echo site_url("appointment")?>"><i class="fa fa-calendar"></i>Appointment</a></li>
                   <li><a><i class="fa fa-fire"></i> Performance Task <span class="fa fa-chevron-down"></span></0>
                      <ul class="nav child_menu">    
                        <li><a href="<?php echo site_url("dashboard/attendance")?>"><i class="fa fa-clock-o"></i> Attendance</a> </li>
@@ -276,7 +277,46 @@
                   </ul>
 
                 </li>
+                <li role="presentation" class="nav-item dropdown open"  style="margin-right: 20px;">
+                 <a href="javascript::void(0);" class="dropdown-toggle info-number number_of_appointmentnotification" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
 
+                 <i class="fa fa-bell"></i>
+                 
+                     <span class="badge rounded-pill badge-notification bg-danger count_appointmentnotification"><?=$count_apointmentnotifications == 0 ? '': $count_apointmentnotifications;?></span>
+                 </a>
+                 <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdownMenuLink">
+                      <?php if($notification_appointment > 0):?>
+                              <?php foreach($notification_appointment as $notification):?>
+                                    <li class="nav-item">
+                                      <?php if($notification['link'] == "direct"): ?>
+                                         <a class="dropdown-item" href="<?php echo base_url('appointment/index'.$notification['id'].'')?>">
+                                      <?php else: ?>
+                                        <a class="dropdown-item" href="<?php echo $notification['link'];?>">
+                                      <?php endif; ?>
+                                        <span>
+                                          <span><?=$notification['from_user'];?></span>
+                                          <span class="time"><?=modules::run("dashboard/time_ago",$notification['date_notify']);?></span>
+                                        </span>
+                                        <span class="message" style="display:block;">
+                                          <?=$notification['message'];?>
+                                        </span>
+                                      </a>
+                                  </li>
+                            <?php endforeach;?>
+                          <?php endif;?>
+
+                          <?php if($notifications > 0):?>
+                            <li class="nav-item">
+                                <div class="text-center">
+                                  <a  href="<?=site_url('dashboard/view_notification');?>" class="dropdown-item">
+                                    <strong>See All Alerts</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                  </a>
+                                </div>
+                            </li>
+                          <?php endif;?>
+                       </ul>
+                   </li>
               </ul>
             </nav>
           </div>

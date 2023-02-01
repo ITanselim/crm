@@ -1230,7 +1230,8 @@ public function get_phone(){
      public function index($id=''){
        
              $get_extension_number = 0;
-
+    $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
+      $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
         $id = $this->uri->segment(3);
         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
         $user_charge2 = $this->session->userdata['userlogin']['sub_name'];
@@ -1385,7 +1386,7 @@ public function get_phone(){
 
                 $prevdate = date('Y-m-d', strtotime($record->startTime));
 
-                  if($record->from->name == $user_charge2){
+                  if($record->from->name == $user_charge){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
@@ -1409,7 +1410,7 @@ public function get_phone(){
               if (!empty($recordt->from->name)) {         
 
                 $prevdate = date('Y-m-d', strtotime($recordt->startTime));
-                  if($recordt->from->name == $user_charge2){
+                  if($recordt->from->name == $user_charge){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
@@ -1577,7 +1578,7 @@ public function get_phone(){
           foreach ($resp->json()->records as $record) {
 
             if (!empty($record->from->name)) {
-                if($record->from->name == $agent_name2){
+                if($record->from->name == $agent_name){
                      $count_call_log += count((array)$record->from->name);
                  }
 
@@ -1696,7 +1697,7 @@ public function get_phone(){
           foreach ($resp->json()->records as $record) {
 
             if (!empty($record->from->name)) {
-                if($record->from->name == $agent_name2){
+                if($record->from->name == $agent_name){
                      $count_call_log += count((array)$record->from->name);
                  }
 
@@ -1802,7 +1803,7 @@ public function get_phone(){
           foreach ($resp->json()->records as $record) {
 
             if (!empty($record->from->name)) {
-                if($record->from->name == $agent_name2){
+                if($record->from->name == $agent_name){
                      $count_call_log += count($record->from->name);
                  }
 
@@ -1977,7 +1978,7 @@ function searchForId($name, $array) {
           foreach ($resp->json()->records as $record) {
 
             if (!empty($record->from->name)) {
-                if($record->from->name == $agent_name2){
+                if($record->from->name == $agent_name){
                      $count_call_log += count($record->from->name);
                  }
 
@@ -2080,7 +2081,7 @@ function searchForId($name, $array) {
           // foreach ($resp->json()->records as $record) {
 
           //   if (!empty($record->from->name)) {
-          //       if($record->from->name == $agent_name2){
+          //       if($record->from->name == $agent_name){
           //            $count_call_log += count((array)$record->from->name);
           //        }
 
@@ -2095,7 +2096,7 @@ function searchForId($name, $array) {
 
                 $prevdate = date('Y-m-d', strtotime($record->startTime));
 
-                  if($record->from->name == $agent_name2){
+                  if($record->from->name == $agent_name){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
@@ -2891,7 +2892,8 @@ function searchForId($name, $array) {
 
 
     public function attendance($id=""){
-
+      $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
+      $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
       $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
       $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
@@ -3836,6 +3838,9 @@ function searchForId($name, $array) {
 
 
      public function collection_payment($id=""){
+        $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
+      $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
+              $records['user_managers']= $this->User_Model->select_user_manager();
         $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
         $records['activities']= $this->Remark_Model->user_remarks($this->session->userdata['userlogin']['user_id']);
         $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
@@ -4427,7 +4432,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                         else if($from_name == 'The Greendot Films2'){
+                                         else if($from_name == 'Olivia Turner'){
 
                                               $get_extension_number = 104;
                                                if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
@@ -4562,7 +4567,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                           else if($from_name == 'Kylie Summers'){
+                                           else if($from_name == 'Robert Pierce'){
 
                                               $get_extension_number = 110;
                                                if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
@@ -4747,7 +4752,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                          if($from_name == $user_charge2){
+                                          if($from_name == $user_charge){
 
                                               $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
                                                if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted"){
@@ -13552,10 +13557,7 @@ public function update_submission(){
 
 
 
-
     }
 
 }
 
-
-  

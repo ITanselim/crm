@@ -33,6 +33,8 @@
     <link href="<?php echo base_url('css/croppie.css');?>" rel="stylesheet">
     <link href="<?php echo base_url('datepicker/css/bootstrap-datepicker.css');?>" rel="stylesheet">
 
+    <link href="https://monim67.github.io/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
     <!-- Custom CSS for side Remark History -->
     <link href="<?php echo base_url('css/remarkhistory.css');?>" rel="stylesheet">
 
@@ -48,6 +50,9 @@
       #confirmationhistorymodal .modal-content{padding: 0px 20px; width: 300%; margin-left: -445px;}
       #payleadmodal .modal-content{ width: 300% !important; margin-left: -415px !important;}
       .hide_initialpayment, .hide_amount_paid, .alert-success{display: none;}
+      .input-group.date .input-group-addon{height:38px}
+     #addapointment_Modal{background:#000000;}
+     select.form-control[multiple], select.form-control[size]{height:325px;}
 
       /* loader */
       #loader {border: 12px solid #f3f3f3; border-radius: 50%; border-top: 12px solid #444444; width: 70px; height: 70px; animation: spin 1s linear infinite;}
@@ -424,7 +429,7 @@
                                 <option value="Recycled">Recycle</option>
                                 <option value="Dead">Dead</option>
                               </select>
-                             <input type="hidden" class="form-control" style="height:50px;"  name="project_id"  placeholder="Title Name" aria-describedby="inputGroupPrepend" required>
+                             <input type="hidden" class="form-control" style="height:50px;"  name="project_id"  required>
                          </div>
                          <div class="col mb-3">
                             <label for="validationCustom05">Installment Term</label>
@@ -470,6 +475,9 @@
                         </div>
                     </div>
                   <button class="btn btn-success" id="update_lead" type="button">Update</button>
+                  <button class="btn btn-secondary disabled" id="appointment_button" data-toggle='modal' data-target='#addapointment_Modal' data-backdrop='static' data-keyboard='false'  type="button">Appointment Schedule</button>
+
+                  
                 </form>
               </div>
     
@@ -944,6 +952,25 @@
                                         </tbody>
                                       </table>
                               </div>
+
+                              <h4 class="modal-title">Appointment History </h4> 
+
+                                <div class="table-responsive">
+                                  <table class="table table-bordered" id="history_appointmenttable" width="100%" cellspacing="0">
+                                    <thead>
+                                      <tr>
+                                        <th>Closer Name</th>
+                                        <th>Appointment Date</th>
+                                        <th>Appointment Time</th>
+                                        <th>Status</th>
+                                        <th>Date Created</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody class="viewapointment_history">
+
+                                    </tbody>
+                                  </table>
+                                </div>
                             </div>
                           </div>
                           
@@ -991,7 +1018,85 @@
 
  
 
+         <!-- Add Appointment -->
+         <div class="modal fade" id="addapointment_Modal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+                 <div class="modal-body">
+                      <div class="signup-form">
+                      <form id="addappointmentform" method="post">
+                          <div class="alert alert-success"><p></p></div>
+                        <h2>Appointment</h2>
+                        <p class="hint-text">Create appointment Schedule.</p>
+                           
+                         <div class="form-group">
+                            <select class="form-control manager_id closer_name" name="manager_id">
+                                <option value="">Please Select A Manager Name</option>
+                                <?php foreach ($user_managers as  $manager):?>
+                                    <option  value="<?php echo $manager['user_id']; ?>"><?php echo $manager['firstname'] .' '. $manager['lastname']  ; ?></option>
+                                <?php endforeach;?>
+                             </select>
+                           </div>
 
+                           
+                              <div class="form-group">
+                                <select class="form-control appointment_status" name="appointment_status">
+                                  <option value="">Please Select a Status</option>
+                                  <option value="Open">Open</option>
+                                  <option value="Reschedule">Reschedule</option>
+                                </select>
+                           </div>
+                             <input type="hidden" name="project_id" value="">
+                          <div class="form-group">
+                          <label for="Date">Date:</label>
+                              <div class="input-group date" id="id_4">
+                                <input type="text" name="date_appointment" value="" class="form-control date_appointment" required="">
+                                <div class="input-group-addon input-group-append">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                              </div>
+                           </div>
+                           <div class="form-group">
+                           <!-- <div class="alert alert-success" id="message-response"><p></p></div> -->
+                           <label for="Time">Time:</label>
+                           <select multiple name="starttime" class="form-control starttime" id="sel2" name="sellist2">
+                                    <option disabled value="01:00:00">1:00 AM - 1:30 AM</option>
+                                    <option disabled value="01:30:00">1:30 AM - 2:00 AM</option>
+                                    <option disabled value="02:00:00">2:00 AM - 2:30 AM</option>
+                                    <option disabled value="02:30:00">2:30 AM - 3:00 AM</option>
+                                    <option disabled value="03:00:00">3:00 AM - 3:30 AM</option>
+                                    <option disabled value="03:30:00">3:30 AM - 4:00 AM</option>
+                                    <option disabled value="04:00:00">4:00 AM - 4:30 AM</option>
+                                    <option disabled value="04:30:00">4:30 AM - 5:00 AM</option>
+                                    <option disabled value="05:00:00">5:00 AM - 5:30 AM</option>
+                                    <option disabled value="05:30:00">5:30 AM - 6:00 AM</option>
+                                    <option disabled value="06:00:00">6:00 AM - 6:30 AM</option>
+                                    <option disabled value="06:30:00">6:30 AM - 7:00 AM</option>
+                                    <option disabled value="07:00:00">7:00 AM - 7:30 AM</option>
+                                    <option disabled value="07:30:00">7:30 AM - 8:00 AM</option>
+                                  </select>
+                          </div>
+
+
+                           <div id="loader_4" class="center_4"></div>
+                        <div class="form-group">
+                                <button type="button" id="add_appointment" class="btn btn-success btn-lg btn-block">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                      <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+              </div>
+          </div>
+      </div>
+      <!--end Add Appointment-->
 
 
 
@@ -1043,6 +1148,8 @@
     <script src="<?php echo base_url('bootstrap/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js');?>"></script>
     <!-- bootstrap-daterangepicker -->
     <script src="<?php echo base_url('bootstrap/vendors/moment/min/moment.min.js');?>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+    <script src="https://monim67.github.io/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script src="<?php echo base_url('bootstrap/vendors/bootstrap-daterangepicker/daterangepicker.js');?>"></script>
 
     <!-- Custom Theme Scripts -->
@@ -1051,6 +1158,8 @@
         <script src="<?php echo base_url('js/dataTables.select.min.js');?>"></script>
         <script src="<?php echo base_url('js/fnReloadAjax.js');?>"></script>
 
+
+
     <script src="<?php echo base_url('js/croppie.js');?>"></script>
     <script src="<?php echo base_url('js/jquery.idle.js');?>"></script>
     <script src="<?php echo base_url('js/html2canvas.min.js');?>"></script>
@@ -1058,8 +1167,12 @@
 
      <script src="<?php echo base_url('js/validateuser.js');?>"></script>
      <script src="<?php echo base_url('js/validatelead.js');?>"></script>
+     <script src="<?php echo base_url('js/validateappointment.js');?>"></script>
 
  <script>  
+
+
+
  var  activitydatatable = $('#activitydataTable').DataTable({
       "sPaginationType": "listbox",
      "pageLength": 5,
@@ -1113,7 +1226,7 @@
         },
 
         //Set column definition initialisation properties.
-        "sPaginationType": "listbox",
+         "sPaginationType": "listbox",
           "order": [], //Initial no order.
             "lengthChange": false,
           columns: [
@@ -1228,6 +1341,13 @@ $(function () {
         format: "dd/mm/yyyy",
         startDate: '01/01/2020',
     }).datepicker("setDate", dateToday);
+
+    $('#id_4').datepicker({           
+        minDate: dateToday,
+        clearBtn: true,
+        format: "yyyy/mm/dd",
+        startDate: new Date()
+    }).datepicker("setDate", dateToday);
     
 })
 </script>
@@ -1238,6 +1358,7 @@ $(function () {
           $("#loader_1").css("display", "none");  
           $("#loader_2").css("display", "none");
      });
+
 
     </script>
   </body>

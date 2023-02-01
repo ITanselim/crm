@@ -411,7 +411,7 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
                                echo "<td>".$evaluation['firstname']." ".$evaluation['lastname']."</td>";
                                echo "<td>".$evaluation['date_created']."</td>"; ?>
                                <td> <a class="btn btn-primary" href="<?php echo base_url('evaluation/view_teamEvaluation?id=').$evaluation['evaluation_id']."&classid=".$evaluation['class_id']?>">View</a></td>
-                         <? echo "</tr>";
+                         <?php echo "</tr>";
                      }
                   }  
                   ?>

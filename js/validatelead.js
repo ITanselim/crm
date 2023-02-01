@@ -212,6 +212,7 @@
         //loader
         $("#loader_1").css("display", "block");
         $("#loader_2").css("display", "block");
+        var status_lead = $('#update_lead_form').find(".status").val();
         $.ajax({
                type: "POST",
                url: base_url +  "dashboard/update_lead",
@@ -222,12 +223,19 @@
                   $("#update_lead_form .alert-danger").removeClass("alert-danger").addClass("alert-success");
                   $("#update_lead_form .alert-success").css("display", "block");
                   $("#update_lead_form .alert-success p").html(res.message);
-                  setTimeout(function(){
+
+               setTimeout(function(){
                                $("#update_lead_form .alert-success").css("display", "none");
                                $("#update_lead_form .alert-success p").html('');
-                               $("#update_lead_form")[0].reset();
-                               $('#updateleadmodal').modal('hide');
-                                //loader
+                               // $("#update_lead_form")[0].reset();
+                           if(status_lead  =='' || status_lead  =='Recycled'  || status_lead  =='Dead'  || status_lead  =='Assigned Low'){
+                                $("#update_lead_form #appointment_button").removeAttr('data-target');
+                                $("#update_lead_form #appointment_button").addClass('disabled');
+                            }
+                            else{ 
+                              $("#update_lead_form #appointment_button").removeClass('disabled');
+                              $("#update_lead_form #appointment_button").attr('data-target', '#addapointment_Modal');
+                            }
                                 $("#loader_1").css("display", "none");
                                 $("#loader_2").css("display", "none");
                       },3000);
@@ -918,7 +926,6 @@
       // view update lead form
        $(document).on("click", ".view_update_leaddetail", function(e){
               e.preventDefault();
-                $('#update_lead_form')[0].reset();
              $("#update_lead_form .status option[value='In Progress']").removeAttr('selected').text('In Progress').change();
              $("#update_lead_form .status option[value='Assigned Low']").removeAttr('selected').text('Assigned Low').change();
              $("#update_lead_form .status option[value='Assigned Mid']").removeAttr('selected').text('Assigned Mid').change();
@@ -927,6 +934,11 @@
              $("#update_lead_form .status option[value='Dead']").removeAttr('selected').text('Dead').change();
 
               var project_id= $(this).data('project_id');
+              $("#addappointmentform input[name='project_id']").val(project_id);
+              $("#update_lead_form input[name='project_id']").val(project_id);
+
+
+
               dataEdit = 'project_id='+ project_id;
                 var getstatus = "";
                 var remain_balance = "";
@@ -942,7 +954,6 @@
                 var get_total_amount = 0;
                 var isFirst = true;
                 var get_installment_term ='';
-
                   $.ajax({
                   type:'GET',
                   data:dataEdit,
@@ -952,12 +963,13 @@
                       var data = res.get_data;
                       var count = res.number_of_row;
                       var usertype = res.usertype;
+                      var get_status ="";
                       for (var i = 0; i < data.length; i++) {
                          $("#update_lead_form input[name='brand_name']").val(data[i].brand_name);
                          $("#update_lead_form input[name='product_name']").val(data[i].product_name);
                          $("#update_lead_form input[name='author_name']").val(data[i].author_name);
                          $("#update_lead_form input[name='title_name']").val(data[i].book_title);
-                         $("#update_lead_form input[name='project_id']").val(data[i].project_id);
+
                          $("#update_lead_form input[name='area_code']").val(data[i].area_code);
                          $("#update_lead_form input[name='email_address']").val(data[i].email_address);
                          $("#update_lead_form input[name='contact_number']").val(data[i].contact_number);
@@ -978,6 +990,7 @@
                          getstatus = data[i].collection_status;
                          get_installment_term = data[i].installment_term;
                          get_date_commitment = new Date(data[i].date_commitment);
+                         get_status = data[i].status;
 
 
                        }
@@ -991,7 +1004,14 @@
                       // var get_last_date = $('#updateleadmodal .view_all_lead').find('.date_collection:last').text();
                       // var get_last_amount = $('#updateleadmodal .view_all_lead').find('.amount_paid:last').text();
                       // $("#update_lead_form input[name='initial_payment']").val(get_last_amount);
+                      if(get_status  =='' || get_status  =='Recycled'  || get_status  =='Dead'  || get_status  =='Assigned Low'){
+                            $("#update_lead_form #appointment_button").removeAttr('data-target');
+                            $("#update_lead_form #appointment_button").addClass('disabled');
+                      }
+                      else{ 
+                        $("#update_lead_form #appointment_button").removeClass('disabled');
 
+                      }
                       if(usertype != 'Admin'){
                            // $("#update_lead_form input[name='brand_name']").prop('readonly', true);
                            $("#update_lead_form input[name='product_name']").prop('readonly', false);
@@ -2864,6 +2884,7 @@
 
                             $('#historyremarkleadtable').DataTable({"sPaginationType": "listbox"});
                             $('#historylead_assigntable').DataTable({"sPaginationType": "listbox"});
+                            $('#history_appointmenttable').DataTable({"sPaginationType": "listbox"});
 
 
                   }
@@ -2878,6 +2899,7 @@
             dataEdit = 'project_id='+ project_id;
             var tr= '';
             var tr_status_lead= '';
+            var tr_appointment= '';
                   $.ajax({
                   type:'GET',
                   data:dataEdit,
@@ -2902,14 +2924,29 @@
                                '</tr>'; 
                          }
                         $('#viewleadremarkhistorymodal .viewlead_status_history').html(tr_status_lead);
+
+                        for (var i = 0; i < data.length; i++) {
+                          tr_appointment  += '<tr>'+
+                                   '<td><a href="'+base_url+'appointment" target="blank">'+data[i].m_fname + ' ' + data[i].m_lname +'</a></td>'+
+                                   '<td>'+moment(data[i].appt_schedule).format('YYYY/MM/DD')+'</td>'+
+                                   '<td>'+moment(data[i].appt_start_time, "HH:mm:ss").format('hh:mm a') + ' - ' + moment(data[i].appt_end_time, "HH:mm:ss").format('hh:mm A') +'</td>'+
+                                   '<td>'+data[i].appt_status+'</td>'+
+                                   '<td>'+moment(data[i].appt_date_creaE).format('YYYY/MM/DD hh:mm A')+'</td>'+
+                                    '</tr>'; 
+                           }
+                          $('#viewleadremarkhistorymodal .viewapointment_history').html(tr_appointment);
                         $(".viewleadremarkhistory td").filter(function() {
                                 return $(this).text() == 'undefined';
                             }).closest("tr").remove();
                          $(".viewlead_status_history td").filter(function() {
                                 return $(this).text() == 'undefined undefined';
                             }).closest("tr").remove();
+                        $(".viewapointment_history td").filter(function() {
+                              return $(this).text() == 'undefined undefined';
+                          }).closest("tr").remove();
                          $('#historyremarkleadtable').DataTable({"sPaginationType": "listbox"});
                          $('#historylead_assigntable').DataTable({"sPaginationType": "listbox"});
+                         $('#history_appointmenttable').DataTable({"sPaginationType": "listbox"});
 
                   }
            });
