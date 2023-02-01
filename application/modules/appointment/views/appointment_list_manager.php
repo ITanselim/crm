@@ -32,6 +32,8 @@
     <link href="<?php echo base_url('bootstrap/build/css/custom.min.css');?>" rel="stylesheet">
     <link href="<?php echo base_url('css/croppie.css');?>" rel="stylesheet">
     <link href="<?php echo base_url('datepicker/css/bootstrap-datepicker.css');?>" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
+
 
     <style type="text/css">
         #addleadmodal .modal-content, #updateleadmodal .modal-content, #viewleadmodal .modal-content, #payleadmodal .modal-content{padding: 0px 20px; width: 200%; margin-left: -160px;}
@@ -403,16 +405,36 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
           <!-- /top tiles -->
   <div class="card mb-3">
           <div class="card-header">
-            <i class="fa fa-table"></i>Team Evaluation
+            <i class="fa fa-table"></i>Appointment Schedule
     <!--  -->
       </div>
           <div class="card-body">
             <div class="alert alert-success"><p></p></div>
           <div class="table-responsive">
+            <form id="sales_lead_agent_form">
+             <div class="col-sm-3 inline-block">
+                <label for="validationCustom03">Date</label>
+                  <div id="reportrange_appointment" style="background: #fff; cursor: pointer; padding: 10px 15px; border: 1px solid #ccc;" >
+                      <i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;
+                      <span></span> <b class="caret"></b>
+                     </div><!-- DEnd ate Picker Input -->            
+              </div>
+            <div class="form-group">
+              <label for="sel1">Select Appointment Status:</label>
+              <select class="form-control" id="appt_status" style="width: 20%;">
+                <option value="Please ddd">Please select an Appointment Status</option>
+                <option value="Open">Open</option>
+                <option value="Reschedule">Reschedule</option>
+                <option value="Closed">Closed</option>
+              </select>
+           </div>
+            </form>
+             
             <table class="table table-bordered" id="appointmentdataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
                   <th>Project ID</th>
+                  <th>Agent Name</th>
                   <th>Closer Name</th>
                   <th>Author Name</th>
                   <th>Book Title</th>
@@ -423,6 +445,7 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
                   <th>Status</th>
                   <th>Date Created</th>
                   <th>Details</th>
+                  <th style="display:none;"></th>
                 </tr>
               </thead>
               <tbody>
@@ -432,6 +455,7 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
                          
                          echo "<tr>";
                                echo "<td>LEAD".$appointment['project_id']."</td>";
+                               echo "<td>".$appointment['a_fname']." ".$appointment['a_lname']."</td>";
                                echo "<td>".$appointment['m_fname']." ".$appointment['m_lname']."</td>";
                                echo "<td>".$appointment['author_name']."</td>";
                                echo "<td>".$appointment['book_title']."</td>";
@@ -442,6 +466,8 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
                                echo "<td>".$appointment['appt_status']."</td>";
                                echo "<td>".date('Y/m/d h:i:s',strtotime($appointment['appt_date_create']))."</td>";?>
                                <td> <a class="btn btn-success" href="<?php echo base_url('appointment/appointment_detail/'.$appointment['appt_id'].'');?>">View</a></td>
+                               <?php echo "<td style='display:none'>".date("Y-m-d", strtotime($appointment['appt_schedule'])). "</td>"; ?>
+
                                <?php echo "</tr>";
                      }
                   }  
@@ -688,7 +714,71 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
  <script>  
 var lead_id = "<?=$status_appointment !=false ? "LEAD".$status_appointment['appt_project_id'] : ""; ?>";
 
-$('#appointmentdataTable').DataTable({"oSearch":  {"sSearch":  lead_id}});
+ var oTable = $('#appointmentdataTable').DataTable({"oSearch":  {"sSearch":  lead_id}});
+
+  $('#appt_status').change(function(){
+        oTable.columns(9).search($(this).val()).draw() ;
+});
+
+
+  $(function () {
+   var start = moment().subtract(29, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+        $('#reportrange_appointment span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+
+    $('#reportrange_appointment').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+
+    cb(start, end);
+
+
+  $('#reportrange_appointment').on('apply.daterangepicker', function(ev, picker) {
+
+   var start = picker.startDate.format('YYYY-MM-DD');
+   var end = picker.endDate.format('YYYY-MM-DD');
+
+  
+
+  $.fn.dataTable.ext.search.push(
+    function(settings, data, dataIndex) {
+      var min = new Date(start);
+      var max = new Date(end);
+      var startDate = new Date(data[12]);
+      console.log(startDate +  " <= " + max  + " --- "  + (startDate <= max));
+      
+      if (min == null && max == null) {
+        return true;
+      }
+      if (min == null && startDate <= max) {
+        return true;
+      }
+      if (max == null && startDate >= min) {
+        return true;
+      }
+      if (startDate <= max && startDate >= min) {
+        return true;
+      }
+      return false;
+    }
+  );
+  oTable.draw();
+    $.fn.dataTable.ext.search.pop();
+
+});
+  });
 </script>
 
   </body>

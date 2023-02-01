@@ -84,7 +84,8 @@
 
 // set appointment time
 $('#addappointmentform .closer_name, #addappointmentform .date_appointment').on('change', function () {
-    $('#addappointmentform .starttime option').prop('disabled', false);
+    $('#addappointmentform .starttime option').prop('disabled', false
+      ).css("color", "#000000").css("background", "none");
       $.ajax({
 
         type: "POST",
@@ -99,10 +100,12 @@ $('#addappointmentform .closer_name, #addappointmentform .date_appointment').on(
         if (res.response=="success"){
           $('#addappointmentform  .starttime').each(function() {
             var val = res.start_time;
-            $('#addappointmentform .starttime').find('option').filter(function() {
-                return this.value === val;
-            }).prop('disabled', true).css("color", "#5b5555").css("background", "#661a1a");
-        });
+            for (var i = 0; i < val.length; i++) {
+              $('#addappointmentform .starttime').find('option').filter(function() {
+                return this.value === val[i].appt_start_time;
+              }).prop('disabled', true).css("color", "#5b5555").css("background", "#661a1a");
+            }
+          });
         }
         // else{
         //     $('#addappointmentform .starttime option').prop('disabled', true);

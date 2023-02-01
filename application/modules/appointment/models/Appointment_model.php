@@ -58,7 +58,7 @@
       // history of appointment agent
       public function view_list_appointment($user_id){ 
 
-        $this->db->select('appointment.*, lead.*, user.firstname as m_fname, user.lastname as m_lname, agent.firstname as a_fname,agent.lastname as a_name')->from('tblappointment as appointment')
+        $this->db->select('appointment.*, lead.*, user.firstname as m_fname, user.lastname as m_lname, agent.firstname as a_fname,agent.lastname as a_lname')->from('tblappointment as appointment')
 
         ->join('tbllead as lead', 'appointment.appt_project_id = lead.project_id', 'inner')
         ->join('tbluser as user', 'appointment.appt_closer_id = user.user_id', 'inner')
@@ -70,8 +70,6 @@
         else if($this->session->userdata['userlogin']['usertype'] == "Manager"){
             $this->db->where('appointment.appt_closer_id', $user_id);
         }
-            $this->db->group_by('appointment.appt_project_id');
-            $this->db->group_by('appointment.appt_schedule');
             $this->db->order_by('appointment.appt_date_create','desc');
 
         $query=$this->db->get();
@@ -84,7 +82,7 @@
    
       public function view_appointment_detail($appt_id){ 
 
-        $this->db->select('appointment.*, lead.*, user.firstname as m_fname, user.lastname as m_lname, agent.firstname as a_fname,agent.lastname as a_name')->from('tblappointment as appointment')
+        $this->db->select('appointment.*, lead.*, user.firstname as m_fname, user.lastname as m_lname, agent.firstname as a_fname,agent.lastname as a_lname')->from('tblappointment as appointment')
 
         ->join('tbllead as lead', 'appointment.appt_project_id = lead.project_id', 'inner')
         ->join('tbluser as user', 'appointment.appt_closer_id = user.user_id', 'inner')
@@ -112,7 +110,7 @@
         // ->where('appt_start_time BETWEEN "'. date('H:i:s', strtotime($time)). '" and "'. date('H:i:s', strtotime($time)).'"');
         $query=$this->db->get();
 
-        if ($query->num_rows() == 1){
+        if ($query->num_rows() > 0){
 
             return true;
 
@@ -134,7 +132,7 @@
         $query=$this->db->get();
 
         if ($query->num_rows() > 0){
-            return $query->row_array();
+            return $query->result_array();
 
         }
         else{

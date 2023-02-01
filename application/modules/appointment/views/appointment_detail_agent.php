@@ -419,6 +419,10 @@
         <tbody>
         <?php foreach ($appointments as $row):?>
           <tr class="project-overview-customer">
+          <td class="bold">Agent Name</td>
+          <td><?=$row['a_fname'].  ' -' .$row['a_lname'] ;?></td>
+          </tr>
+          <tr class="project-overview-customer">
           <td class="bold">Closer Name</td>
           <td><?=$row['m_fname'].  ' -' .$row['m_lname'] ;?></td>
           </tr>

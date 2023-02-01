@@ -311,7 +311,7 @@
                       <?php if($notification_appointment > 0):?>
                               <?php foreach($notification_appointment as $notification):?>
                                     <li class="nav-item">
-                                  ``  <?php if($notification['link'] == "direct"): ?>
+                                    <?php if($notification['link'] == "direct"): ?>
                                          <a class="dropdown-item" href="<?php echo base_url('appointment/index/'.$notification['id'].'')?>">
                                       <?php else: ?>
                                         <a class="dropdown-item" href="<?php echo $notification['link'];?>">
@@ -442,6 +442,10 @@
       <table class="table no-margin project-overview-table">
         <tbody>
         <?php foreach ($appointments as $row):?>
+          <tr class="project-overview-customer">
+          <td class="bold">Agent Name</td>
+          <td><?=$row['a_fname'].  ' -' .$row['a_lname'] ;?></td>
+          </tr>
           <tr class="project-overview-customer">
           <td class="bold">Closer Name</td>
           <td><?=$row['m_fname'].  ' -' .$row['m_lname'] ;?></td>

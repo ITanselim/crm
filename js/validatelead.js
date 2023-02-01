@@ -227,7 +227,7 @@
                setTimeout(function(){
                                $("#update_lead_form .alert-success").css("display", "none");
                                $("#update_lead_form .alert-success p").html('');
-                               $("#update_lead_form")[0].reset();
+                               // $("#update_lead_form")[0].reset();
                            if(status_lead  =='' || status_lead  =='Recycled'  || status_lead  =='Dead'  || status_lead  =='Assigned Low'){
                                 $("#update_lead_form #appointment_button").removeAttr('data-target');
                                 $("#update_lead_form #appointment_button").addClass('disabled');

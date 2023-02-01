@@ -204,7 +204,7 @@ class Appointment extends MY_Controller {
    $get_time = $this->Appointment_Model->select_schedule_exist_appointment($this->input->post('manager_id'), date('Y-m-d', strtotime($this->input->post('date_appointment'))));
 
    if($get_time !=false){
-      echo json_encode(array("response" => "success", "start_time" => $get_time['appt_start_time']));
+      echo json_encode(array("response" => "success", "start_time" => $get_time));
    }
   else{
       echo json_encode(array("response" => "error", "start_time" => "00:00:00"));

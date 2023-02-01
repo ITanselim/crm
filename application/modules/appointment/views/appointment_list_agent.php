@@ -390,6 +390,7 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
               <thead>
                 <tr>
                   <th>Project ID</th>
+                  <th>Agent Name</th>
                   <th>Closer Name</th>
                   <th>Author Name</th>
                   <th>Book Title</th>
@@ -409,6 +410,7 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
                          
                          echo "<tr>";
                                echo "<td>LEAD".$appointment['project_id']."</td>";
+                               echo "<td>".$appointment['a_fname']." ".$appointment['a_lname']."</td>";
                                echo "<td>".$appointment['m_fname']." ".$appointment['m_lname']."</td>";
                                echo "<td>".$appointment['author_name']."</td>";
                                echo "<td>".$appointment['book_title']."</td>";
