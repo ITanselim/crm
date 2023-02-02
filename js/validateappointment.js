@@ -178,3 +178,70 @@ $('#update_appointment_form .appt_status').on('change', function () {
 
 
 });
+
+
+//appointment view lead communication history
+
+      // $(document).on('click','.viewleadremark_history_appt',function(e) {
+
+      //       var project_id= $(this).data('project_id');
+      //        //alert(project_id);
+      //       dataEdit = 'project_id='+ project_id;
+      //       var tr= '';
+      //       var tr_status_lead= '';
+      //       var tr_appointment= '';
+      //             $.ajax({
+      //             type:'GET',
+      //             data:dataEdit,
+      //             url: base_url +'dashboard/view_lead_remark_history/'+ project_id,
+      //             dataType: 'json',
+      //             success:function(data){
+      //                 for (var i = 0; i < data.length; i++) {
+      //                   tr += '<tr>'+
+      //                             '<td>'+data[i].from_user+'</td>'+
+      //                             '<td>'+data[i].from_usertype+'</td>'+
+      //                             '<td>'+data[i].create_remark+'</td>'+
+      //                             '<td>'+new Date(data[i].date_create_remark).toLocaleString([], { hour12: true})+'</td>'+
+      //                          '</tr>'; 
+      //                    }
+      //                   $('#viewleadremarkhistorymodal .viewleadremarkhistory').html(tr);
+
+      //                for (var i = 0; i < data.length; i++) {
+      //                   tr_status_lead += '<tr>'+
+      //                             '<td>'+data[i].firstname + ' ' + data[i].lastname +'</td>'+
+      //                             '<td>'+data[i].collection_status+'</td>'+
+      //                             '<td>'+new Date(data[i].alter_date_commitment).toLocaleString([], { hour12: true})+'</td>'+
+      //                          '</tr>'; 
+      //                    }
+      //                   $('#viewleadremarkhistorymodal .viewlead_status_history').html(tr_status_lead);
+
+      //                   for (var i = 0; i < data.length; i++) {
+      //                     tr_appointment  += '<tr>'+
+      //                              '<td><a href="'+base_url+'appointment" target="blank">'+data[i].m_fname + ' ' + data[i].m_lname +'</a></td>'+
+      //                              '<td>'+moment(data[i].appt_schedule).format('YYYY/MM/DD')+'</td>'+
+      //                              '<td>'+moment(data[i].appt_start_time, "HH:mm:ss").format('hh:mm a') + ' - ' + moment(data[i].appt_end_time, "HH:mm:ss").format('hh:mm A') +'</td>'+
+      //                              '<td>'+data[i].appt_status+'</td>'+
+      //                              '<td>'+moment(data[i].appt_date_creaE).format('YYYY/MM/DD hh:mm A')+'</td>'+
+      //                               '</tr>'; 
+      //                      }
+      //                     $('#viewleadremarkhistorymodal .viewapointment_history').html(tr_appointment);
+      //                   $(".viewleadremarkhistory td").filter(function() {
+      //                           return $(this).text() == 'undefined';
+      //                       }).closest("tr").remove();
+      //                    $(".viewlead_status_history td").filter(function() {
+      //                           return $(this).text() == 'undefined undefined';
+      //                       }).closest("tr").remove();
+      //                   $(".viewapointment_history td").filter(function() {
+      //                         return $(this).text() == 'undefined undefined';
+      //                     }).closest("tr").remove();
+      //                    $('#historyremarkleadtable').DataTable({"sPaginationType": "listbox"});
+      //                    $('#historylead_assigntable').DataTable({"sPaginationType": "listbox"});
+      //                    $('#history_appointmenttable').DataTable({"sPaginationType": "listbox"});
+
+      //             }
+      //      });
+      //  });
+
+
+
+      // 

@@ -4567,7 +4567,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                           else if($from_name == 'Robert Pierce'){
+                                           else if($from_name == 'Robert Johns'){
 
                                               $get_extension_number = 110;
                                                if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
@@ -4588,7 +4588,29 @@ function searchForId($name, $array) {
 
 
                                           }
-  
+                                             else if($from_name == 'Sean Oliver'){
+
+                                              $get_extension_number = 111;
+                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
+                                                      $data[] = array(
+                                                          "type" => $get_type,
+                                                          "from_Phonenumber" => $from_Phonenumber,
+                                                          "to_Phonenumber" => $to_Phonenumber,
+                                                          "extension_number" => $get_extension_number,
+                                                          "location" => $to_location,
+                                                          "startTime" => date('Y-m-d g:i A', strtotime($call_log_history->startTime)),
+                                                          "date" => date('Y-m-d', strtotime($call_log_history->startTime)),
+                                                          "action" => $call_log_history->action,
+                                                          "result" => $call_log_history->result,
+                                                          "duration" => gmdate("H:i:s", $call_log_history->duration),
+                                                     );
+
+                                             }
+
+
+                                          }
+
+
                                        }
                                      }
                                      $result = array();
@@ -5198,6 +5220,7 @@ function searchForId($name, $array) {
          $history_agent=array();
 
          $remark_history=array();
+         $history_appointment=array();
 
       if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
 
@@ -5206,15 +5229,16 @@ function searchForId($name, $array) {
            $remark_history = $this->Lead_Model->select_lead_history($this->input->get('project_id'));
 
            $lead_history = $this->Lead_Model->view_lead_status_history($this->input->get('project_id'));
+           $history_appointment = $this->Appointment_Model->view_appointment_history($this->input->get('project_id'));
 
            $get_lead_history =  $lead_history == 'false'?  array() : $lead_history;
 
+           $history_appointment =  $history_appointment == 'false'?  array() : $history_appointment;
 
-           //                 $this->Payment_Model->sales_lead_byid($this->session->userdata['userlogin']['user_id']);
 
            $get_remark =  $remark_history == 'false' ? array() : $remark_history;
 
-           echo json_encode(array_merge($history_agent, $get_remark));       
+           echo json_encode(array_merge($history_agent, $get_remark, $lead_history, $history_appointment));       
 
       }
 
@@ -5246,6 +5270,8 @@ function searchForId($name, $array) {
            $remark_history = $this->Lead_Model->select_lead_history($this->input->get('project_id'));
 
            $lead_history = $this->Lead_Model->view_lead_status_history($this->input->get('project_id'));
+           $history_appointment = $this->Appointment_Model->view_appointment_history($this->input->get('project_id'));
+
 
            $get_lead_history =  $lead_history == 'false'?  array() : $lead_history;
 
@@ -5266,14 +5292,19 @@ function searchForId($name, $array) {
 
            $lead_history = $this->Lead_Model->view_lead_status_history($this->input->get('project_id'));
 
+           $history_appointment = $this->Appointment_Model->view_appointment_history($this->input->get('project_id'));
+
            $get_lead_history =  $lead_history == 'false'?  array() : $lead_history;
+
+
+           $get_appointment_history =  $history_appointment == 'false'?  array() : $history_appointment;
 
 
            //                 $this->Payment_Model->sales_lead_byid($this->session->userdata['userlogin']['user_id']);
 
            $get_remark =  $remark_history == 'false' ? array() : $remark_history;
 
-           echo json_encode(array_merge($history_agent, $get_remark, $lead_history));      
+           echo json_encode(array_merge($history_agent, $get_remark, $lead_history, $get_appointment_history));      
 
       }
 

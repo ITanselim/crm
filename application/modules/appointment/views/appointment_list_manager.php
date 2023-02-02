@@ -40,6 +40,8 @@
     table.dataTable thead > tr > th.sorting{padding-right: 0px !important;}
     #payleadmodal .modal-content{ width: 300% !important; margin-left: -415px !important;}
     .hide_initialpayment, .hide_amount_paid, .alert-success{display: none;}
+        .inline-block{ display: inline-block;}
+
 
 
     </style>
@@ -411,7 +413,7 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
           <div class="card-body">
             <div class="alert alert-success"><p></p></div>
           <div class="table-responsive">
-            <form id="sales_lead_agent_form">
+            <form id="apointment_agent_form">
              <div class="col-sm-3 inline-block">
                 <label for="validationCustom03">Date</label>
                   <div id="reportrange_appointment" style="background: #fff; cursor: pointer; padding: 10px 15px; border: 1px solid #ccc;" >
@@ -419,15 +421,31 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
                       <span></span> <b class="caret"></b>
                      </div><!-- DEnd ate Picker Input -->            
               </div>
-            <div class="form-group">
+             <div class="col-sm-3 inline-block">
               <label for="sel1">Select Appointment Status:</label>
-              <select class="form-control" id="appt_status" style="width: 20%;">
+              <select class="form-control" id="appt_status">
                 <option value="Please ddd">Please select an Appointment Status</option>
                 <option value="Open">Open</option>
                 <option value="Reschedule">Reschedule</option>
                 <option value="Closed">Closed</option>
               </select>
            </div>
+             <div class="col-sm-3 inline-block">
+                <label for="validationCustom03">Agent Name</label>
+                      <select class="form-control user_type" name="user_type">
+                       <option selected value="0">Please Select an Agent's</option>
+                         <?php 
+                             if ($all_agents_and_managers > 0){
+                                  foreach ($all_agents_and_managers as $attendance_user){
+                                   echo "<option value='".$attendance_user['firstname']. ' ' .$attendance_user['lastname']."'>".$attendance_user['firstname']. ' ' .$attendance_user['lastname']. ' - ' .$attendance_user['usertype'] ."</option>";
+                               }
+                            } 
+                          ?>
+                      </select>
+                          <input type="hidden" class="form-control" name="from_date" placeholder="from_date" required="required">
+                          <input type="hidden" class="form-control" name="to_date" placeholder="to_date" required="required">
+
+                 </div>
             </form>
              
             <table class="table table-bordered" id="appointmentdataTable" width="100%" cellspacing="0">
@@ -438,8 +456,8 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
                   <th>Closer Name</th>
                   <th>Author Name</th>
                   <th>Book Title</th>
-                  <th>Email Address</th>
-                  <th>Contact Number</th>
+    <!--               <th>Email Address</th>
+                  <th>Contact Number</th> -->
                   <th>Date Schedule</th>
                   <th>Time</th>
                   <th>Status</th>
@@ -459,8 +477,8 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
                                echo "<td>".$appointment['m_fname']." ".$appointment['m_lname']."</td>";
                                echo "<td>".$appointment['author_name']."</td>";
                                echo "<td>".$appointment['book_title']."</td>";
-                               echo "<td>".$appointment['email_address']."</td>";
-                               echo "<td>".$appointment['contact_number']."</td>";
+                               // echo "<td>".$appointment['email_address']."</td>";
+                               // echo "<td>".$appointment['contact_number']."</td>";
                                echo "<td>".date('Y/m/d',strtotime($appointment['appt_schedule']))."</td>";
                                echo "<td>".date('h:i a',strtotime($appointment['appt_start_time']))." - ".date('h:i a',strtotime($appointment['appt_end_time']))."</td>";
                                echo "<td>".$appointment['appt_status']."</td>";
@@ -746,17 +764,20 @@ var lead_id = "<?=$status_appointment !=false ? "LEAD".$status_appointment['appt
 
 
   $('#reportrange_appointment').on('apply.daterangepicker', function(ev, picker) {
+   $('#apointment_agent_form [name="user_type"]').prop('selectedIndex',0);
 
    var start = picker.startDate.format('YYYY-MM-DD');
    var end = picker.endDate.format('YYYY-MM-DD');
 
-  
+   $('#apointment_agent_form [name="from_date"]').val(start);
+   $('#apointment_agent_form [name="to_date"]').val(end);
+
 
   $.fn.dataTable.ext.search.push(
     function(settings, data, dataIndex) {
       var min = new Date(start);
       var max = new Date(end);
-      var startDate = new Date(data[12]);
+      var startDate = new Date(data[10]);
       console.log(startDate +  " <= " + max  + " --- "  + (startDate <= max));
       
       if (min == null && max == null) {
@@ -777,8 +798,40 @@ var lead_id = "<?=$status_appointment !=false ? "LEAD".$status_appointment['appt
   oTable.draw();
     $.fn.dataTable.ext.search.pop();
 
-});
-  });
+    });
+ });
+
+  $('#apointment_agent_form [name="user_type"]').on('change', function () {
+       oTable.columns(1).search($(this).val()).draw() ;
+
+
+         $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+              var min = new Date($('#apointment_agent_form [name="from_date"]').val());
+              var max = new Date($('#apointment_agent_form [name="to_date"]').val());
+              var startDate = new Date(data[10]);
+              var agent_user = data[1];
+                  
+              
+              if (min == null && max == null &&  $(this).val() == agent_user) {
+                return true;
+              }
+              if (min == null && startDate <= max && $(this).val() == agent_user) {
+                return true;
+              }
+              if (max == null && startDate >= min && $(this).val() == agent_user) {
+                return true;
+              }
+              if (startDate <= max && startDate >= min) {
+                return true;
+              }
+              return false;
+            }
+          );
+      oTable.draw();
+        $.fn.dataTable.ext.search.pop();
+
+     });
 </script>
 
   </body>

@@ -39,11 +39,11 @@
       // history of appointment
       public function view_appointment_history($project_id){ 
 
-        $this->db->select('appointment.*, lead.*, user.firstname as m_fname, user.lastname as m_lname')->from('tblappointment as appointment')
+       $this->db->select('appointment.*, lead.*, user.firstname as m_fname, user.lastname as m_lname, agent.firstname as a_fname,agent.lastname as a_lname')->from('tblappointment as appointment')
 
         ->join('tbllead as lead', 'appointment.appt_project_id = lead.project_id', 'inner')
         ->join('tbluser as user', 'appointment.appt_closer_id = user.user_id', 'inner')
-
+        ->join('tbluser as agent', 'appointment.appt_agent_id = agent.user_id', 'inner')
         ->where('lead.project_id', $project_id)
         ->order_by('appointment.appt_date_create','desc');
 

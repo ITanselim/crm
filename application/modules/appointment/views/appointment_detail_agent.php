@@ -60,6 +60,7 @@
           width: 250px;
         }
         #addleadmodal .modal-content, #updateleadmodal .modal-content, #viewleadmodal .modal-content{padding: 0px 20px; width: 280%; margin-left: -405px;}
+        #viewleadhistorymodal .modal-content{padding: 0px 20px; width: 280%; margin-left: -405px;}
     table.dataTable thead > tr > th.sorting{padding-right: 0px !important;}
     #payleadmodal .modal-content{ width: 300% !important; margin-left: -415px !important;}
     .hide_initialpayment, .hide_amount_paid, .alert-success{display: none;}
@@ -389,7 +390,8 @@
            <?php $project_id =  $row['project_id']; $appt_id = $row['appt_id']; $closer_id = $row['appt_closer_id']; $agent_id = $row['appt_agent_id'];?>
           <tr class="project-overview-customer">
           <td class="bold">Author Name</td>
-          <td><?=$row['author_name'];?></td>
+          <td><a href='http://google.com/search?q=<?=$row["author_name"];?>   <?=$row["book_title"];?>' target='blank'><?=$row["author_name"];?></a></td>
+          <!-- <td><a type='button' class='btn btn-outline-info viewleadremark_history_appt' data-toggle='modal' data-target='#viewleadremarkhistorymodal' data-backdrop='static' data-keyboard='false' data-author_name='<?=$row['project_id'];?>' data-project_id='<?=$row['project_id'];?>'><?=$row['author_name'];?></a></td> -->
           </tr>
           <tr>
           <td class="bold">Project ID</td>
@@ -401,11 +403,15 @@
           </tr>
           <tr>
           <td class="bold">Contact Number</td>
-          <td><?=$row['contact_number'];?></td>
+          <td><a href='callto:"<?=$row['contact_number'];?>"'><?=$row['contact_number'];?></a></td>
           </tr>
           <tr>
-          <td class="bold">Emall Address</td>
+          <td class="bold">Emai Address</td>
           <td><?=$row['email_address'];?></td>
+          </tr>
+          <tr>
+          <td class="bold">History</td>
+          <td><button type='button' class='btn btn-outline-info viewleadremark_history1' data-toggle='modal' data-target='#viewleadremarkhistorymodal' data-backdrop='static' data-keyboard='false' data-author_name="<?=$row["author_name"];?>" data-project_id=<?=$row["project_id"];?>>View</a></td>
           </tr>
           <?php endforeach; ?>
       
@@ -447,6 +453,7 @@
               </select>
             </div></td>
           </tr>
+
           <?php endforeach; ?>
           </tbody>
          </table>
@@ -718,6 +725,76 @@
                 </div>
             <!-- end of Remark modal -->
 
+ <!-- The History Leas  Remark-->
+                <div  class="modal fade" id="viewleadremarkhistorymodal" data-backdrop="true">
+                  <div class="modal-dialog modal-right w-xl">
+                    <div class="modal-content h-100 no-radius">
+                    
+                      <!-- Modal Header -->
+                           <div class="modal-header">
+                            <h4 class="modal-title">Remark History </h4> 
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          </div>
+
+                          <!-- Modal body -->
+                          <div class="modal-body">
+                                <div class="table-responsive">
+                                      <table class="table table-bordered" id="historyleadtable" width="100%" cellspacing="0">
+                                        <thead>
+                                          <tr>
+                                            <th>From Users</th>
+                                            <th>User Type</th>
+                                            <th>Remark</th>
+                                            <th>Date Remark</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody class="viewleadremarkhistory">
+
+                                        </tbody>
+                                      </table>
+                              </div>
+                            <h4 class="modal-title">Activities History </h4> 
+
+                                   <div class="table-responsive">
+                                      <table class="table table-bordered" id="historylead_assigntable" width="100%" cellspacing="0">
+                                        <thead>
+                                          <tr>
+                                            <th>Agent Name</th>
+                                            <th>Status</th>
+                                            <th>Date Activities</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody class="viewlead_status_history">
+
+                                        </tbody>
+                                      </table>
+                              </div>
+
+                              <h4 class="modal-title">Appointment History </h4> 
+
+                                <div class="table-responsive">
+                                  <table class="table table-bordered" id="history_appointmenttable" width="100%" cellspacing="0">
+                                    <thead>
+                                      <tr>
+                                        <th>Closer Name</th>
+                                        <th>Agent Name</th>
+                                        <th>Appointment Date</th>
+                                        <th>Appointment Time</th>
+                                        <th>Status</th>
+                                        <th>Date Created</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody class="viewapointment_history">
+
+                                    </tbody>
+                                  </table>
+                                </div>
+                            </div>
+                          </div>
+                          
+                    </div>
+                  </div>
+
 
             <!--Lines/Words Side Modal-->
                 <div  class="modal fade" id="sidemodal1" data-backdrop="true">
@@ -965,6 +1042,8 @@
     <!-- bootstrap-daterangepicker -->
     <script src="<?php echo base_url('bootstrap/vendors/moment/min/moment.min.js');?>"></script>
     <script src="<?php echo base_url('js/jquery.timeago.js');?>"></script>
+    <script src="<?php echo base_url('js/select.js');?>"></script>
+     <script src="<?php echo base_url('js/dataTables.select.min.js');?>"></script>
     <script src="<?php echo base_url('bootstrap/vendors/bootstrap-daterangepicker/daterangepicker.js');?>"></script>
 
     <!-- Custom Theme Scripts -->
@@ -975,6 +1054,7 @@
 
 
      <script src="<?php echo base_url('js/validateuser.js');?>"></script>
+     <script src="<?php echo base_url('js/validatelead.js');?>"></script>
      <script src="<?php echo base_url('js/validateappointment.js');?>"></script>
      <script src="<?php echo base_url('js/notification.js');?>"></script>
      <script src="<?php echo base_url('js/dropzone.js');?>"></script>

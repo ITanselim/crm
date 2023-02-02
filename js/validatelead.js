@@ -2928,13 +2928,14 @@
                         for (var i = 0; i < data.length; i++) {
                           tr_appointment  += '<tr>'+
                                    '<td><a href="'+base_url+'appointment" target="blank">'+data[i].m_fname + ' ' + data[i].m_lname +'</a></td>'+
+                                   '<td><a href="'+base_url+'appointment" target="blank">'+data[i].a_fname + ' ' + data[i].a_lname +'</a></td>'+
                                    '<td>'+moment(data[i].appt_schedule).format('YYYY/MM/DD')+'</td>'+
                                    '<td>'+moment(data[i].appt_start_time, "HH:mm:ss").format('hh:mm a') + ' - ' + moment(data[i].appt_end_time, "HH:mm:ss").format('hh:mm A') +'</td>'+
                                    '<td>'+data[i].appt_status+'</td>'+
                                    '<td>'+moment(data[i].appt_date_creaE).format('YYYY/MM/DD hh:mm A')+'</td>'+
                                     '</tr>'; 
                            }
-                          $('#viewleadremarkhistorymodal .viewapointment_history').html(tr_appointment);
+                        $('#viewleadremarkhistorymodal .viewapointment_history').html(tr_appointment);
                         $(".viewleadremarkhistory td").filter(function() {
                                 return $(this).text() == 'undefined';
                             }).closest("tr").remove();

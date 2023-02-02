@@ -960,6 +960,7 @@
                                     <thead>
                                       <tr>
                                         <th>Closer Name</th>
+                                        <th>Agent Name</th>
                                         <th>Appointment Date</th>
                                         <th>Appointment Time</th>
                                         <th>Status</th>
@@ -1154,9 +1155,9 @@
 
     <!-- Custom Theme Scripts -->
     <script src="<?php echo base_url('bootstrap/build/js/custom.min.js'); ?>"></script>
-        <script src="<?php echo base_url('js/select.js');?>"></script>
-        <script src="<?php echo base_url('js/dataTables.select.min.js');?>"></script>
-        <script src="<?php echo base_url('js/fnReloadAjax.js');?>"></script>
+    <script src="<?php echo base_url('js/select.js');?>"></script>
+    <script src="<?php echo base_url('js/dataTables.select.min.js');?>"></script>
+    <script src="<?php echo base_url('js/fnReloadAjax.js');?>"></script>
 
 
 

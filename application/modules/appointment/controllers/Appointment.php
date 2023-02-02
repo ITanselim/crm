@@ -20,6 +20,7 @@ class Appointment extends MY_Controller {
       $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
 
       $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
+       $records['all_agents_and_managers']= $this->User_Model->select_user_agent();
      if($this->session->userdata['userlogin']['usertype'] == "Manager"){
 
       $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
