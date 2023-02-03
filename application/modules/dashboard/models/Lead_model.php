@@ -3680,7 +3680,7 @@ public function select_all_remark($project_id){
 
             $this->db->select('lead.*, remark.*')->from('tbllead as lead')
             ->join('tblremarks as remark', 'lead.project_id = remark.project_id', 'left')
-            ->where("IF(remark.date_create_remark IS NOT NULL, DATE_FORMAT(remark.date_create_remark, '%Y-%m-%d') <  DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_FORMAT(lead.lead_date_agent_assign, '%Y-%m-%d') <  DATE_SUB(NOW(), INTERVAL 1 DAY))")
+            ->where("IF(remark.date_create_remark IS NOT NULL, DATE_FORMAT(remark.date_create_remark, '%Y-%m-%d') <  DATE_SUB(NOW(), INTERVAL 30 DAYS), DATE_FORMAT(lead.lead_date_agent_assign, '%Y-%m-%d') <  DATE_SUB(NOW(), INTERVAL 30 DAYS))")
             ->group_by('remark.project_id')
             ->order_by('remark.date_create_remark','DESC');  
 

@@ -3953,6 +3953,8 @@ function searchForId($name, $array) {
     // Row position
      $rowno = $_POST['start'];
 
+     
+    
  
         $list = $this->Lead_Model->view_lead_collection_contract($this->session->userdata['userlogin']['user_id'],$rowno,$rowperpage,$_POST['search']['value']);
         $data = array();
@@ -3973,7 +3975,32 @@ function searchForId($name, $array) {
         echo json_encode($output);
 
     }
+    public function load_data_filter_classification(){
 
+      $rowperpage = 10;
+     // Row position
+      $rowno = $_POST['start'];
+     
+  
+         $list = $this->Lead_Model->view_lead_collection_contract($this->session->userdata['userlogin']['user_id'],$rowno,$rowperpage,$this->input->post('classification_status'));
+         $data = array();
+     
+         foreach ($list as $lead) {
+                $data[]= $lead;
+         }
+           $query = $this->Lead_Model->getrecordCount($this->session->userdata['userlogin']['user_id'],$this->input->post('classification_status'));
+ 
+ 
+         $output = array(
+                         "draw" => $_POST['draw'],
+                         "recordsTotal" => $query['count'],
+                         "recordsFiltered" => $query['num_rows'],
+                         "data" => $data,
+                 );
+         //output to json format
+         echo json_encode($output);
+ 
+     }
 
     public function load_data_lead(){
 
@@ -5286,25 +5313,21 @@ function searchForId($name, $array) {
 
       else if ($this->session->userdata['userlogin']['usertype'] == "Manager"){
 
-           $history_agent = $this->Lead_Model->view_lead_history($this->input->get('project_id'));
+        $history_agent = $this->Lead_Model->view_lead_history($this->input->get('project_id'));
 
-           $remark_history = $this->Lead_Model->select_lead_history($this->input->get('project_id'));
+        $remark_history = $this->Lead_Model->select_lead_history($this->input->get('project_id'));
 
-           $lead_history = $this->Lead_Model->view_lead_status_history($this->input->get('project_id'));
+        $lead_history = $this->Lead_Model->view_lead_status_history($this->input->get('project_id'));
+        $history_appointment = $this->Appointment_Model->view_appointment_history($this->input->get('project_id'));
 
-           $history_appointment = $this->Appointment_Model->view_appointment_history($this->input->get('project_id'));
+        $get_lead_history =  $lead_history == 'false'?  array() : $lead_history;
 
-           $get_lead_history =  $lead_history == 'false'?  array() : $lead_history;
-
-
-           $get_appointment_history =  $history_appointment == 'false'?  array() : $history_appointment;
+        $history_appointment =  $history_appointment == 'false'?  array() : $history_appointment;
 
 
-           //                 $this->Payment_Model->sales_lead_byid($this->session->userdata['userlogin']['user_id']);
+        $get_remark =  $remark_history == 'false' ? array() : $remark_history;
 
-           $get_remark =  $remark_history == 'false' ? array() : $remark_history;
-
-           echo json_encode(array_merge($history_agent, $get_remark, $lead_history, $get_appointment_history));      
+        echo json_encode(array_merge($history_agent, $get_remark, $lead_history, $history_appointment));       
 
       }
 
@@ -6096,6 +6119,7 @@ function searchForId($name, $array) {
            // $this->form_validation->set_rules('title_name','Book Title','trim|xss_clean|required');       
 
          $this->form_validation->set_rules('status','Status','trim|xss_clean|required');      
+        //  $this->form_validation->set_rules('classification','Classification','trim|xss_clean|required');      
 
          // $this->form_validation->set_rules('email_address','Email Address','trim|xss_clean|required|valid_email');
 
@@ -6122,11 +6146,12 @@ function searchForId($name, $array) {
          else{
 
 
-              if($this->input->post('status') == "Dead" || $this->input->post('status') == "Recycled"){
+              if($this->input->post('status') == "Dead" || $this->input->post('status') == "Recycled"  || $this->input->post('status') == "Remove Bucket" ){
 
                   $data =    array(
 
                                    'status'  => $this->input->post('status'),
+                                   'classification'  => $this->input->post('classification'),
 
                                    'remark'  => $this->input->post('remark'),
 
@@ -6143,8 +6168,10 @@ function searchForId($name, $array) {
                                    'product_name' => $this->input->post('product_name'),
 
                                    'author_name' => $this->input->post('author_name'),
-
+                                
                                    'book_title' => $this->input->post('title_name'),
+
+                                   'classification' => $this->input->post('classification'),
 
                                    'email_address' => $this->input->post('email_address'),
 
@@ -6179,7 +6206,7 @@ function searchForId($name, $array) {
 
               $this->Lead_Model->update_lead($data, $data['project_id']);
 
-              $this->Lead_Model->insert_collection(array('project_id' => $this->input->post('project_id'), 'collection_status' => $this->input->post('status'), 'collection_remark' => $this->input->post('remark'), 'alter_collection_status' => 'Updated', 'collection_user_charge' => $user_charge, 'collection_usertype' => $usertype, 'alter_date_commitment' => date("Y-m-d H:i:s")));
+              $this->Lead_Model->insert_collection(array('project_id' => $this->input->post('project_id'), 'collection_status' => $this->input->post('status'), 'collection_classification' => $this->input->post('classification'), 'collection_remark' => $this->input->post('remark'), 'alter_collection_status' => 'Updated', 'collection_user_charge' => $user_charge, 'collection_usertype' => $usertype, 'alter_date_commitment' => date("Y-m-d H:i:s")));
 
                  foreach ($receive_user_notify as $value) {
 
@@ -7080,7 +7107,7 @@ public function update_authorsign_contract(){
 
                         $this->Contractual_Model->insert(array('project_id' =>  $get_last_id, 'lead_contractual_status' => 'Pending', 'alter_contractual_status' => 'Added', 'alter_contractual_date' => date("Y-m-d h:i:s")));
 
-                        $this->Lead_Model->insert_collection(array('project_id' => $get_last_id, 'collection_status' => 'Assigned', 'collection_remark' => $filesop[8], 'alter_collection_status' => 'Added', 'collection_user_charge' => $user_charge, 'collection_usertype' => $usertype, 'alter_date_commitment' => date("Y-m-d h:i:s")));                   }
+                        $this->Lead_Model->insert_collection(array('project_id' => $get_last_id, 'collection_status' => 'Assigned low', 'collection_remark' => $filesop[8], 'alter_collection_status' => 'Added', 'collection_user_charge' => $user_charge, 'collection_usertype' => $usertype, 'alter_date_commitment' => date("Y-m-d h:i:s")));                   }
 
                          $c = $c + 1;
 
@@ -11503,7 +11530,8 @@ public function send_email_author(){
     }
 
     public function check_lead($id=""){
-
+      $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
+      $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
       $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
       $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);

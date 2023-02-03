@@ -2946,7 +2946,8 @@
                               return $(this).text() == 'undefined undefined';
                           }).closest("tr").remove();
                          $('#historyremarkleadtable').DataTable({"sPaginationType": "listbox"});
-                         $('#historylead_assigntable').DataTable({"sPaginationType": "listbox"});
+                         $('#historylead_assigntable').DataTable({"sPaginationType": "listbox",  order: [[2, 'desc']], "scrollY": "200px",
+                            "scrollCollapse": true, fixedColumns: true}).columns.adjust();
                          $('#history_appointmenttable').DataTable({"sPaginationType": "listbox"});
 
                   }

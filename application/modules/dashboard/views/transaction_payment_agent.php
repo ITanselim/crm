@@ -34,6 +34,8 @@
     <link href="<?php echo base_url('datepicker/css/bootstrap-datepicker.css');?>" rel="stylesheet">
 
     <link href="https://monim67.github.io/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+
 
     <!-- Custom CSS for side Remark History -->
     <link href="<?php echo base_url('css/remarkhistory.css');?>" rel="stylesheet">
@@ -158,17 +160,23 @@
       </div>
 
   <div class="card mb-3">
+
           <div class="card-header">
             <i class="fa fa-table"></i>List of Leads
-              <div style="float:right; "> 
-                 <div style="display:inline-block">
-                   <!-- <button style="height: 33px; position: relative;  top: 6px;" type="button" class="btn btn-primary fa fa-plus" aria-hidden="true" data-toggle="modal" data-target="#addleadmodal" data-backdrop="static" data-keyboard="false">ADD LEAD</button> -->
-               </div>   
-          </div>
+            
+        
 <!--  -->
   </div>
           <div class="card-body">
           <div class="table-responsive">
+          <div class="col-sm-3">
+                  <label for="sel1">Select Lead Classification:</label>
+                  <select class="form-control" id="classification">
+                    <option value="Please ddd">Please select A Lead Classification</option>
+                    <option value="TGF">TGF</option>
+                    <option value="BBH">BBH</option>
+                  </select>
+          </div>
             <table class="table table-bordered" id="leaddataSalesTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
@@ -181,6 +189,7 @@
                   <th>Lead Owner</th>
                   <th>Status and Date</th>
                   <th>Contract Status</th>
+                  <th>Classification</th>
                   <th>Special Note</th>
                   <th>Date Assigned</th>
 <!--                   <th>Last Contact Date</th>
@@ -325,7 +334,7 @@
                                           <option value="In Progress">In Progress</option>
                                           <option value="Assigned Low">Assigned Low</option>
                                           <option value="Assigned Mid">Assigned Mid</option>
-                                          <option value="Assigned High">Assigned High</option>
+                                          <!-- <option value="Remove Bucket">Remove Bucket </option> -->
                                           <option value="Recycled">Recycled</option>
                                           <option value="Dead">Dead</option>
                                         </select>
@@ -418,7 +427,7 @@
                       </div>
                     </div>
                     <div class="form-row">
-                      <div class="col mb-3">
+                      <div class="col mb-2">
                         <label for="validationCustom03">Status</label>
                               <select class="form-control status" name="status" style="height:50px;">
                                 <option value="">Please Select a Tag</option>
@@ -426,12 +435,21 @@
                                 <option value="Assigned Low">Assigned Low</option>
                                 <option value="Assigned Mid">Assigned Mid</option>
                                 <option value="Assigned High">Assigned High</option>
+                                <!-- <option value="Assigned High">Remove Bucket</option> -->
                                 <option value="Recycled">Recycle</option>
                                 <option value="Dead">Dead</option>
                               </select>
                              <input type="hidden" class="form-control" style="height:50px;"  name="project_id"  required>
                          </div>
-                         <div class="col mb-3">
+                         <div class="col mb-2">
+                            <label for="validationCustom05">Lead Classification</label>
+                             <select class="form-control classification" name="classification" style="height:50px;" >
+                                <option value="">Please Select a Classification</option>
+                                <option value="BBH">BBH</option>
+                                <option value="TGF">TGF</option>
+                              </select>                                   
+                         </div>
+                         <div class="col mb-2">
                             <label for="validationCustom05">Installment Term</label>
                              <select class="form-control installment_term" name="installment_term" style="height:50px;" >
                                 <option value="">Please Select a Month</option>
@@ -1147,10 +1165,14 @@
     <script src="<?php echo base_url('bootstrap/vendors/jqvmap/dist/jquery.vmap.js');?>"></script>
     <script src="<?php echo base_url('bootstrap/vendors/jqvmap/dist/maps/jquery.vmap.world.js');?>"></script>
     <script src="<?php echo base_url('bootstrap/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js');?>"></script>
+    
     <!-- bootstrap-daterangepicker -->
     <script src="<?php echo base_url('bootstrap/vendors/moment/min/moment.min.js');?>"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/4.2.1/js/dataTables.fixedColumns.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
     <script src="https://monim67.github.io/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.15/pagination/input.js"></script>
+
     <script src="<?php echo base_url('bootstrap/vendors/bootstrap-daterangepicker/daterangepicker.js');?>"></script>
 
     <!-- Custom Theme Scripts -->
@@ -1214,8 +1236,14 @@
                 return "LEAD"+ new_index_assigned;
           }
 
-   var table = $('#leaddataSalesTable').DataTable({ 
+   
+    
+          
+ load_data();
 
+function load_data(is_category)
+{
+  var table = $('#leaddataSalesTable').DataTable({ 
         "processing": true, //Feature control the processing indicator.
         "serverSide": true, //Feature control DataTables' server-side processing mode.
 
@@ -1224,10 +1252,11 @@
 
             "url": base_url +  "dashboard/load_data_collection_payment",
             "type": "POST",
+            data:{is_category:is_category}
         },
 
         //Set column definition initialisation properties.
-         "sPaginationType": "listbox",
+        "pagingType": "input",
           "order": [], //Initial no order.
             "lengthChange": false,
           columns: [
@@ -1263,6 +1292,7 @@
                         }
                },
                { data: 'contractual_status'},
+               { data: 'classification'},
                { data: null,
                 "render" : function( data, type, row, full ) {
 
@@ -1310,13 +1340,29 @@
            ],
         "columnDefs": [
          { 
-            "targets": [ 0 ], //first column / numbering column
+            "targets": [9], //first column / numbering column
             "orderable": false, //set not orderable
         },
         ],
 
     });
+}
 
+
+$(document).on('change', '#classification', function(){
+  var category = $(this).val();
+  $('#leaddataSalesTable').DataTable().destroy();
+  if(category != '')
+  {
+   load_data(category);
+  }
+  else
+  {
+   load_data();
+  }
+ });
+
+    
 
       $(document).on('blur','.exampleFormControlTextarea',function(e) {
           var id = $(this).val();
