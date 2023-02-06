@@ -84,7 +84,7 @@ class TestController extends MY_Controller {
 
      public function stats_calendar(){
 
-      echo 'test';
+      echo 'tesCCCCCt';
       exit();
 
       if ($this->session->userdata['userlogin']['usertype'] == "Finance"){

@@ -1864,6 +1864,7 @@
                  $this->db->or_like('lead.email_address', $search);
                  $this->db->or_like('lead.contact_number', $search);
                  $this->db->or_like('lead.lead_owner', $search);
+                 $this->db->or_like('lead.classification', $search);
                  $this->db->group_end();  //group ed
                }
                  $this->db->group_by('lead.project_id');
@@ -4100,5 +4101,4 @@ public function select_agent_assign_lead(){
 
     }  
 ?>
-
 
