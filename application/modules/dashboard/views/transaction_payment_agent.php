@@ -1241,7 +1241,7 @@
           
  load_data();
 
-function load_data(is_category)
+function load_data(classification)
 {
   var table = $('#leaddataSalesTable').DataTable({ 
         "processing": true, //Feature control the processing indicator.
@@ -1252,7 +1252,7 @@ function load_data(is_category)
 
             "url": base_url +  "dashboard/load_data_collection_payment",
             "type": "POST",
-            data:{is_category:is_category}
+            data:{classification:classification}
         },
 
         //Set column definition initialisation properties.
@@ -1261,7 +1261,7 @@ function load_data(is_category)
             "lengthChange": false,
           columns: [
               { data: 'project_id',
-                    "render" : function( data, type, full ) {
+                      "render" : function( data, type, full ) {
                             // you could prepend a dollar sign before returning, or do it
                             // in the formatNumber method itself
                             return setindex_prefix_lead(data);                          
@@ -1350,11 +1350,11 @@ function load_data(is_category)
 
 
 $(document).on('change', '#classification', function(){
-  var category = $(this).val();
+  var classification = $(this).val();
   $('#leaddataSalesTable').DataTable().destroy();
-  if(category != '')
+  if(classification != '')
   {
-   load_data(category);
+   load_data(classification);
   }
   else
   {

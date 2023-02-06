@@ -825,11 +825,13 @@
         ->order_by('lead.date_create','ASC'); 
 
            if($search != ""){
+                 $this->db->group_start();
                  $this->db->like('lead.project_id', $search);
                  $this->db->or_like('lead.author_name', $search);
                  $this->db->or_like('lead.book_title', $search);
                  $this->db->or_like('lead.email_address', $search);
                  $this->db->or_like('lead.contact_number', $search);
+                 $this->db->group_end();
                }
                $this->db->limit($rowperpage, $rowno); 
 
@@ -875,11 +877,13 @@
 
 
            if($search != ''){
+                 $this->db->group_start();
                  $this->db->like('lead.project_id', $search);
                  $this->db->or_like('lead.author_name', $search);
                  $this->db->or_like('lead.book_title', $search);
                  $this->db->or_like('lead.email_address', $search);
                  $this->db->or_like('lead.contact_number', $search);
+                 $this->db->group_end();
             }
 
           $query = $this->db->get();
@@ -1740,11 +1744,13 @@
         $this->db->select('*')->from('tbllead')->where('user_id', $user_id)->where('status !=', 'Recycled');
 
         if($search != ""){
+                 $this->db->group_start();  //group start
                  $this->db->like('project_id', $search);
                  $this->db->or_like('author_name', $search);
                  $this->db->or_like('book_title', $search);
                  $this->db->or_like('email_address', $search);
                  $this->db->or_like('contact_number', $search);
+                 $this->db->group_end();  //group end
          }
          $this->db->limit($rowperpage, $rowno); 
 
@@ -1773,11 +1779,14 @@
 
 
            if($search != ''){
+                 $this->db->group_start();  //group start
                  $this->db->like('lead.project_id', $search);
                  $this->db->or_like('lead.author_name', $search);
                  $this->db->or_like('lead.book_title', $search);
                  $this->db->or_like('lead.email_address', $search);
                  $this->db->or_like('lead.contact_number', $search);
+                 $this->db->group_end();  //group start
+
             }
 
           $query = $this->db->get();
@@ -1834,7 +1843,7 @@
       // }     
 
 
-      public function view_lead_collection_contract($user_id, $rowno,$rowperpage,$search=""){ 
+      public function view_lead_collection_contract($user_id, $rowno,$rowperpage,$search="", $classification=""){ 
 
         $data = array();
         $item = array();
@@ -1844,9 +1853,10 @@
 
         ->join('tblpayment as payment', 'lead.project_id = payment.project_id', 'left')->where('lead.user_id', $user_id);
 
-        
-              if($search != ""){
-
+              if($classification != ""){
+                $this->db->where('lead.classification', $classification);
+              }
+              else if($search != ""){
                  $this->db->group_start();  //group start
                  $this->db->like('lead.project_id', $search);
                  $this->db->or_like('lead.author_name', $search);
@@ -1855,7 +1865,6 @@
                  $this->db->or_like('lead.contact_number', $search);
                  $this->db->or_like('lead.lead_owner', $search);
                  $this->db->group_end();  //group ed
-
                }
                  $this->db->group_by('lead.project_id');
                  $this->db->order_by('lead.lead_date_agent_assign','ASC');
@@ -1894,14 +1903,16 @@
       }       
 
 
-  public function getrecordCount($user_id,$search = '') {
+  public function getrecordCount($user_id,$search = '', $classification='') {
        $data = array();
         $item = array();
         $results = array();
        $this->db->select('payment.*, lead.*')->from('tbllead as lead')->join('tblpayment as payment', 'lead.project_id = payment.project_id', 'left')->where('lead.user_id', $user_id);
 
-
-           if($search != ''){
+            if($classification != ""){
+              $this->db->where('lead.classification', $classification);
+            }
+            if($search != ''){
                  $this->db->group_start();  //group start
                  $this->db->like('lead.project_id', $search);
                  $this->db->or_like('lead.author_name', $search);
@@ -1911,6 +1922,7 @@
                  $this->db->or_like('lead.lead_owner', $search);
                  $this->db->group_end();  //group ed
             }
+
                  $this->db->group_by('lead.project_id');
                  $this->db->order_by('lead.lead_date_agent_assign','ASC');
 
@@ -3676,83 +3688,78 @@ public function select_all_remark($project_id){
 
       }
 
-        public function select_all_remark_date(){ 
+        // public function select_all_remark_date(){ 
 
-            $this->db->select('lead.*, remark.*')->from('tbllead as lead')
-            ->join('tblremarks as remark', 'lead.project_id = remark.project_id', 'left')
-            ->where("IF(remark.date_create_remark IS NOT NULL, DATE_FORMAT(remark.date_create_remark, '%Y-%m-%d') <  DATE_SUB(NOW(), INTERVAL 30 DAYS), DATE_FORMAT(lead.lead_date_agent_assign, '%Y-%m-%d') <  DATE_SUB(NOW(), INTERVAL 30 DAYS))")
-            ->group_by('remark.project_id')
-            ->order_by('remark.date_create_remark','DESC');  
+        //     $this->db->select('lead.*, remark.*')->from('tbllead as lead')
+        //     ->join('tblremarks as remark', 'lead.project_id = remark.project_id', 'left')
+        //     ->where("IF(remark.date_create_remark IS NOT NULL, DATE_FORMAT(remark.date_create_remark, '%Y-%m-%d') <  DATE_SUB(NOW(), INTERVAL 30 DAYS), DATE_FORMAT(lead.lead_date_agent_assign, '%Y-%m-%d') <  DATE_SUB(NOW(), INTERVAL 30 DAYS))")
+        //     ->group_by('remark.project_id')
+        //     ->order_by('remark.date_create_remark','DESC');  
 
-           $query=$this->db->get();
+        //    $query=$this->db->get();
 
-            if ($query->num_rows() > 0){
+        //     if ($query->num_rows() > 0){
 
-                 return $query->result_array();
-            }
-            else{
-                return false;
-            }
+        //          return $query->result_array();
+        //     }
+        //     else{
+        //         return false;
+        //     }
 
-            $this->db->close();
+        //     $this->db->close();
 
-        }
+        // }
 
 
-   /*   public function select_all_remark_date($rowno,$rowperpage, $search="", $start_date="", $end_date="", $user_id=""){ 
+    public function select_all_remark_date($rowno,$rowperpage, $search="", $start_date="", $end_date="", $user_id=0){ 
         $data = array();
         $item = array();
         $results = array();
 
-        $this->db->select('lead.*, user.*, assign_user.firstname as fname, assign_user.lastname as lname')->from('tbllead as lead')
+        $this->db->select('lead.*, user.*, remark.project_id, remark.create_remark, remark.date_create_remark,  assign_user.firstname as fname, assign_user.lastname as lname')->from('tbllead as lead')
 
         ->join('tbluser as user', 'lead.user_id = user.user_id', 'inner')
-        ->join('tbluser as assign_user', 'lead.user_id = assign_user.user_id', 'inner')->where('DATE_FORMAT(lead.lead_date_agent_assign, "%Y-%m-%d") <  DATE_SUB(NOW(), INTERVAL 1 DAY)');
-        if($user_id !=""){
-            $this->db->where('user.user_id', $user_id)->where('lead.lead_date_agent_assign IS NOT NULL', NULL, false)->order_by('lead.lead_date_agent_assign','DESC');  
+        ->join('tbluser as assign_user', 'lead.user_id = assign_user.user_id', 'inner')
+        ->join('tblremarks as remark', 'lead.project_id = remark.project_id', 'left');
+        if($start_date !="" && $end_date !="" && $user_id !=0){
+          $this->db->where('user.user_id', $user_id);
+          $this->db->where("IF(remark.date_create_remark IS NOT NULL, DATE_FORMAT(remark.date_create_remark, '%Y-%m-%d') BETWEEN '".$start_date."'  AND  '".$end_date."', DATE_FORMAT(lead.lead_date_agent_assign, '%Y-%m-%d') BETWEEN '".$start_date."'  AND  '".$end_date."')")->order_by('lead.lead_date_agent_assign','DESC');  
+         }
+        else if($start_date !="" && $end_date !=""){
+          $this->db->where("IF(remark.date_create_remark IS NOT NULL, DATE_FORMAT(remark.date_create_remark, '%Y-%m-%d') BETWEEN '".$start_date."'  AND  '".$end_date."', DATE_FORMAT(lead.lead_date_agent_assign, '%Y-%m-%d') BETWEEN '".$start_date."'  AND  '".$end_date."')")->order_by('lead.lead_date_agent_assign','DESC');  
          }
          else{
-
-            $this->db->where('lead.lead_date_agent_assign IS NOT NULL', NULL, false)->order_by('lead.lead_date_agent_assign','DESC');  
+            $this->db->where("IF(remark.date_create_remark IS NOT NULL, DATE_FORMAT(remark.date_create_remark, '%Y-%m-%d') >  DATE(NOW() - INTERVAL 1 MONTH), DATE_FORMAT(lead.lead_date_agent_assign, '%Y-%m-%d') >  DATE(NOW() - INTERVAL 1 MONTH))")->order_by('lead.lead_date_agent_assign','DESC');  
          }
 
-
-
-
           if($search != ""){
+             $this->db->group_start();
              $this->db->like('lead.project_id', $search);
              $this->db->or_like('lead.author_name', $search);
              $this->db->or_like('lead.book_title', $search);
              $this->db->or_like('lead.email_address', $search);
-            $this->db->or_like('lead.contact_number', $search);
+             $this->db->or_like('lead.contact_number', $search);
+             $this->db->group_end();
           }
           $this->db->limit($rowperpage, $rowno); 
 
+           $this->db->group_by('remark.project_id');
+
         $query=$this->db->get();
 
-      
         if ($query->num_rows() > 0){
 
                 foreach($query->result_array() as $key=>$item)
                 {
 
-
-                if($start_date == "" && $end_date == ""){
-
-                    $this->db->select('create_remark, date_create_remark, project_id')->from('tblremarks')->where('DATE_FORMAT(date_create_remark, "%Y-%m-%d")  <  DATE_SUB(NOW(), INTERVAL 1 DAY)')->where_in('project_id', $item['project_id'])->order_by('date_create_remark','DESC')->limit(1);
-                    }
-                  else{
-                      $this->db->select('create_remark, date_create_remark, project_id')->from('tblremarks')
-                      ->where('DATE_FORMAT(date_create_remark, "%Y-%m-%d")  <  DATE_SUB(NOW(), INTERVAL 1 DAY)')
-                      ->where("DATE_FORMAT(date_create_remark, '%Y-%m-%d') BETWEEN '".$start_date."'  AND  '".$end_date."'")
-                      ->where_in('project_id', $item['project_id'])->order_by('date_create_remark','DESC')->limit(1);
-                  }
+                    $this->db->select('create_remark, date_create_remark, project_id')->from('tblremarks')->where_in('project_id', $item['project_id'])->order_by('date_create_remark','DESC')->limit(1);
+ 
                     $query1=$this->db->get();
 
                     $row = $query1->row_array();
 
                     $item['create_remark']  = $row['create_remark'] == null ? " No remark":  $row['create_remark'];
-                    $item['date_create_remark']  =  $row['create_remark'] == null ? " No remark" : date("Y/m/d", strtotime($row['date_create_remark']));
+                    $item['date_create_remark']  =  $row['create_remark'] == null ? " No remark" : date("Y/m/d h:i:s", strtotime($row['date_create_remark']));
 
 
                     $data[] = $item;
@@ -3769,22 +3776,37 @@ public function select_all_remark($project_id){
         $this->db->close();
 
       }
-*/
-     public function getrecord_CountNoactivities_Lead($search ="") {
 
-         $this->db->select('lead.*, user.*, assign_user.firstname as fname, assign_user.lastname as lname')->from('tbllead as lead')
-        ->join('tbluser as user', 'lead.user_id = user.user_id', 'inner')
-        ->join('tbluser as assign_user', 'lead.user_id = assign_user.user_id', 'inner')->where('DATE_FORMAT(lead.lead_date_agent_assign, "%Y-%m-%d") <  DATE_SUB(NOW(), INTERVAL 1 DAY)')
-        ->where('lead.lead_date_agent_assign  IS NOT NULL', NULL, false)
-        ->order_by('lead.lead_date_agent_assign','ASC')->order_by('lead.lead_date_agent_assign','ASC');  
+     public function getrecord_CountNoactivities_Lead($search ="",  $start_date="", $end_date="", $user_id=0) {
+
+    
+      $this->db->select('lead.*, user.*, remark.project_id, remark.create_remark, remark.date_create_remark,  assign_user.firstname as fname, assign_user.lastname as lname')->from('tbllead as lead')
+
+      ->join('tbluser as user', 'lead.user_id = user.user_id', 'inner')
+      ->join('tbluser as assign_user', 'lead.user_id = assign_user.user_id', 'inner')
+      ->join('tblremarks as remark', 'lead.project_id = remark.project_id', 'left');
+      if($start_date !="" && $end_date !="" && $user_id !=0){
+        $this->db->where('user.user_id', $user_id);
+        $this->db->where("IF(remark.date_create_remark IS NOT NULL, DATE_FORMAT(remark.date_create_remark, '%Y-%m-%d') BETWEEN '".$start_date."'  AND  '".$end_date."', DATE_FORMAT(lead.lead_date_agent_assign, '%Y-%m-%d') BETWEEN '".$start_date."'  AND  '".$end_date."')")->order_by('lead.lead_date_agent_assign','DESC');  
+       }
+      else if($start_date !="" && $end_date !=""){
+        $this->db->where("IF(remark.date_create_remark IS NOT NULL, DATE_FORMAT(remark.date_create_remark, '%Y-%m-%d') BETWEEN '".$start_date."'  AND  '".$end_date."', DATE_FORMAT(lead.lead_date_agent_assign, '%Y-%m-%d') BETWEEN '".$start_date."'  AND  '".$end_date."')")->order_by('lead.lead_date_agent_assign','DESC');  
+       }
+       else{
+          $this->db->where("IF(remark.date_create_remark IS NOT NULL, DATE_FORMAT(remark.date_create_remark, '%Y-%m-%d') >  DATE(NOW() - INTERVAL 1 MONTH), DATE_FORMAT(lead.lead_date_agent_assign, '%Y-%m-%d') >  DATE(NOW() - INTERVAL 1 MONTH))")->order_by('lead.lead_date_agent_assign','DESC');  
+       }
+
 
            if($search != ''){
+                 $this->db->group_start();
                  $this->db->like('lead.project_id', $search);
                  $this->db->or_like('lead.author_name', $search);
                  $this->db->or_like('lead.book_title', $search);
                  $this->db->or_like('lead.email_address', $search);
                  $this->db->or_like('lead.contact_number', $search);
+                 $this->db->group_end();
             }
+            $this->db->group_by('lead.project_id');
 
           $query = $this->db->get();
  

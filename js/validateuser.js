@@ -921,7 +921,7 @@ $(document).on('click','.formlogin #login',function(e) {
 
                     $(".codeForm .alert-danger").css("display", "none");
 
-                },1000);
+                },500);
 
 
 
@@ -2150,7 +2150,7 @@ $(document).on('click','#loginAs',function(e) {
 
                         window.location= res.redirect;
 
-                },1000);
+                },300);
 
 
 
@@ -2168,7 +2168,7 @@ $(document).on('click','#loginAs',function(e) {
 
                     $(".alert-danger").css("display", "none");
 
-                },30100);
+                },3000);
 
 
 

@@ -2932,7 +2932,7 @@
                                    '<td>'+moment(data[i].appt_schedule).format('YYYY/MM/DD')+'</td>'+
                                    '<td>'+moment(data[i].appt_start_time, "HH:mm:ss").format('hh:mm a') + ' - ' + moment(data[i].appt_end_time, "HH:mm:ss").format('hh:mm A') +'</td>'+
                                    '<td>'+data[i].appt_status+'</td>'+
-                                   '<td>'+moment(data[i].appt_date_creaE).format('YYYY/MM/DD hh:mm A')+'</td>'+
+                                   '<td>'+moment(data[i].appt_date_create).format('YYYY/MM/DD hh:mm A')+'</td>'+
                                     '</tr>'; 
                            }
                         $('#viewleadremarkhistorymodal .viewapointment_history').html(tr_appointment);
@@ -6505,6 +6505,7 @@ $(function () {
                   "url":   base_url +  "dashboard/load_data_user_limit",
                   "type": "POST",
               },
+              "lengthChange": false,
               "sPaginationType": "listbox",
           columns: [
               { data: 'project_id',
@@ -6590,6 +6591,7 @@ $(function () {
                   "url":   base_url +  "dashboard/load_data_user_limit",
                   "type": "POST",
               },
+              "lengthChange": false,
               "sPaginationType": "listbox",
           columns: [
               { data: 'project_id',

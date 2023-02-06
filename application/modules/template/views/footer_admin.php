@@ -2465,7 +2465,7 @@ function CalculateTableSummary(otable) {
       var min = new Date(start);
       var max = new Date(end);
       var startDate = new Date(data[13]);
-      console.log(startDate +  " <= " + max  + " --- "  + (startDate <= max));
+      // console.log(startDate +  " <= " + max  + " --- "  + (startDate <= max));
       
       if (min == null && max == null) {
         return true;
@@ -2644,10 +2644,8 @@ $('#updatereportform .project_status  option, #updatereportform .interior_design
 
     var test_table =   $('#call_log_historytable').DataTable( {
         order: [[6, 'asc']],
-        scrollY:"480px",
-        scrollCollapse: true,
-        paging: false,
-        scrollX: true,
+        "sPaginationType": "listbox",
+        "pageLength": 20,
         info: true,
         // dom: 'Bfrtip',
         select: true,
@@ -2883,11 +2881,11 @@ $('#updatereportform .project_status  option, #updatereportform .interior_design
 
                  'Today': [moment().tz('America/New_York'), moment().tz('America/New_York')],
 
-                 'Yesterday': [moment().subtract(1, 'days').tz('America/New_York'), moment().subtract(1, 'days')],
+                 'Yesterday': [moment().subtract(1, 'days').tz('America/New_York'), moment().subtract(1, 'days').tz('America/New_York')],
 
-                 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                 'Last 7 Days': [moment().subtract(6, 'days').tz('America/New_York'), moment().tz('America/New_York')],
 
-                 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                 'Last 30 Days': [moment().subtract(29, 'days').tz('America/New_York'), moment().tz('America/New_York')],
 
                  'This Month': [moment().startOf('month'), moment().endOf('month')],
 
@@ -2928,6 +2926,7 @@ var days = 0;
                 $.fn.dataTable.moment('YYYY-MM-DD H:mm A');
 
                 days = getBusinessDateCount(new Date(start), new Date(end));
+                
 
 
        
@@ -2942,11 +2941,8 @@ var days = 0;
 
                         "destroy": true,
 
-                       
-                        scrollY:"480px",
-                        scrollCollapse: true,
-                        paging: false,
-                        scrollX: true,
+                        "sPaginationType": "listbox",
+                        "pageLength": 20,
                         info: true,
                         select: true,
                         "columnDefs": [
@@ -3050,7 +3046,7 @@ $('#call_logs_form [name="user_type"]').on('change', function () {
 
     var agent_name = $('option:selected', this).text();
 
-    console.log(agent_name.split('-')[0]);
+    // console.log(agent_name.split('-')[0]);
 
 
 
@@ -3174,209 +3170,101 @@ $(function () {
 
     //    }
     // });
-// var leaddataTableselectagent =  $('#leaddataTableselectagent').DataTable( {
-//            "processing": true,
-//            "serverSide": true,
-//             "ajax": {
-//             "url": base_url +  "dashboard/status_lead_no_activities",
-//             "type": "POST",
-//         },
+load_data();
+function load_data(start_date, end_date, agent_name){
+  var leaddataTableselectagent =  $('#leadactivitiesDatatable').DataTable( {
+           "processing": true,
+           "serverSide": true,
+            "ajax": {
+            "url": base_url +  "dashboard/status_lead_no_activities",
+            "type": "POST",
+             data:{start_date:start_date, end_date:end_date, agent_name: agent_name}
+        },
 
-//         //Set column definition initialisation properties.
-//           "sPaginationType": "listbox",
-//           columns: [
-//               { data: 'project_id',
-//                     "render" : function( data, type, full ) {
-//                             // you could prepend a dollar sign before returning, or do it
-//                             // in the formatNumber method itself
-//                             return setindex_prefix_lead(data);                          
-//                           }
-//                },
-//               { data: 'product_name' },
-//               { data: 'author_name' },
-//               { data: 'book_title' },
-//               { data: 'email_address' },
-//               { data: 'contact_number' },
-//               { data: 'price' },
-//               { data: null,
-//                 "render" : function( data, type, row, full ) {
-//                             var status = row.status == null ? row.status: row.status +' - '+  new Date(row.date_create).toLocaleDateString('en-GB');
-//                              return status;                          
+          "sPaginationType": "listbox",
+          columns: [
+              { data: 'project_id',
+                    "render" : function( data, type, full ) {
+                            // you could prepend a dollar sign before returning, or do it
+                            // in the formatNumber method itself
+                            return setindex_prefix_lead(data);                          
+                          }
+               },
+              { data: 'product_name' },
+              { data: 'author_name' },
+              { data: 'book_title' },
+              { data: 'email_address' },
+              { data: 'contact_number' },
+              { data: 'price' },
+              { data: null,
+                "render" : function( data, type, row, full ) {
+                            var status = row.status == null ? row.status: row.status +' - '+  new Date(row.date_create).toLocaleDateString('en-GB');
+                             return status;                          
 
-//                         }
-//                }, 
-//               { data: 'income_level' },
-//                { data: null,  
-//                 "render" : function( data, type, row, full ) {
-//                             var full_name = row.firstname == null ? '': row.firstname + ' ' + row.lastname ;
-//                             return full_name;   
-//                         }
-//                }, 
-//                  { data: 'lead_date_agent_assign',
-//                 "render" : function( data, type, row, full ) {
-//                             return new Date(data).toLocaleDateString('en-GB');   
-//                         }
-//                },
+                        }
+               }, 
+              { data: 'income_level' },
+               { data: null,  
+                "render" : function( data, type, row, full ) {
+                            var full_name = row.firstname == null ? '': row.firstname + ' ' + row.lastname ;
+                            return full_name;   
+                        }
+               }, 
+                 { data: 'lead_date_agent_assign',
+                "render" : function( data, type, row, full ) {
+                            return new Date(data).toLocaleDateString('en-GB');   
+                        }
+               },
           
-//                 { data: 'create_remark'},
-//                 { data: 'date_create_remark' },
-//                 { data: null,  
-//                 "render" : function( data, type, row, full ) {
-//                             return "<input style='text-align:center;' type='checkbox' name='project_id[]' class='form-check-input project_id' value="+row.project_id+">" 
-//                    }
-//                }, 
+                { data: 'create_remark'},
+                { data: 'date_create_remark' },
+                { data: null,  
+                "render" : function( data, type, row, full ) {
+                            return "<input style='text-align:center;' type='checkbox' name='project_id[]' class='form-check-input project_id' value="+row.project_id+">" 
+                   }
+               }, 
 
 
-//            ],
-//          });
-// $('#reportrangeleadstatus').on('apply.daterangepicker', function(ev, picker) {
+           ],
+         });
 
-//    var start = picker.startDate.format('YYYY-MM-DD');
-//    var end = picker.endDate.format('YYYY-MM-DD');
-//    $('.agent .selectpicker').selectpicker('val', "Please Select An Agent");
-//    $('#addAssignUserform [name="from_date"]').val(start);
-//    $('#addAssignUserform [name="to_date"]').val(end);
+}
+$('#reportrangeleadstatus').on('apply.daterangepicker', function(ev, picker) {
+
+   var start = picker.startDate.format('YYYY-MM-DD');
+   var end = picker.endDate.format('YYYY-MM-DD');
+   $('.agent .selectpicker').selectpicker('val', "Please Select An Agent");
+   $('#addAssignUserform [name="from_date"]').val(start);
+   $('#addAssignUserform [name="to_date"]').val(end);
+   $('#leadactivitiesDatatable').DataTable().destroy();
+   if(start != '' && end !=''){
+       load_data(start, end, 0);
+    }
+    else{
+       load_data();
+    }
   
-//   leaddataTableselectagent =  $('#leaddataTableselectagent').DataTable( {
-//            "processing": true,
-//            "serverSide": true,
-//             "destroy":true,
-//             "ajax": {
-//             "url": base_url +  "dashboard/status_lead_no_activities",
-//             "type": "POST",
-//               "data": { 
-//                    "start_date": start,
-//                     "end_date": end    
-//                   },
-//         },
-//           "sPaginationType": "listbox",
+  
 
-//         //Set column definition initialisation properties.
+  });
 
-//           columns: [
-//               { data: 'project_id',
-//                     "render" : function( data, type, full ) {
-//                             // you could prepend a dollar sign before returning, or do it
-//                             // in the formatNumber method itself
-//                             return setindex_prefix_lead(data);                          
-//                           }
-//                },
-//               { data: 'product_name' },
-//               { data: 'author_name' },
-//               { data: 'book_title' },
-//               { data: 'email_address' },
-//               { data: 'contact_number' },
-//               { data: 'price' },
-//               { data: null,
-//                 "render" : function( data, type, row, full ) {
-//                             var status = row.status == null ? row.status: row.status +' - '+  new Date(row.date_create).toLocaleDateString('en-GB');
-//                              return status;                          
+$('#addAssignUserform .selectpicker').on('change', function () {
+      var agent_name = $(this).val();
+      
+      var start = $('#addAssignUserform [name="from_date"]').val();
+      var end = $('#addAssignUserform [name="to_date"]').val();
+      $('#leadactivitiesDatatable').DataTable().destroy();
 
-//                         }
-//                }, 
-//               { data: 'income_level' },
-//                { data: null,  
-//                 "render" : function( data, type, row, full ) {
-//                             var full_name = row.firstname == null ? '': row.firstname + ' ' + row.lastname ;
-//                             return full_name;   
-//                         }
-//                }, 
-//                  { data: 'lead_date_agent_assign',
-//                 "render" : function( data, type, row, full ) {
-//                             return new Date(data).toLocaleDateString('en-GB');   
-//                         }
-//                },
-          
-//                 { data: 'create_remark'},
-//                 { data: 'date_create_remark' },
-//                 { data: null,  
-//                 "render" : function( data, type, row, full ) {
-//                             return "<input style='text-align:center;' type='checkbox' name='project_id[]' class='form-check-input project_id' value="+row.project_id+">" 
-//                    }
-//                }, 
+      if(start != '' && end !='' && agent_name !=0){
+          load_data(start, end, agent_name);
+      }
+      else{
+          load_data();
+      }
 
-
-//            ]
-
-//          });
-
-//   });
-
-// $('#addAssignUserform [name="agent"]').on('change', function () {
-//       // var agent_name = $('option:selected', this).text();
-//       var agent_name = $(this).val();
-//       // leaddataTableselectagent.columns(9).search(agent_name.split('-')[0]).draw() ;
-//       // console.log(agent_name.split('-')[0]);
-
-//       var start = new Date($('#addAssignUserform [name="from_date"]').val());
-//       var end = new Date($('#addAssignUserform [name="to_date"]').val());
-
-//         leaddataTableselectagent =  $('#leaddataTableselectagent').DataTable( {
-//            "processing": true,
-//            "serverSide": true,
-//             "destroy":true,
-//             "ajax": {
-//             "url": base_url +  "dashboard/status_lead_no_activities",
-//             "type": "POST",
-//              "data": { 
-//                    "start_date": start,
-//                     "end_date": end,
-//                     "agent_name": agent_name,
-//                 },
-//         },
-//           "sPaginationType": "listbox",
-
-//         //Set column definition initialisation properties.
-
-//           columns: [
-//               { data: 'project_id',
-//                     "render" : function( data, type, full ) {
-//                             // you could prepend a dollar sign before returning, or do it
-//                             // in the formatNumber method itself
-//                             return setindex_prefix_lead(data);                          
-//                           }
-//                },
-//               { data: 'product_name' },
-//               { data: 'author_name' },
-//               { data: 'book_title' },
-//               { data: 'email_address' },
-//               { data: 'contact_number' },
-//               { data: 'price' },
-//               { data: null,
-//                 "render" : function( data, type, row, full ) {
-//                             var status = row.status == null ? row.status: row.status +' - '+  new Date(row.date_create).toLocaleDateString('en-GB');
-//                              return status;                          
-
-//                         }
-//                }, 
-//               { data: 'income_level' },
-//                { data: null,  
-//                 "render" : function( data, type, row, full ) {
-//                             var full_name = row.firstname == null ? '': row.firstname + ' ' + row.lastname ;
-//                             return full_name;   
-//                         }
-//                }, 
-//                  { data: 'lead_date_agent_assign',
-//                 "render" : function( data, type, row, full ) {
-//                             return new Date(data).toLocaleDateString('en-GB');   
-//                         }
-//                },
-          
-//                 { data: 'create_remark'},
-//                 { data: 'date_create_remark' },
-//                 { data: null,  
-//                 "render" : function( data, type, row, full ) {
-//                             return "<input style='text-align:center;' type='checkbox' name='project_id[]' class='form-check-input project_id' value="+row.project_id+">" 
-//                    }
-//                }, 
-
-
-//            ]
-
-//          });
-
+       
      
-// });
+});
 
    $(document).on('click','#editUserform #update_account',function(e) {
 

@@ -2277,10 +2277,8 @@ $('#updatereportform .project_status  option, #updatereportform .interior_design
 
        $('#call_log_historytable').DataTable( {
         order: [[6, 'asc']],
-        scrollY:"480px",
-        scrollCollapse: true,
-        paging: false,
-        scrollX: true,
+        "sPaginationType": "listbox",
+        "pageLength": 50,
         info: true,
         dom: 'Bfrtip',
         select: true,
@@ -2415,18 +2413,17 @@ $('#updatereportform .project_status  option, #updatereportform .interior_design
 
               ranges: {
 
-                 'Today': [moment().tz('America/New_York'), moment().tz('America/New_York')],
+                'Today': [moment().tz('America/New_York'), moment().tz('America/New_York')],
 
-                 'Yesterday': [moment().subtract(1, 'days').tz('America/New_York'), moment().subtract(1, 'days').tz('America/New_York')],
+                'Yesterday': [moment().subtract(1, 'days').tz('America/New_York'), moment().subtract(1, 'days').tz('America/New_York')],
 
-                 'Last 7 Days': [moment().subtract(6, 'days').tz('America/New_York'), moment().tz('America/New_York')],
+                'Last 7 Days': [moment().subtract(6, 'days').tz('America/New_York'), moment().tz('America/New_York')],
 
-                 'Last 30 Days': [moment().subtract(29, 'days').tz('America/New_York'), moment().tz('America/New_York')],
+                'Last 30 Days': [moment().subtract(29, 'days').tz('America/New_York'), moment().tz('America/New_York')],
 
-                 'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
 
-                 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
               }
 
           }, cb);
@@ -2467,10 +2464,8 @@ $('#updatereportform .project_status  option, #updatereportform .interior_design
               "destroy": true,
 
              
-              scrollY:"480px",
-              scrollCollapse: true,
-              paging: false,
-              scrollX: true,
+              "sPaginationType": "listbox",
+             "pageLength": 50,
               info: true,
               dom: 'Bfrtip',
               select: true,

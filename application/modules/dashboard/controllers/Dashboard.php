@@ -668,7 +668,7 @@ public function get_phone(){
      }
 
   public function call_log_history(){
-
+      
       $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
       $user_charge2 = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
       $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
@@ -711,14 +711,14 @@ public function get_phone(){
        date_default_timezone_set('America/New_York');
 
       
-       $last_seven_days = date('Y-m-d', strtotime('-6 days'));
-       // echo $last_seven_days;
+       $last_seven_days = date('Y-m-d\T00:00:00.u\Z', strtotime('-6 days'));
+      //  echo $last_seven_days;
        // exit();
  // date_default_timezone_set('America/New_York');
  //         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d').'&view=Detailed');
  //         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed');
 
-      $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$last_seven_days.'&dateTo='.date('Y-m-d'),
+      $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$last_seven_days.'&dateTo='.date('Y-m-d\TH:i:s.u\Z'),
 
              array(
 
@@ -1648,9 +1648,8 @@ public function get_phone(){
       else if ($this->session->userdata['userlogin']['usertype'] == "Manager"){
 
           // $records['leads']= $this->Lead_Model->select_lead_manager($this->session->userdata['userlogin']['user_id']);
-          $records['leads']= $this->Lead_Model->select_lead_manager_all_lead();
 
-   date_default_timezone_set('America/New_York');
+          date_default_timezone_set('America/New_York');
           // echo date('Y-m-d');
 
           require APPPATH.'vendor/autoload.php';
@@ -1732,6 +1731,7 @@ public function get_phone(){
           $records['agent_submissions'] = $this->Payment_Model->select_monthly_submission_agent(date('m'), date('Y'), $this->session->userdata['userlogin']['user_id']);
           $records['user_agents']= $this->Payment_Model->select_agent_assign($this->session->userdata['userlogin']['user_id']);
           $records['number_assign_agents']= $this->Payment_Model->select_number_agent_assign($this->session->userdata['userlogin']['user_id']);
+          $records['leads']= $this->Lead_Model->select_lead_manager_all_lead();
 
 
           $this->load->view('template/header_manager', $records);
@@ -1740,13 +1740,7 @@ public function get_phone(){
           $this->load->view('template/footer_manager', $records);
           // $this->load->view('template/sidebar_manager', $records);
 
-    
-            
-
-
-
          }
-
 
           else if ($this->session->userdata['userlogin']['usertype'] == "Human Resources"){
                   $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
@@ -3913,22 +3907,15 @@ function searchForId($name, $array) {
 
         public function load_data_user_limit(){
 
-     //    $data =array();
-     //    $get_author_name= $this->Lead_Model->select_lead_manager_all_lead();
-     //      foreach ($get_author_name as $value) {
-
-     //        $data[] = $value['author_name'] ;
-     //    }
-
-     //    echo #
-         $rowperpage = 100;
+         $rowperpage = 10;
         // Row position
          $rowno = $_POST['start'];
 
      
             $list = $this->Lead_Model->select_lead_manager_all_lead_limit($rowno,$rowperpage,$_POST['search']['value']);
             $data = array();
-        
+
+         if(!empty($list)){
             foreach ($list as $lead) {
                    $data[]= $lead;
             }
@@ -3943,8 +3930,16 @@ function searchForId($name, $array) {
                     );
 
             echo json_encode($output);
-
-
+        }
+         else{
+            $output = array(
+              "draw" => $_POST['draw'],
+              "recordsTotal" => 0,
+              "recordsFiltered" => 0,
+              "data" => $data,
+            );
+          echo json_encode($output);
+       }
     }
 
     public function load_data_collection_payment(){
@@ -3952,27 +3947,38 @@ function searchForId($name, $array) {
      $rowperpage = 10;
     // Row position
      $rowno = $_POST['start'];
+     $list = array();
 
-     
-    
  
-        $list = $this->Lead_Model->view_lead_collection_contract($this->session->userdata['userlogin']['user_id'],$rowno,$rowperpage,$_POST['search']['value']);
+        $list = $this->Lead_Model->view_lead_collection_contract($this->session->userdata['userlogin']['user_id'],$rowno,$rowperpage,$_POST['search']['value'], $this->input->post('classification'));
         $data = array();
-    
-        foreach ($list as $lead) {
-               $data[]= $lead;
-        }
-          $query = $this->Lead_Model->getrecordCount($this->session->userdata['userlogin']['user_id'],$_POST['search']['value']);
+
+       if(!empty($list)){
+            foreach ($list as $lead) {
+                  $data[]= $lead;
+            }
+              $query = $this->Lead_Model->getrecordCount($this->session->userdata['userlogin']['user_id'],$_POST['search']['value'], $this->input->post('classification'));
 
 
-        $output = array(
-                        "draw" => $_POST['draw'],
-                        "recordsTotal" => $query['count'],
-                        "recordsFiltered" => $query['num_rows'],
-                        "data" => $data,
-                );
-        //output to json format
-        echo json_encode($output);
+            $output = array(
+                            "draw" => $_POST['draw'],
+                            "recordsTotal" => $query['count'],
+                            "recordsFiltered" => $query['num_rows'],
+                            "data" => $data,
+                    );
+            //output to json format
+            echo json_encode($output);
+         }
+         else{
+                $output = array(
+                  "draw" => $_POST['draw'],
+                  "recordsTotal" => 0,
+                  "recordsFiltered" => 0,
+                  "data" => $data,
+            );
+             echo json_encode($output);
+
+         }
 
     }
     public function load_data_filter_classification(){
@@ -4008,10 +4014,10 @@ function searchForId($name, $array) {
     // Row position
      $rowno = $_POST['start'];
 
- 
+     
         $list = $this->Lead_Model->view_leads_agent_limit($this->session->userdata['userlogin']['user_id'],$rowno,$rowperpage,$_POST['search']['value']);
         $data = array();
-    
+     if(!empty($list)){
         foreach ($list as $lead) {
                $data[]= $lead;
         }
@@ -4026,11 +4032,19 @@ function searchForId($name, $array) {
                 );
         //output to json format
         echo json_encode($output);
+        }
+          else{
+            $output = array(
+              "draw" => $_POST['draw'],
+              "recordsTotal" => 0,
+              "recordsFiltered" => 0,
+              "data" => $data,
+        );
+        echo json_encode($output);
 
     }
 
-
-
+    }
 
 
     public function collection_lead($id=""){
@@ -4298,37 +4312,10 @@ function searchForId($name, $array) {
          date_default_timezone_set('America/New_York');
          $yesterday = date('Y-m-d', strtotime('-1 days'));
 
-           if($this->input->post('start') == date('Y-m-d') &&  $this->input->post('end') == date('Y-m-d')){
 
-               $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d').'&view=Detailed');
-                         // echo "a";
+       $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
 
-          }
-          else if($this->input->post('start') == date('Y-m-d') &&  $this->input->post('end') == $yesterday){
- 
-             $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed'); 
-                            // echo "b";
-
-          }
-           else if($this->input->post('start') == $yesterday &&  $this->input->post('end') == date('Y-m-d')){
- 
-             $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed'); 
-                                     // echo "c";
-
-          }
-        
-         // else if($this->input->post('start') != $this->input->post('end')){
-
-         //     $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$this->input->post('start').'&dateTo='.$this->input->post('end').'&view=Detailed');
-         //            // echo "c";
-
-         //  }
-
-          else{
-             $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$this->input->post('start').'&dateTo='.date('Y-m-d', strtotime($this->input->post('end').'+1 day')).'&view=Detailed');
-                                  // echo "d";
-
-          }
+           
            // exit();
          //  if($this->input->post('start') == date('Y-m-d') &&  $this->input->post('end') == date('Y-m-d')){
 
@@ -4729,32 +4716,9 @@ function searchForId($name, $array) {
           $date_from_prev = $datetime->modify('-1 day')->format('Y-m-d\TH:i:s.u\Z');
 
          date_default_timezone_set('America/New_York');
-         $yesterday = date('Y-m-d', strtotime('-1 days'));
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
 
-           if($this->input->post('start') == date('Y-m-d') &&  $this->input->post('end') == date('Y-m-d')){
-
-               $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d').'&view=Detailed');
-                         // echo "a";
-
-          }
-          else if($this->input->post('start') == date('Y-m-d') &&  $this->input->post('end') == $yesterday){
- 
-             $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed'); 
-                            // echo "b";
-
-          }
-           else if($this->input->post('start') == $yesterday &&  $this->input->post('end') == date('Y-m-d')){
- 
-             $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed'); 
-                                     // echo "c";
-
-          }
-        
-          else{
-             $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$this->input->post('start').'&dateTo='.date('Y-m-d', strtotime($this->input->post('end').'+1 day')).'&view=Detailed');
-                                  // echo "d";
-
-          }
+          
           // exit();
 
                   
@@ -11663,20 +11627,16 @@ public function send_email_author(){
 
       //   }
             public function status_lead_no_activities(){
-  
-              $rowperpage = 100;
+              $rowperpage = 20;
               $rowno = $_POST['start'];
-
                   $list = $this->Lead_Model->select_all_remark_date($rowno,$rowperpage,$_POST['search']['value'], $this->input->post('start_date'), $this->input->post('end_date'), $this->input->post('agent_name'));
                   $data = array();
-                  $output = array();
 
-                 if(!empty($list) || $list != ""){
+                 if(!empty($list)){
                     foreach ($list as $lead) {
                            $data[]= $lead;
                     }
-                    $query = $this->Lead_Model->getrecord_CountNoactivities_Lead($_POST['search']['value']);
-
+                    $query = $this->Lead_Model->getrecord_CountNoactivities_Lead($_POST['search']['value'], $this->input->post('start_date'), $this->input->post('end_date'), $this->input->post('agent_name'));
 
                     $output = array(
                                     "draw" => $_POST['draw'],
@@ -11684,10 +11644,18 @@ public function send_email_author(){
                                     "recordsFiltered" => $query['num_rows'],
                                     "data" => $data,
                             );
-                  echo json_encode($output);
+                     echo json_encode($output);
                 }
-  
+                else{
+                    $output = array(
+                    "draw" => $_POST['draw'],
+                    "recordsTotal" => 0,
+                    "recordsFiltered" => 0,
+                    "data" => $data,
+                    );
+                 echo json_encode($output);
 
+                }
         }
         public function load_check_lead(){
 

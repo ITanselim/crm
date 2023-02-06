@@ -68,9 +68,9 @@
                 </select>
               </div> -->
               <div style="float:right; ">
-              <button type="button" id="recyle_lead" class="btn btn-info">Recyled Lead</button>
+              <!-- <button type="button" id="recyle_lead" class="btn btn-info">Recyled Lead</button> -->
 
-            <!--   <button style="height: 38px;" type="button" class="btn btn-info" aria-hidden="true" data-toggle="modal" data-target="#assignAgentModal" data-backdrop="static" data-keyboard="false">Recyle Lead</button> -->
+              <button style="height: 38px;" type="button" class="btn btn-info" aria-hidden="true" data-toggle="modal" data-target="#assignAgentModal" data-backdrop="static" data-keyboard="false">Recyle Lead</button>
               </div>
 
             
@@ -274,7 +274,7 @@
 
                               <div class="table-responsive">
 
-                                <table class="table table-bordered" id="leaddataTableselectagent" width="100%" cellspacing="0">
+                                <table class="table table-bordered" id="leadactivitiesDatatable" width="100%" cellspacing="0">
 
                                   <thead>
 
@@ -302,7 +302,9 @@
                                       <th>Agent Assigned</th>
                                       <th>Date Assign</th>
                                       <th>Remark</th>
-                                      <th>Date Remark</th>zall_lead' class='form-check-input' style='position:relative; width:45px;'></th>
+                                      <th>Date Remark</th>
+                                      <th><input type="checkbox" name="" id=""></th>
+                                      
 
 
                                     </tr>
