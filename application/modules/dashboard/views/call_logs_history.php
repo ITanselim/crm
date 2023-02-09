@@ -266,8 +266,6 @@
 
                              foreach ($call_log_histories as $call_log_history){
 
-                                       if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
-
 
                                           $from_name = !empty($call_log_history->from->name) ? $call_log_history->from->name: "";
 
@@ -464,8 +462,6 @@
 
                                        }
                                   }
-
-                         }
 
 
 

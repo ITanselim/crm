@@ -21,7 +21,19 @@ class Appointment extends MY_Controller {
 
       $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
        $records['all_agents_and_managers']= $this->User_Model->select_user_agent();
-     if($this->session->userdata['userlogin']['usertype'] == "Manager"){
+      if($this->session->userdata['userlogin']['usertype'] == "Manager" && $this->session->userdata['userlogin']['user_id'] == 70 ){
+
+      $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
+      $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
+      $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
+      $records['appointments']= $this->Appointment_Model->view_list_appointment_all();
+      $records['status_appointment']= $this->Appointment_Model->select_appointment_status($this->uri->segment(3));
+
+         $this->load->view('appointment_list_manager', $records);
+     
+     }
+
+    else if($this->session->userdata['userlogin']['usertype'] == "Manager"){
 
       $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
       $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);

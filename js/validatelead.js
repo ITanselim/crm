@@ -982,24 +982,17 @@ $(document).on("click", ".view_update_leaddetail", function(e){
                //$("#update_lead_form .status option[value='"+data[i].collection_status+"']").removeAttr('selected').change();
 
                if(data[i].status !="" ){
-                 $("#update_lead_form .status option[value='"+data[i].status+"']").removeAttr('selected').change();
-                 $("#update_lead_form .status option[value='"+data[i].status+"']").attr('selected', 'selected').text(data[i].status).change();
+                 $("#update_lead_form .status").val(data[i].status).change();
               }   
-              else{
-                $("#update_lead_form .status").removeAttr('selected').change();
-                $('#update_lead_form .status').attr('selected', 'selected').val("").change();
-            }                     
+               else{
+                $('#update_lead_form .status').val("").change();
+              }                     
              
-
-               //alert(data[i].status);
-
-               if(data[i].classification !="" ){
-                  $("#update_lead_form .classification option[value='"+data[i].classification+"']").removeAttr('selected').change();
-                  $("#update_lead_form .classification option[value='"+data[i].classification+"']").attr('selected', 'selected').text(data[i].classification).change();
+              if(data[i].classification !="" ){
+                  $("#update_lead_form .classification").val(data[i].classification).change();
               }   
               else{
-                $("#update_lead_form .classification").removeAttr('selected').change();
-                $('#update_lead_form .classification').attr('selected', 'selected').val("").change();
+                 $('#update_lead_form .classification').val("").change();
               }                     
                
               

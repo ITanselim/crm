@@ -79,6 +79,28 @@
         $this->db->close();
 
       } 
+
+
+     // history of appointment agent and closer name
+      public function view_list_appointment_all(){ 
+
+        $this->db->select('appointment.*, lead.*, user.firstname as m_fname, user.lastname as m_lname, agent.firstname as a_fname,agent.lastname as a_lname')->from('tblappointment as appointment')
+
+        ->join('tbllead as lead', 'appointment.appt_project_id = lead.project_id', 'inner')
+        ->join('tbluser as user', 'appointment.appt_closer_id = user.user_id', 'inner')
+        ->join('tbluser as agent', 'appointment.appt_agent_id = agent.user_id', 'inner');
+
+
+        $this->db->order_by('appointment.appt_date_create','desc');
+
+        $query=$this->db->get();
+
+        return $query->result_array();
+
+        $this->db->close();
+
+      } 
+   
    
       public function view_appointment_detail($appt_id){ 
 

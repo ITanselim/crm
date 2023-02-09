@@ -444,7 +444,7 @@
                          <div class="col mb-2">
                             <label for="validationCustom05">Lead Classification</label>
                              <select class="form-control classification" name="classification" style="height:50px;" >
-                                <option selected value="">Please Select a Classification</option>
+                                <option value="">Please Select a Classification</option>
                                 <option value="BBH">BBH</option>
                                 <option value="TGF">TGF</option>
                               </select>                                   

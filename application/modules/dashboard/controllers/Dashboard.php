@@ -1285,8 +1285,8 @@ public function get_phone(){
           $date_from_prev = $datetime->modify('-1 day')->format('Y-m-d\TH:i:s.u\Z');
 
          date_default_timezone_set('America/New_York');
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d').'&view=Detailed');
-         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed');
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z').'&view=Detailed');
+         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T23:00:00.u\Z').'&view=Detailed');
 
            // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$date_to.'&view=Detailed');
            // $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateto='.$date_from.'&view=Detailed');
@@ -1390,10 +1390,7 @@ public function get_phone(){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
-                           if($record->result == 'Call connected' || $record->result == 'Voicemail' || $record->result == 'Accepted'){
                             $count_call_log += count((array)$record->from->name);  
-                   
-                       }
 
                     }   
 
@@ -1414,9 +1411,8 @@ public function get_phone(){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
-                           if($recordt->result == 'Call connected' || $recordt->result == 'Voicemail' || $recordt->result == 'Accepted'){
                             $count_call_log_prev += count((array)$recordt->from->name);  
-                          }
+                        
                        }
     
                 }
@@ -2094,10 +2090,9 @@ function searchForId($name, $array) {
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
-                           if($record->result == 'Call connected' || $record->result == 'Voicemail' || $record->result == 'Accepted' || $record->result == 'No Answer'){
                             $count_call_log += count((array)$record->from->name);  
                    
-                       }
+                    
 
                     }   
 
@@ -2114,9 +2109,8 @@ function searchForId($name, $array) {
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
-                           if($recordt->result == 'Call connected' || $recordt->result == 'Voicemail' || $recordt->result == 'Accepted' || $recordt->result == 'No Answer'){
                             $count_call_log_prev += count((array)$recordt->from->name);  
-                          }
+                          
                        }
     
                 }
@@ -4383,7 +4377,6 @@ function searchForId($name, $array) {
                                           if($from_name == 'Warren Walton'){
 
                                               $get_extension_number = 101;
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4397,7 +4390,7 @@ function searchForId($name, $array) {
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
 
-                                             }
+                                             
 
 
                                           }
@@ -4405,7 +4398,7 @@ function searchForId($name, $array) {
                                          else if($from_name == 'Allison Lewis'){
 
                                               $get_extension_number = 102;
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
+
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4418,8 +4411,6 @@ function searchForId($name, $array) {
                                                           "result" => $call_log_history->result,
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
-
-                                             }
 
 
                                           }
@@ -4427,7 +4418,6 @@ function searchForId($name, $array) {
                                           else if($from_name == 'Alex Morgan'){
 
                                                $get_extension_number = 103;
-                                                if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4440,8 +4430,6 @@ function searchForId($name, $array) {
                                                           "result" => $call_log_history->result,
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
-
-                                             }
 
 
                                           }
@@ -4449,7 +4437,6 @@ function searchForId($name, $array) {
                                          else if($from_name == 'Olivia Turner'){
 
                                               $get_extension_number = 104;
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4462,8 +4449,6 @@ function searchForId($name, $array) {
                                                           "result" => $call_log_history->result,
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
-
-                                             }
 
 
                                           }
@@ -4472,7 +4457,6 @@ function searchForId($name, $array) {
 
                                               $get_extension_number = 105;
 
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4486,7 +4470,6 @@ function searchForId($name, $array) {
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
 
-                                             }
 
 
                                           }
@@ -4495,7 +4478,6 @@ function searchForId($name, $array) {
                                           else if($from_name == 'Sandra Lauder'){
 
                                               $get_extension_number = 106;
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4509,7 +4491,6 @@ function searchForId($name, $array) {
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
 
-                                             }
 
                                           }
 
@@ -4517,7 +4498,6 @@ function searchForId($name, $array) {
 
 
                                               $get_extension_number = 107;
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4530,17 +4510,14 @@ function searchForId($name, $array) {
                                                           "result" => $call_log_history->result,
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
-
-                                             }
 
 
                                           }
 
-                                          else if($from_name == 'Jason Hunt'){
+                                          else if($from_name == 'Paul Mclean'){
 
 
                                               $get_extension_number = 108;
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4553,16 +4530,13 @@ function searchForId($name, $array) {
                                                           "result" => $call_log_history->result,
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
-
-                                             }
-
 
                                           }
                                           else if($from_name == 'Rebecca Williams'){
 
 
                                               $get_extension_number = 109;
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
+                                
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4575,8 +4549,6 @@ function searchForId($name, $array) {
                                                           "result" => $call_log_history->result,
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
-
-                                             }
 
 
                                           }
@@ -4584,7 +4556,6 @@ function searchForId($name, $array) {
                                            else if($from_name == 'Robert Johns'){
 
                                               $get_extension_number = 110;
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4597,15 +4568,13 @@ function searchForId($name, $array) {
                                                           "result" => $call_log_history->result,
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
-
-                                             }
 
 
                                           }
                                              else if($from_name == 'Sean Oliver'){
 
                                               $get_extension_number = 111;
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
+
                                                       $data[] = array(
                                                           "type" => $get_type,
                                                           "from_Phonenumber" => $from_Phonenumber,
@@ -4618,8 +4587,6 @@ function searchForId($name, $array) {
                                                           "result" => $call_log_history->result,
                                                           "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                      );
-
-                                             }
 
 
                                           }
@@ -4634,7 +4601,7 @@ function searchForId($name, $array) {
                                             $data);
 
                                           foreach ($data as $value) {
-                                                 if ($this->searchDuplicate($result, $value) === false) {
+                                                 if ($this->searchDuplicate($result, $value) === false ) {
                                                         $result[] = $value;
                                                  }
                                           }
@@ -4645,7 +4612,8 @@ function searchForId($name, $array) {
 
     function searchDuplicate($arr, $obj) {
             foreach ($arr as $value) {
-                if ($value['to_Phonenumber'] == $obj['to_Phonenumber'] && $value['extension_number'] == $obj['extension_number'] && $value['date'] == $obj['date'] ) {
+                if ($value['to_Phonenumber'] == $obj['to_Phonenumber'] && $value['extension_number'] == $obj['extension_number'] && $value['date'] == $obj['date'] 
+                    && $value['duration'] <= "00:05:00" ) {
                     return true; //duplicate
                 }
             }
@@ -4768,8 +4736,6 @@ function searchForId($name, $array) {
                                           if($from_name == $user_charge){
 
                                               $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted"){
-
                                                    $data[] = array(
                                                                 "type" => $get_type,
                                                                 "from_Phonenumber" => $from_Phonenumber,
@@ -4777,17 +4743,29 @@ function searchForId($name, $array) {
                                                                 "extension_number" => $get_extension_number,
                                                                 "location" => $to_location,
                                                                 "startTime" => date('Y-m-d g:i A', strtotime($call_log_history->startTime)),
+                                                                "date" => date('Y-m-d', strtotime($call_log_history->startTime)),
                                                                 "action" => $call_log_history->action,
                                                                 "result" => $call_log_history->result,
                                                                 "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                   );
                                              }
-                                        }
+                            
                                      }
                                   }
                               
+                                     $result = array();
+                                    
+                                     array_multisort(array_column($data, 'date'), SORT_ASC,
+                                            array_column($data, 'duration'),      SORT_DESC,
+                                            $data);
 
-                                echo  json_encode($data);
+                                          foreach ($data as $value) {
+                                                 if ($this->searchDuplicate($result, $value) === false ) {
+                                                        $result[] = $value;
+                                                 }
+                                          }
+                                            
+                                        echo json_encode($result);
 
       
     }
@@ -13532,8 +13510,6 @@ public function update_submission(){
                            if (!empty($call_log_history->from->name)) {         
                               $from_name = !empty($call_log_history->from->name) ? $call_log_history->from->name: "";
                                      if($from_name == trim($agent_name)){
-                                               if($call_log_history->result == "Voicemail"  || $call_log_history->result == "Call connected" || $call_log_history->result == "Accepted" || $call_log_history->result == "No Answer"){
-
                                                             // Explode by separator :
                                                              $handle =  gmdate("H:i:s", $call_log_history->duration);
                                                              $totalWork = $this->convertStringToNumSeconds($handle);
@@ -13549,7 +13525,7 @@ public function update_submission(){
                                                     }
                                             }
                                     }
-                              }
+                        
 
 
 

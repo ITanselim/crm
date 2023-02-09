@@ -89,9 +89,9 @@ $(document).on('click','#update_status_form #update_status',function(e) {
             $("#update_status_form .alert-danger").removeClass("alert-danger").addClass("alert-success");
             $("#update_status_form .alert-success").css("display", "block");
             $("#update_status_form .alert-success p").html(res.message);
-            setTimeout(function(){
-                         location.reload();
-                },1000);
+            // setTimeout(function(){
+            //              location.reload();
+            //     },1000);
 
         }
          else{
