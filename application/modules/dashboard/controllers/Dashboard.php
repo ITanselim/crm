@@ -1229,7 +1229,7 @@ public function get_phone(){
 
      public function index($id=''){
        
-             $get_extension_number = 0;
+     $get_extension_number = 0;
     $records['notification_appointment']  = $this->Appointment_Model->view_notification_user($this->session->userdata['userlogin']['user_id']);
       $records['count_apointmentnotifications']  = $this->Appointment_Model->select_count_notification($this->session->userdata['userlogin']['user_id']);
         $id = $this->uri->segment(3);
@@ -1285,26 +1285,22 @@ public function get_phone(){
           $date_from_prev = $datetime->modify('-1 day')->format('Y-m-d\TH:i:s.u\Z');
 
          date_default_timezone_set('America/New_York');
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z').'&view=Detailed');
-         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T23:00:00.u\Z').'&view=Detailed');
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\TH:i:s.u\Z').'&view=Detailed');
+         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\TH:i:s.u\Z').'&view=Detailed');
 
-           // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$date_to.'&view=Detailed');
-           // $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateto='.$date_from.'&view=Detailed');
+       
 
-         // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d').'&dateTo='.date('Y-m-d'),
-
-         //     array(
-
-         //  //   'from' => array('phoneNumber' => $RINGCENTRAL_USERNAME),
-
-          //  //   'to' => array('phoneNumber' => $RECIPIENT),
-         //   // 'extensionNumber' => array('105')
-         //  ));
-
-           
 
           $count_call_log = 0;
           $count_call_log_prev = 0;
+          $result_call_log_current =array();
+          $data_call_log_current =array();
+
+          $result_call_log_prev =array();
+          $data_current_call=array();
+          $data_call_prev=array();
+          $data_call_log_prev=array();
+
           $agent_name = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
           $agent_name2 = $this->session->userdata['userlogin']['sub_name'];
           $current_date  = date('Y-m-06');
@@ -1390,7 +1386,14 @@ public function get_phone(){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
-                            $count_call_log += count((array)$record->from->name);  
+                        $data_current_call[] = array(
+                          "from_Phonenumber" =>  !empty($record->from->phoneNumber)? $record->from->phoneNumber : "",
+                          "to_Phonenumber" =>  !empty($record->to->phoneNumber)? $record->to->phoneNumber : "", $record->to->phoneNumber,
+                          "extension_number" => $get_extension_number,
+                          "date" => date('Y-m-d', strtotime($record->startTime)),
+                          "duration" => gmdate("H:i:s", $record->duration),
+                          "from_name" => $record->from->name,
+                       );
 
                     }   
 
@@ -1398,7 +1401,15 @@ public function get_phone(){
 
               }
         
+            foreach ($data_current_call as $value) {
+                if ($this->searchDuplicate($result_call_log_current, $value) === false ) {
+                       $result_call_log_current[] = $value;
+                }
+            }
+              $total_call_current =  array_column($result_call_log_current, 'from_name');
 
+              $count_call_log = count($total_call_current);  
+  
 
 
                      
@@ -1411,13 +1422,31 @@ public function get_phone(){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
-                            $count_call_log_prev += count((array)$recordt->from->name);  
-                        
-                       }
+                            
+                        $data_call_prev[] = array(
+                          "from_Phonenumber" => !empty($recordt->from->phoneNumber)? $recordt->from->phoneNumber : "",
+                          "to_Phonenumber" => !empty($recordt->to->phoneNumber)? $recordt->to->phoneNumber : "",
+                          "extension_number" => $get_extension_number,
+                          "date" => date('Y-m-d', strtotime($recordt->startTime)),
+                          "duration" => gmdate("H:i:s", $recordt->duration),
+                          "from_name" => $recordt->from->name,
+                       );
+
+
+                     }
     
                 }
             }
 
+        
+                 foreach ($data_call_prev as $value) {
+                        if ($this->searchDuplicate($result_call_log_prev, $value) === false ) {
+                               $result_call_log_prev[] = $value;
+                        }
+                 }
+                 $total_call_prev =  array_column($result_call_log_prev, 'from_name');
+
+                $count_call_log_prev = count($total_call_prev);  
 
           $user_charge = $this->session->userdata['userlogin']['firstname'] .' '. $this->session->userdata['userlogin']['lastname'];
           
@@ -4307,7 +4336,7 @@ function searchForId($name, $array) {
          $yesterday = date('Y-m-d', strtotime('-1 days'));
 
 
-       $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+       $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T09:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
 
            
            // exit();
@@ -4612,7 +4641,7 @@ function searchForId($name, $array) {
 
     function searchDuplicate($arr, $obj) {
             foreach ($arr as $value) {
-                if ($value['to_Phonenumber'] == $obj['to_Phonenumber'] && $value['extension_number'] == $obj['extension_number'] && $value['date'] == $obj['date'] 
+                if ($value['from_Phonenumber'] == $obj['from_Phonenumber'] && $value['to_Phonenumber'] == $obj['to_Phonenumber'] && $value['extension_number'] == $obj['extension_number'] && $value['date'] == $obj['date'] 
                     && $value['duration'] <= "00:05:00" ) {
                     return true; //duplicate
                 }
@@ -4684,7 +4713,7 @@ function searchForId($name, $array) {
           $date_from_prev = $datetime->modify('-1 day')->format('Y-m-d\TH:i:s.u\Z');
 
          date_default_timezone_set('America/New_York');
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T09:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
 
           
           // exit();
