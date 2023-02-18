@@ -674,7 +674,7 @@ public function get_phone(){
       $records['notifications']  = $this->Notification_Model->view_notification_user($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
       $records['count_notifications']  = $this->Notification_Model->select_count_notification($this->session->userdata['userlogin']['user_id'], $user_charge, $this->session->userdata['userlogin']['usertype']);
        date_default_timezone_set('America/New_York');
-       // echo  date("Y-m-d h:i:s");
+       echo  date('Y-m-d\TH:i:s.u\Z');
        // exit();
 
       require APPPATH.'vendor/autoload.php';
@@ -718,7 +718,7 @@ public function get_phone(){
  //         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d').'&view=Detailed');
  //         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed');
 
-      $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$last_seven_days.'&dateTo='.date('Y-m-d\TH:i:s.u\Z'),
+      $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.$last_seven_days.'&dateTo='.date('Y-m-d\TH:i:s.u\Z'),
 
              array(
 
@@ -955,233 +955,6 @@ public function get_phone(){
       }
 
 
-       public function call_log_history_test(){
-
-       date_default_timezone_set('America/New_York');
-       // echo  date("Y-m-d h:i:s");
-       // exit();
-
-       // $start = $month = date('2020-01-01');
-       // $end = date('Y-m-d');
-
-      require APPPATH.'vendor/autoload.php';
-
-       $data = array();
-
-      $RECIPIENT = '+18882248399';
-
-      $RINGCENTRAL_CLIENTID = 'iEbMxA7gQs6izB6AvBDVHQ';
-
-      $RINGCENTRAL_CLIENTSECRET = '7WIxpzSLSDuG0oyQ2JO2Lg65BSRTBuSuOHD3S1umuAkQ';
-
-      $RINGCENTRAL_SERVER = 'https://platform.ringcentral.com';
-
-
-
-      $RINGCENTRAL_USERNAME = '+18882248399';
-
-      $RINGCENTRAL_PASSWORD = 'GodlovesUs143@';
-
-      $RINGCENTRAL_EXTENSION = '101';
-
-
-
-      $rcsdk = new RingCentral\SDK\SDK($RINGCENTRAL_CLIENTID, $RINGCENTRAL_CLIENTSECRET, $RINGCENTRAL_SERVER);
-
-
-
-      $platform = $rcsdk->platform();
-
-
-
-      $platform->login($RINGCENTRAL_USERNAME, $RINGCENTRAL_EXTENSION, $RINGCENTRAL_PASSWORD);
-
-
-
-       $last_seven_days = date('Y-m-d', strtotime('-5 days'));
-
-       $get_all_data= array();
-
-
-      // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$last_seven_days.'&dateTo='.date('Y-m-d', strtotime('+5 days')));
-
-       // $month = strtotime('2020-01-01');
-       // $end = strtotime('today');
-       //              $timePerApiCall = 1.2;
-       //  while($month < $end)
-       //  {
-       //       $first_day_month =  date('Y-m-01', $month);
-       //       $ten_days_month =  date('Y-m-10', $month);
-       //       $eleven_days_month =  date('Y-m-11', $month);
-       //       $twenty_days_month =  date('Y-m-20', $month);
-       //       $twentyone_days_month =  date('Y-m-21', $month);
-       //       $last_day_month = date('Y-m-t', $month);
-
-     
-       //        sleep(10);
-       //        $get_tendays_month = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.$first_day_month.'&dateTo='.$ten_days_month);
-       //        $get_twentydays_month = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.$eleven_days_month.'&dateTo='.$twenty_days_month);
-       //        $get_thirtydays_month = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.$twentyone_days_month.'&dateTo='.$last_day_month);
-
-       //        $get_all_data[] = array_merge((array) $get_tendays_month->json()->records, (array) $get_twentydays_month->json()->records, (array) $get_thirtydays_month->json()->records);
-
-
-       //    $month = strtotime("+1 month", $month);
-     
-              $get_tendays_jan = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-01-01').'&dateTo='.date('Y-01-10'));
-              $get_twentydays_jan = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-01-11').'&dateTo='.date('Y-01-20'));
-              $get_thi0rtydays_jan = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-01-21').'&dateTo='.date('Y-m-t'), strtotime('Y-01-01'));
-
-              $get_tendays_feb = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-02-01').'&dateTo='.date('Y-02-10'));
-              $get_twentydays_feb = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-02-11').'&dateTo='.date('Y-02-20'));
-              $get_thirtydays_feb = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-02-21').'&dateTo='.date('Y-m-t'), strtotime('Y-02-01'));
-
-              $get_tendays_march = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-03-01').'&dateTo='.date('Y-03-10'));
-              $get_twentydays_march = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-03-11').'&dateTo='.date('Y-03-20'));
-              $get_thirtydays_march = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-03-21').'&dateTo='.date('Y-m-t'), strtotime('Y-03-01'));
-
-
-              $get_tendays_april = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-04-01').'&dateTo='.date('Y-04-10'));
-              $get_twentydays_april = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-04-11').'&dateTo='.date('Y-04-20'));
-              $get_thirtydays_april = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-04-21').'&dateTo='.date('Y-m-t'), strtotime('Y-04-01'));
-              sleep(20);
-              $get_tendays_may = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-05-01').'&dateTo='.date('Y-05-10'));
-              $get_twentydays_may = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-05-11').'&dateTo='.date('Y-05-20'));
-              $get_thirtydays_may = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-05-21').'&dateTo='.date('Y-m-t'), strtotime('Y-05-01'));
-
-              $get_tendays_jun = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-06-01').'&dateTo='.date('Y-06-10'));
-              $get_twentydays_jun = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-06-11').'&dateTo='.date('Y-06-20'));
-              $get_thirtydays_jun = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-06-21').'&dateTo='.date('Y-m-t'), strtotime('Y-06-01'));
-
-              $get_tendays_july = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-07-01').'&dateTo='.date('Y-07-10'));
-              $get_twentydays_july = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-07-11').'&dateTo='.date('Y-07-20'));
-              $get_thirtydays_july = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-07-21').'&dateTo='.date('Y-m-t'), strtotime('Y-07-01'));
-
-              $get_tendays_aug = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-08-01').'&dateTo='.date('Y-08-10'));
-              $get_twentydays_aug = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-08-11').'&dateTo='.date('Y-08-20'));
-              $get_thirtydays_aug = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-08-21').'&dateTo='.date('Y-m-t'), strtotime('Y-08-01'));
-
-              $get_tendays_sept = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-09-01').'&dateTo='.date('Y-09-10'));
-              $get_twentydays_sept = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-09-11').'&dateTo='.date('Y-09-20'));
-              $get_thirtydays_sept = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-09-21').'&dateTo='.date('Y-m-t'), strtotime('Y-09-01'));
-
-              $get_tendays_oct = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-10-01').'&dateTo='.date('Y-10-10'));
-              $get_twentydays_oct = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-10-11').'&dateTo='.date('Y-10-20'));
-              $get_thirtydays_oct = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-10-21').'&dateTo='.date('Y-m-t'), strtotime('Y-10-01'));
-
-              $get_tendays_nov = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-11-01').'&dateTo='.date('Y-11-10'));
-              $get_twentydays_nov = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-11-11').'&dateTo='.date('Y-11-20'));
-              $get_thirtydays_nov = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-11-21').'&dateTo='.date('Y-m-t'), strtotime('Y-11-01'));
-
-              $get_tendays_dec = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-12-01').'&dateTo='.date('Y-12-10'));
-              $get_twentydays_dec = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-12-11').'&dateTo='.date('Y-12-20'));
-              $get_thirtydays_dec = $platform->get('/account/~/call-log?page=1&perPage=1000&dateFrom='.date('Y-12-21').'&dateTo='.date('Y-m-t'), strtotime('Y-12-01'));
-
-
-
-
-              $get_all_data = array_merge(
-                (array) $get_tendays_jan->json()->records, (array) $get_twentydays_jan->json()->records, (array) $get_thirtydays_jan->json()->records, (array) $get_thirtydays_jan->json()->records, 
-                (array) $get_thirtydays_feb->json()->records,(array) $get_thirtydays_feb->json()->records,(array) $get_thirtydays_feb->json()->records,
-                (array) $get_thirtydays_march->json()->records,(array) $get_thirtydays_march->json()->records,(array) $get_thirtydays_march->json()->records,
-                (array) $get_thirtydays_april->json()->records,(array) $get_thirtydays_april->json()->records,(array) $get_thirtydays_april->json()->records,
-                (array) $get_thirtydays_may->json()->records,(array) $get_thirtydays_may->json()->records,(array) $get_thirtydays_may->json()->records,
-                (array) $get_thirtydays_june->json()->records,(array) $get_thirtydays_june->json()->records,(array) $get_thirtydays_june->json()->records,
-                (array) $get_thirtydays_july->json()->records,(array) $get_thirtydays_july->json()->records,(array) $get_thirtydays_july->json()->records,
-                (array) $get_thirtydays_aug->json()->records,(array) $get_thirtydays_aug->json()->records,(array) $get_thirtydays_aug->json()->records,
-                (array) $get_thirtydays_sept->json()->records,(array) $get_thirtydays_sept->json()->records,(array) $get_thirtydays_sept->json()->records,
-                (array) $get_thirtydays_oct->json()->records,(array) $get_thirtydays_oct->json()->records,(array) $get_thirtydays_oct->json()->records,
-                (array) $get_thirtydays_nov->json()->records,(array) $get_thirtydays_nov->json()->records,(array) $get_thirtydays_nov->json()->records,
-                (array) $get_thirtydays_dec->json()->records,(array) $get_thirtydays_dec->json()->records,(array) $get_thirtydays_dec->json()->records);
-
-        //    $headers= $get_all_data->response()->getHeaders();
-        //    $limit = strval($headers['X-Rate-Limit-Limit'][0]);
-        //    $remaining = strval($headers['X-Rate-Limit-Remaining'][0]);
-        //    $window = strval($headers['X-Rate-Limit-Window'][0]);
-
-        // echo count($get_all_data);
-
-      exit();
-       if ($this->session->userdata['userlogin']['usertype'] == "Finance"){
-
-          $records['signatures']= $this->Signature_Model->view_signature($this->session->userdata['userlogin']['user_id']);
-
-          $records['author_emails_updates']= $this->Lead_Model->select_author_email_not_empty();
-
-          $records['author_emails']= $this->Lead_Model->select_author_email();
-
-          $records['email_history']= $this->Signature_Model->view_email_history_all();
-
-          $this->load->view('email_authors_history', $records);  
-
-      }
-
-
-
-      else if ($this->session->userdata['userlogin']['usertype'] == "Admin"){
-               date_default_timezone_set('America/New_York');
-
-          $records['all_users']= $this->User_Model->select_user_agent_manager();
-
-          $records['call_log_histories'] = $resp->json()->records;
-
-          $this->load->view('call_logs_history', $records);  
-
-      }
-
-       else if ($this->session->userdata['userlogin']['usertype'] == "Production"){
-
-          $records['signatures']= $this->Signature_Model->view_signature($this->session->userdata['userlogin']['user_id']);
-
-          $records['author_emails_updates']= $this->Lead_Model->select_author_email_not_empty();
-
-          $records['author_emails']= $this->Lead_Model->select_author_email();
-
-          $records['email_history']= $this->Signature_Model->view_email_history_all();
-
-          $this->load->view('email_authors_production', $records);  
-
-      }
-
-       else if ($this->session->userdata['userlogin']['usertype'] == "Author Relation"){
-
-          $records['call_log_history']= $this->Signature_Model->view_email_history_all();
-
-          $this->load->view('email_authors_author_history', $records);  
-
-      }
-
-      else if ($this->session->userdata['userlogin']['usertype'] == "Manager"){
-         date_default_timezone_set('America/New_York');
-         $records['all_users']= $this->User_Model->select_user_agent_manager();
-         $records['call_log_histories'] = $resp->json()->records;
-
-
-          $this->load->view('call_logs_history_manager', $records);  
-
-      }
-
-
-
-      else if ($this->session->userdata['userlogin']['usertype'] == "Agent"){
-
-          $records['signatures']= $this->Signature_Model->view_signature($this->session->userdata['userlogin']['user_id']);
-
-          $records['author_emails_updates']= $this->Lead_Model->select_author_email_not_empty();
-
-          $records['author_emails']= $this->Lead_Model->select_author_email();
-
-          $records['email_history']= $this->Signature_Model->view_email_history($this->session->userdata['userlogin']['user_id']);
-
-          $this->load->view('call_logs_history', $records);  
-
-      }
-
-     }
-
-
-
-
     function unique_multi_array($array, $key) { 
 
         $temp_array = array(); 
@@ -1274,7 +1047,7 @@ public function get_phone(){
           $platform->login($RINGCENTRAL_USERNAME, $RINGCENTRAL_EXTENSION, $RINGCENTRAL_PASSWORD);
 
          $last_seven_days = date('Y-m-d', strtotime('-7 days'));
-         // echo date('Y-m-d');dd
+  
          // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d'));
          // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\TH:i:s\Z'));
 
@@ -1285,8 +1058,11 @@ public function get_phone(){
           $date_from_prev = $datetime->modify('-1 day')->format('Y-m-d\TH:i:s.u\Z');
 
          date_default_timezone_set('America/New_York');
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\TH:i:s.u\Z').'&view=Detailed');
-         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\TH:i:s.u\Z').'&view=Detailed');
+         // echo date('Y-m-d\TH:i:s.u\Z', strtotime('+14 hours'));
+         // exit();
+
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T10:00:00.u\Z').'&dateTo='.date('Y-m-d\T23:00:00.u\Z').'&view=Detailed');
+         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T10:00:00.u\Z').'&view=Detailed');
 
        
 
@@ -1387,8 +1163,8 @@ public function get_phone(){
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
                         $data_current_call[] = array(
-                          "from_Phonenumber" =>  !empty($record->from->phoneNumber)? $record->from->phoneNumber : "",
-                          "to_Phonenumber" =>  !empty($record->to->phoneNumber)? $record->to->phoneNumber : "", $record->to->phoneNumber,
+                          "from_Phonenumber" =>  !empty($record->from->phoneNumber) ? (array)$record->from->phoneNumber : "",
+                          "to_Phonenumber" =>  !empty($record->to->phoneNumber)? $record->to->phoneNumber : "",
                           "extension_number" => $get_extension_number,
                           "date" => date('Y-m-d', strtotime($record->startTime)),
                           "duration" => gmdate("H:i:s", $record->duration),
@@ -1585,8 +1361,8 @@ public function get_phone(){
 
          $last_seven_days = date('Y-m-d', strtotime('-7 days'));
 
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateTo'.date('Y-m-d'));
-         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateTo='.date('Y-m-d', strtotime('- 1 days')));
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateTo'.date('Y-m-d'));
+         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateTo='.date('Y-m-d', strtotime('- 1 days')));
 
           date_default_timezone_set('America/New_York');
 
@@ -1703,8 +1479,8 @@ public function get_phone(){
 
          $last_seven_days = date('Y-m-d', strtotime('-7 days'));
 
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateTo'.date('Y-m-d'));
-         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateTo='.date('Y-m-d', strtotime('- 1 days')));
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateTo'.date('Y-m-d'));
+         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateTo='.date('Y-m-d', strtotime('- 1 days')));
 
           date_default_timezone_set('America/New_York');
 
@@ -1804,8 +1580,8 @@ public function get_phone(){
 
          $last_seven_days = date('Y-m-d', strtotime('-7 days'));
 
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateTo'.date('Y-m-d'));
-         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateTo='.date('Y-m-d', strtotime('- 1 days')));
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateTo'.date('Y-m-d'));
+         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateTo='.date('Y-m-d', strtotime('- 1 days')));
 
           date_default_timezone_set('America/New_York');
 
@@ -1978,8 +1754,8 @@ function searchForId($name, $array) {
 
          $last_seven_days = date('Y-m-d', strtotime('-7 days'));
 
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d'));
-         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('- 1 days')));
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d'));
+         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d', strtotime('- 1 days')));
 
 
 
@@ -2084,8 +1860,8 @@ function searchForId($name, $array) {
          $last_seven_days = date('Y-m-d', strtotime('-7 days'));
           date_default_timezone_set('America/New_York');
 
-          $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d').'&view=Detailed');
-         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed');
+          $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d').'&view=Detailed');
+         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed');
 
           $count_call_log = 0;
           $count_call_log_prev = 0;
@@ -4333,30 +4109,35 @@ function searchForId($name, $array) {
           $date_from_prev = $datetime->modify('-1 day')->format('Y-m-d\TH:i:s.u\Z');
 
          date_default_timezone_set('America/New_York');
-         $yesterday = date('Y-m-d', strtotime('-1 days'));
+         $yesterday = date('Y-m-d', strtotime('-1 day'));
 
 
-       $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T09:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+       // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+
+       // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T10:00:00.u\Z').'&dateTo='.date('Y-m-d\T23:00:00.u\Z').'&view=Detailed');
+
+       //   $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T11:00:00.u\Z').'&view=Detailed');
 
            
            // exit();
-         //  if($this->input->post('start') == date('Y-m-d') &&  $this->input->post('end') == date('Y-m-d')){
+          if($this->input->post('start') == date('Y-m-d') &&  $this->input->post('end') == date('Y-m-d')){
 
-         //       $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d'));
-         //  }
-         //  else if($this->input->post('start') == $yesterday &&  $this->input->post('end') == $yesterday){
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z').'&dateTo='.date('Y-m-d\T23:00:00.u\Z').'&view=Detailed');
+          }
+          else if($this->input->post('start') == $yesterday &&  $this->input->post('end') == $yesterday){
  
-         //     $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$this->input->post('start').'&dateTo='.date('Y-m-d', strtotime($this->input->post('end').'+1 days')).'&view=Detailed');
-         //  }
-         // else if($this->input->post('start') != $this->input->post('end')){
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T11:00:00.u\Z').'&view=Detailed');
 
-         //     $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$this->input->post('start').'&dateTo='.$this->input->post('end').'&view=Detailed');
-         //  }
+          }
+         else if($this->input->post('start') == $this->input->post('end')){
 
-         //  else{
-         //     $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$this->input->post('start').'&dateTo='.date('Y-m-d', strtotime($this->input->post('end').'+1 days')).'&view=Detailed');
+           $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+          }
 
-         //  }
+          else{
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+
+          }
 
                   
                        foreach ($resp->json()->records as $call_log_history){
@@ -4582,7 +4363,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                           else if($from_name == 'Robert Johns'){
+                                           else if($from_name == 'Henry Bowers'){
 
                                               $get_extension_number = 110;
                                                       $data[] = array(
@@ -4713,7 +4494,29 @@ function searchForId($name, $array) {
           $date_from_prev = $datetime->modify('-1 day')->format('Y-m-d\TH:i:s.u\Z');
 
          date_default_timezone_set('America/New_York');
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T09:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+         // $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T09:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+          $yesterday = date('Y-m-d', strtotime('-1 days'));
+
+
+           if($this->input->post('start') == date('Y-m-d') &&  $this->input->post('end') == date('Y-m-d')){
+
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T10:00:00.u\Z').'&dateTo='.date('Y-m-d\T23:00:00.u\Z').'&view=Detailed');
+          }
+          else if($this->input->post('start') == $yesterday &&  $this->input->post('end') == $yesterday){
+ 
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T11:00:00.u\Z').'&view=Detailed');
+
+          }
+         else if($this->input->post('start') == $this->input->post('end')){
+
+            $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+          }
+
+          else{
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+
+          }
+
 
           
           // exit();
@@ -4847,7 +4650,7 @@ function searchForId($name, $array) {
          //     $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.$this->input->post('start').'&view=Detailed');
 
          //  }
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateTo='.date('Y-m-d'),
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateTo='.date('Y-m-d'),
 
              array(
              'extensionNumber' => $this->session->userdata['userlogin']['extension_number']
@@ -6270,9 +6073,9 @@ public function pay_lead(){
 
          // $this->form_validation->set_rules('title_name','Book Title','trim|xss_clean|required');       
 
-         $this->form_validation->set_rules('status','Tag','trim|xss_clean|required');       
+         // $this->form_validation->set_rules('status','Tag','trim|xss_clean|required');       
 
-         $this->form_validation->set_rules('email_address','Email Address','trim|xss_clean|required|valid_email');
+         // $this->form_validation->set_rules('email_address','Email Address','trim|xss_clean|required|valid_email');
 
          $this->form_validation->set_rules('contact_number','Contact Number','trim|required|xss_clean');    
 

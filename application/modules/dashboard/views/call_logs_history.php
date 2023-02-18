@@ -52,7 +52,7 @@
 
             <div class="col-md-12 col-sm-4  tile_stats_count">
 
-              <span class="count_top"><i class="fa fa-user"></i> Total Time Call logs</span>
+              <span class="count_top"><i class="fa fa-user"></i> Total Phone Time Call logs</span>
 
               <div class="count total_time_average_call_logs">0.00</div>
 
@@ -73,7 +73,7 @@
 
             <div class="col-md-12 col-sm-4  tile_stats_count">
 
-              <span class="count_top"><i class="fa fa-user"></i> Total Handling Time Call logs</span>
+              <span class="count_top"><i class="fa fa-user"></i> Average Phone Time Call logs</span>
 
               <div class="count total_average_handling_call_logs">0.00</div>
 

@@ -735,7 +735,7 @@ var lead_id = "<?=$status_appointment !=false ? "LEAD".$status_appointment['appt
  var oTable = $('#appointmentdataTable').DataTable({"oSearch":  {"sSearch":  lead_id}});
 
   $('#appt_status').change(function(){
-        oTable.columns(9).search($(this).val()).draw() ;
+        oTable.columns(7).search($(this).val()).draw() ;
 });
 
 
