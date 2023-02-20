@@ -1178,9 +1178,9 @@ public function get_phone(){
               }
         
             foreach ($data_current_call as $value) {
-                if ($this->searchDuplicate($result_call_log_current, $value) === false ) {
+                // if ($this->searchDuplicate($result_call_log_current, $value) === false ) {
                        $result_call_log_current[] = $value;
-                }
+                // }
             }
               $total_call_current =  array_column($result_call_log_current, 'from_name');
 
@@ -1216,9 +1216,9 @@ public function get_phone(){
 
         
                  foreach ($data_call_prev as $value) {
-                        if ($this->searchDuplicate($result_call_log_prev, $value) === false ) {
+                        // if ($this->searchDuplicate($result_call_log_prev, $value) === false ) {
                                $result_call_log_prev[] = $value;
-                        }
+                        // }
                  }
                  $total_call_prev =  array_column($result_call_log_prev, 'from_name');
 
@@ -4411,9 +4411,9 @@ function searchForId($name, $array) {
                                             $data);
 
                                           foreach ($data as $value) {
-                                                 if ($this->searchDuplicate($result, $value) === false ) {
+                                                // if ($this->searchDuplicate($result, $value) === false ) {
                                                         $result[] = $value;
-                                                 }
+                                                // }
                                           }
                                             
                                         echo json_encode($result);
@@ -4592,9 +4592,9 @@ function searchForId($name, $array) {
                                             $data);
 
                                           foreach ($data as $value) {
-                                                 if ($this->searchDuplicate($result, $value) === false ) {
+                                                 // if ($this->searchDuplicate($result, $value) === false ) {
                                                         $result[] = $value;
-                                                 }
+                                                 // }
                                           }
                                             
                                         echo json_encode($result);
