@@ -1,5 +1,7 @@
 <?php
 
-echo phpinfo();xxxxx
+echo phpinfo();
+
+tewst
 
 ?>
