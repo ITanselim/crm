@@ -19,9 +19,76 @@
 
             </div>
 
+
           </div>
 
         </div>
+
+           <div class="row ml-3" style="display: inline-block;" >
+
+          <div class="tile_count">
+
+            
+
+            <div class="col-md-12 col-sm-4  tile_stats_count">
+
+              <span class="count_top"><i class="fa fa-user"></i> Total Average Call logs</span>
+
+              <div class="count total_average_call_logs">0.00</div>
+
+            </div>
+            
+
+          </div>
+
+
+        </div>
+
+        <div class="row ml-3" style="display: inline-block;" >
+
+          <div class="tile_count">
+
+            
+
+            <div class="col-md-12 col-sm-4  tile_stats_count">
+
+              <span class="count_top"><i class="fa fa-user"></i> Total Phone Time Call logs</span>
+
+              <div class="count total_time_average_call_logs">0.00</div>
+
+            </div>
+            
+
+          </div>
+
+
+        </div>
+
+
+        <div class="row ml-5" style="display: inline-block;" >
+
+          <div class="tile_count">
+
+            
+
+            <div class="col-md-12 col-sm-4  tile_stats_count">
+
+              <span class="count_top"><i class="fa fa-user"></i> Average Phone Time Call logs</span>
+
+              <div class="count total_average_handling_call_logs">0.00</div>
+
+            </div>
+            
+
+          </div>
+
+
+        </div>
+
+
+
+
+        
 
 
           <form id="call_logs_form">
@@ -126,6 +193,9 @@
                         <th>Date/Time</th>
 
 
+                         <th style="display: none;">Date</th>
+
+
 
                         <th>Action</th>
 
@@ -135,7 +205,7 @@
 
 
 
-                        <th>Length</th>
+                        <th class="average_time">Length</th>
 
 
 

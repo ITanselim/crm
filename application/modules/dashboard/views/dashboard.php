@@ -239,7 +239,7 @@
 
             
           <span style="float: right;" data-toggle="tooltip" data-placement="bottom" title="**** POINTING SYSTEM ****  30% commission deduction monthly if reaches 2.5 points (late: 0.5, absent: 1, overbreak/overlunch: 0.5, fail to logout: 0.5)" id="total_points">PENALTY WARNING
-            <? if($penalties > 0 ){
+            <?php if($penalties > 0 ){
               foreach($penalties as $penalty){
                 if($penalty['warning_level'] == '')
                   {echo "<i class='fa fa-flag fa-lg' style='color:green'></i>";}
@@ -418,7 +418,7 @@
                     <div class="card">
                       <div class="card-body">
                         <h7 class="card-title">Total Commission
-                        <h1 style="color: black;"><b class="total_commission"><?echo "₱" . $current_sales * 0.2 . ".00";?></b></h1>
+                        <h1 style="color: black;"><b class="total_commission"><?php echo "₱" . $current_sales * 0.2 . ".00";?></b></h1>
                       </div>
                     </div>
                   </div>
@@ -437,7 +437,7 @@
                     <div class="card">
                       <div class="card-body">
                         <h7 class="card-title">Estimated Commission Receivable</h7>
-                        <h1 style="color: black;"><b class="commission_receivable"><?echo '₱'.($commission_receivable > 0 ? $commission_receivable .'.00' : '0.00'); ?></b></h1>
+                        <h1 style="color: black;"><b class="commission_receivable"><?php echo '₱'.($commission_receivable > 0 ? $commission_receivable .'.00' : '0.00'); ?></b></h1>
                       </div>
                     </div>
                   </div>

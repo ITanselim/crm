@@ -1061,8 +1061,8 @@ public function get_phone(){
          // echo date('Y-m-d\TH:i:s.u\Z', strtotime('+14 hours'));
          // exit();
 
-         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T10:00:00.u\Z').'&dateTo='.date('Y-m-d\T23:00:00.u\Z').'&view=Detailed');
-         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T10:00:00.u\Z').'&view=Detailed');
+         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:01.u\Z').'&dateTo='.date('Y-m-d\T23:59:59.u\Z').'&view=Detailed');
+         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T23:59:59.u\Z', strtotime('-1 days')).'&view=Detailed');
 
        
 
@@ -1178,9 +1178,9 @@ public function get_phone(){
               }
         
             foreach ($data_current_call as $value) {
-                // if ($this->searchDuplicate($result_call_log_current, $value) === false ) {
+                 //if ($this->searchDuplicate($result_call_log_current, $value) === false ) {
                        $result_call_log_current[] = $value;
-                // }
+               //  }
             }
               $total_call_current =  array_column($result_call_log_current, 'from_name');
 
@@ -1216,9 +1216,9 @@ public function get_phone(){
 
         
                  foreach ($data_call_prev as $value) {
-                        // if ($this->searchDuplicate($result_call_log_prev, $value) === false ) {
+                      //   if ($this->searchDuplicate($result_call_log_prev, $value) === false ) {
                                $result_call_log_prev[] = $value;
-                        // }
+                       //  }
                  }
                  $total_call_prev =  array_column($result_call_log_prev, 'from_name');
 
@@ -4122,20 +4122,20 @@ function searchForId($name, $array) {
            // exit();
           if($this->input->post('start') == date('Y-m-d') &&  $this->input->post('end') == date('Y-m-d')){
 
-              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z').'&dateTo='.date('Y-m-d\T23:00:00.u\Z').'&view=Detailed');
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:00.u\Z').'&dateTo='.date('Y-m-d\T23:59:59.u\Z').'&view=Detailed');
           }
           else if($this->input->post('start') == $yesterday &&  $this->input->post('end') == $yesterday){
  
-              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T11:00:00.u\Z').'&view=Detailed');
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T23:59:59.u\Z').'&view=Detailed');
 
           }
          else if($this->input->post('start') == $this->input->post('end')){
 
-           $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+           $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:59:59.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
           }
 
           else{
-              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:59:59.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
 
           }
 
@@ -4411,9 +4411,10 @@ function searchForId($name, $array) {
                                             $data);
 
                                           foreach ($data as $value) {
-                                                // if ($this->searchDuplicate($result, $value) === false ) {
+                                                 // if ($this->searchDuplicate($result, $value) === false ) {
                                                         $result[] = $value;
-                                                // }
+                                                
+                                                 // }
                                           }
                                             
                                         echo json_encode($result);
@@ -4422,7 +4423,7 @@ function searchForId($name, $array) {
 
     function searchDuplicate($arr, $obj) {
             foreach ($arr as $value) {
-                if ($value['from_Phonenumber'] == $obj['from_Phonenumber'] && $value['to_Phonenumber'] == $obj['to_Phonenumber'] && $value['extension_number'] == $obj['extension_number'] && $value['date'] == $obj['date'] 
+                if ($value['to_Phonenumber'] == $obj['to_Phonenumber'] && $value['extension_number'] == $obj['extension_number'] && $value['date'] == $obj['date'] 
                     && $value['duration'] <= "00:05:00" ) {
                     return true; //duplicate
                 }
@@ -4592,9 +4593,9 @@ function searchForId($name, $array) {
                                             $data);
 
                                           foreach ($data as $value) {
-                                                 // if ($this->searchDuplicate($result, $value) === false ) {
+                                                //  if ($this->searchDuplicate($result, $value) === false ) {
                                                         $result[] = $value;
-                                                 // }
+                                                //  }
                                           }
                                             
                                         echo json_encode($result);

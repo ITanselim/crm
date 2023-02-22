@@ -1783,6 +1783,7 @@
     <script src="<?php echo base_url('bootstrap/vendors/bootstrap-daterangepicker/daterangepicker.js');?>"></script>
     <script scr="<?php echo base_url('bootstrap/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js');?>"></script>
 
+
 <script type="text/javascript">
  var pageURL = $(location).attr("href");
   var script = document.createElement('script');
@@ -1892,6 +1893,112 @@ $('#sales_lead_agent_form [name="agent_type"]').on('change', function () {
        otable.columns(11).search($(this).val()).draw() ;
 
 });
+
+var days = 0;
+
+ function hmsToSeconds(s) {
+        var b = typeof s === 'string' ? s.split(':') : '';
+        return b[0]*3600 + b[1]*60 + (+b[2] || 0);
+      }
+
+      // Convert seconds to hh:mm:ss
+      function secondsToHMS(secs) {
+        function z(n){return (n<10?'0':'') + n;}
+        var sign = secs < 0? '-':'';
+        secs = Math.abs(secs);
+        return sign + z(secs/3600 |0) + ':' + z((secs%3600) / 60 |0) + ':' + z(secs%60 |0);
+      }
+
+    function getBusinessDateCount(startDate, endDate) {
+          var elapsed, daysBeforeFirstSaturday, daysAfterLastSunday;
+          var ifThen = function (a, b, c) {
+              return a == b ? c : a;
+          };
+
+          elapsed = endDate - startDate;
+          elapsed /= 86400000;
+
+          daysBeforeFirstSunday = (7 - startDate.getDay()) % 7;
+          daysAfterLastSunday = endDate.getDay();
+
+          elapsed -= (daysBeforeFirstSunday + daysAfterLastSunday);
+          elapsed = (elapsed / 7) * 5;
+          elapsed += ifThen(daysBeforeFirstSunday - 1, -1, 0) + ifThen(daysAfterLastSunday, 6, 5);
+
+          return Math.ceil(elapsed);
+      }
+   var test_table =   $('#call_log_historytable').DataTable( {
+        order: [[6, 'asc']],
+        "pageLength": 20,
+        info: true,
+        // dom: 'Bfrtip',
+        select: true,
+        "initComplete": function (settings, json) {
+         var api = this.api();
+         CalculateTimeAverage(this);
+        },
+        "drawCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;  
+            CalculateTimeAverage(this);
+            return ;   
+          },
+
+    } );
+    ///
+
+function CalculateTimeAverage(test_table) {
+        try {
+
+        var api = test_table.api();
+
+        var intVal = function ( i ) {
+                  return i != null ? moment.duration(i).asSeconds() : 0;
+              };
+        //convert seconds to hour:minute:seconds
+        var secondsToHms = function(d) {
+          d = Number(d);
+          var h = Math.floor(d / 3600);
+          return h;
+        };
+
+        //sum of hidden colunm hours in seconds
+
+
+        //covert the seconds into hour.minute
+       var numRows = api.rows( {search:'applied'} ).count();
+
+        api.columns(".average_time").each(function (index) {
+         var column_point = api.column(index,{page:'current'});
+
+         var sum_hours_estimated = column_point.data()
+                .reduce( function (a, b) {
+                    var total = intVal(a) + intVal(b);
+                    var totalFormatted = [
+                        parseInt(total / 60 / 60),
+                        parseInt(total / 60 % 60),
+                        parseInt(total % 60)
+                    ].join(":").replace(/\b(\d)\b/g, "0$1");
+                    return totalFormatted;
+                }, 0 );
+
+    var count_date = getBusinessDateCount(new Date($('#call_logs_form [name="from_date"]').val()), new Date($('#call_logs_form [name="to_date"]').val()));
+
+    var  number_of_days = $('#call_logs_form [name="from_date"]').val() == "" ? 5 : count_date;
+
+       $('.tile_stats_count .total_time_average_call_logs').text(sum_hours_estimated);
+       $('.tile_stats_count .total_average_handling_call_logs').text(secondsToHMS(hmsToSeconds(sum_hours_estimated)/number_of_days));
+
+
+      });
+
+      }
+      catch (e) {
+            console.log('Error in CalculateTableSummary');
+            console.log(e)
+        }
+}
+
+
 function CalculateTableSummary(otable) {
     try {
 
@@ -2201,12 +2308,12 @@ $('#updatereportform .project_status  option, #updatereportform .interior_design
           $('#call_logs_form [name="to_date"]').val(end);
 
         $.fn.dataTable.moment('YYYY-MM-DD H:mm A');
-
  
+         days = getBusinessDateCount(new Date(start), new Date(end));
 
 
 
-   var test_table =   $('#call_log_historytable').DataTable( {
+   test_table =   $('#call_log_historytable').DataTable( {
 
               "processing": true,
 
@@ -2217,6 +2324,13 @@ $('#updatereportform .project_status  option, #updatereportform .interior_design
               "pageLength": 20,
 
               "order": [[ 5, "desc" ]],
+               select: true,
+               "columnDefs": [
+                      {
+                          "targets": [ 6 ],
+                          "visible": false,
+                          "searchable": true
+                      }],
 
               "ajax": {
 
@@ -2235,17 +2349,28 @@ $('#updatereportform .project_status  option, #updatereportform .interior_design
               },            
 
            columns: [
-              { data: 'type'},
-              { data: 'from_Phonenumber'},
-              { data: 'to_Phonenumber'},
-              { data: 'extension_number'},
-              { data: 'location'},
-              { data: 'startTime'},
-              { data: 'action'},
-              { data: 'result'},
-              { data: 'duration'},
-
+                        { data: 'type'},
+                        { data: 'from_Phonenumber'},
+                        { data: 'to_Phonenumber'},
+                        { data: 'extension_number'},
+                        { data: 'location'},
+                        { data: 'startTime'},
+                        { data: 'date'},
+                        { data: 'action'},
+                        { data: 'result'},
+                        { data: 'duration'},
            ], 
+
+           order: [[6, 'asc']],
+                      "initComplete": function (settings, json) {
+                       var api = this.api();
+                       CalculateTimeAverage(this);
+                      },
+                      "drawCallback": function ( row, data, start, end, display ) {
+                          var api = this.api(), data;  
+                          CalculateTimeAverage(this);
+                          return ;   
+                  },
 
 
         });
@@ -2253,8 +2378,12 @@ $('#updatereportform .project_status  option, #updatereportform .interior_design
             test_table.on( 'draw', function () {
 
                var numRows = test_table.rows( {search:'applied'} ).count();
+               var total_call_log_average = (numRows /  days);
+
 
                 $('.tile_stats_count .total_call_logs').text(numRows.toLocaleString("en")+'.00');
+                $('.tile_stats_count .total_average_call_logs').text(total_call_log_average.toFixed(2));
+
 
             });
 
@@ -2293,8 +2422,9 @@ $('#call_logs_form [name="user_type"]').on('change', function () {
       var min = new Date($('#call_logs_form [name="from_date"]').val());
       var max = new Date($('#call_logs_form [name="to_date"]').val());
       var startDate = new Date(data[0]);
-      var agent_user = data[3];
-      console.log(startDate +  " <= " + max  + " --- "  + (startDate <= max));
+      var agent_user = data[6];
+            var days = getBusinessDateCount(min, max);
+
       
       if (min == null && max == null &&  $(this).val() == agent_user) {
         return true;

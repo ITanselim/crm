@@ -3330,7 +3330,7 @@ $('#addAssignUserform .selectpicker').on('change', function () {
           $("#loader_3").css("display", "none");
           $("#loader_4").css("display", "none"); 
           $("#loader_5").css("display", "none");       
-      });
+      });1``
    </script>
 
   </body>
