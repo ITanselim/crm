@@ -4501,20 +4501,20 @@ function searchForId($name, $array) {
 
            if($this->input->post('start') == date('Y-m-d') &&  $this->input->post('end') == date('Y-m-d')){
 
-              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T10:00:00.u\Z').'&dateTo='.date('Y-m-d\T23:00:00.u\Z').'&view=Detailed');
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:00.u\Z').'&dateTo='.date('Y-m-d\T23:59:59.u\Z').'&view=Detailed');
           }
           else if($this->input->post('start') == $yesterday &&  $this->input->post('end') == $yesterday){
  
-              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T11:00:00.u\Z').'&view=Detailed');
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime('-1 days')).'&dateTo='.date('Y-m-d\T11:59:59.u\Z').'&view=Detailed');
 
           }
          else if($this->input->post('start') == $this->input->post('end')){
 
-            $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+            $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:59:59.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
           }
 
           else{
-              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T11:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:00:00.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:59:59.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
 
           }
 

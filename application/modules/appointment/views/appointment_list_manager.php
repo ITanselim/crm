@@ -427,6 +427,7 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
                 <option value="Please ddd">Please select an Appointment Status</option>
                 <option value="Open">Open</option>
                 <option value="Reschedule">Reschedule</option>
+                <option value="Follow Up">Follow Up</option>
                 <option value="Closed">Closed</option>
               </select>
            </div>
