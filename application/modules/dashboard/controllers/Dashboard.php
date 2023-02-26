@@ -718,7 +718,7 @@ public function get_phone(){
  //         $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d').'&view=Detailed');
  //         $resp_prev = $platform->get('/account/~/call-log?page=1&perPage=1000000000&dateFrom='.date('Y-m-d', strtotime('-1 days')).'&dateTo='.date('Y-m-d').'&view=Detailed');
 
-      $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.$last_seven_days.'&dateTo='.date('Y-m-d\TH:i:s.u\Z'),
+      $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.$last_seven_days.'&dateTo='.date('Y-m-d\T23:59:59.u\Z'),
 
              array(
 
@@ -1158,7 +1158,7 @@ public function get_phone(){
 
                 $prevdate = date('Y-m-d', strtotime($record->startTime));
 
-                  if($record->from->name == $user_charge){
+                  if($record->from->name == $user_charge || modules::run("dashboard/formatPhoneNumber",($record->to->phoneNumber)) == $this->session->userdata['userlogin']['rc_number'] ){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
@@ -1194,7 +1194,7 @@ public function get_phone(){
               if (!empty($recordt->from->name)) {         
 
                 $prevdate = date('Y-m-d', strtotime($recordt->startTime));
-                  if($recordt->from->name == $user_charge){
+                  if($recordt->from->name == $user_charge || modules::run("dashboard/formatPhoneNumber",($recordt->to->phoneNumber)) == $this->session->userdata['userlogin']['rc_number']){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
@@ -4135,7 +4135,7 @@ function searchForId($name, $array) {
           }
 
           else{
-              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d\T00:00:00.u\Z', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:59:59.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
+              $resp = $platform->get('/account/~/call-log?page=1&perPage=1000000000&type=Fax&type=Voice&direction=Inbound&direction=Outbound&dateFrom='.date('Y-m-d', strtotime($this->input->post('start'))).'&dateTo='.date('Y-m-d\T23:59:59.u\Z', strtotime($this->input->post('end'))).'&view=Detailed'); 
 
           }
 
@@ -4184,7 +4184,7 @@ function searchForId($name, $array) {
 
                                           }
                         
-                                          if($from_name == 'Warren Walton'){
+                                          if($from_name == 'Warren Walton' ||  $to_Phonenumber == "(332) 456-8997"){
 
                                               $get_extension_number = 101;
                                                       $data[] = array(
@@ -4205,7 +4205,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                         else if($from_name == 'Allison Lewis'){
+                                         else if($from_name == 'Allison Lewis' ||  $to_Phonenumber == "(361) 237-4872"){
 
                                               $get_extension_number = 102;
 
@@ -4225,7 +4225,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                          else if($from_name == 'Alex Morgan'){
+                                          else if($from_name == 'Alex Morgan' || $to_Phonenumber == "(718) 540-5309"){
 
                                                $get_extension_number = 103;
                                                       $data[] = array(
@@ -4244,7 +4244,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                         else if($from_name == 'Olivia Turner'){
+                                         else if($from_name == 'Olivia Turner' || $to_Phonenumber == "(973) 826-5437"){
 
                                               $get_extension_number = 104;
                                                       $data[] = array(
@@ -4263,7 +4263,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                          else if($from_name == 'The Greendot Films'){
+                                          else if($from_name == 'The Greendot Films' ||  $to_Phonenumber == "(888) 891-3029"){
 
                                               $get_extension_number = 105;
 
@@ -4284,27 +4284,7 @@ function searchForId($name, $array) {
 
                                           }
 
-
-                                          else if($from_name == 'Sandra Lauder'){
-
-                                              $get_extension_number = 106;
-                                                      $data[] = array(
-                                                          "type" => $get_type,
-                                                          "from_Phonenumber" => $from_Phonenumber,
-                                                          "to_Phonenumber" => $to_Phonenumber,
-                                                          "extension_number" => $get_extension_number,
-                                                          "location" => $to_location,
-                                                          "startTime" => date('Y-m-d g:i A', strtotime($call_log_history->startTime)),
-                                                          "date" => date('Y-m-d', strtotime($call_log_history->startTime)),
-                                                          "action" => $call_log_history->action,
-                                                          "result" => $call_log_history->result,
-                                                          "duration" => gmdate("H:i:s", $call_log_history->duration),
-                                                     );
-
-
-                                          }
-
-                                          else if($from_name == 'Ezekiel Wilson'){
+                                          else if($from_name == 'Ezekiel Wilson' ||  $to_Phonenumber == "(332) 777-7804"){
 
 
                                               $get_extension_number = 107;
@@ -4324,7 +4304,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                          else if($from_name == 'Paul Mclean'){
+                                          else if($from_name == 'Paul Mclean' ||  $to_Phonenumber == "(323) 968-0378"){
 
 
                                               $get_extension_number = 108;
@@ -4342,7 +4322,7 @@ function searchForId($name, $array) {
                                                      );
 
                                           }
-                                          else if($from_name == 'Rebecca Williams'){
+                                          else if($from_name == 'Rebecca Williams' ||  $to_Phonenumber == "(323) 988-7106"){
 
 
                                               $get_extension_number = 109;
@@ -4363,7 +4343,7 @@ function searchForId($name, $array) {
 
                                           }
 
-                                           else if($from_name == 'Henry Bowers'){
+                                           else if($from_name == 'Henry Bowers' ||  $to_Phonenumber == "(408) 335-6614"){
 
                                               $get_extension_number = 110;
                                                       $data[] = array(
@@ -4381,7 +4361,7 @@ function searchForId($name, $array) {
 
 
                                           }
-                                             else if($from_name == 'Sean Oliver'){
+                                             else if($from_name == 'Sean Oliver' ||  $to_Phonenumber == "(702) 359-7337"){
 
                                               $get_extension_number = 111;
 
@@ -4566,7 +4546,8 @@ function searchForId($name, $array) {
 
                                           }
 
-                                          if($from_name == $user_charge){
+                                          if($from_name == $user_charge  ||  $this->session->userdata['userlogin']['rc_number'] == 
+                                            $to_Phonenumber ){
 
                                               $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
                                                    $data[] = array(
@@ -4582,6 +4563,7 @@ function searchForId($name, $array) {
                                                                 "duration" => gmdate("H:i:s", $call_log_history->duration),
                                                   );
                                              }
+
                             
                                      }
                                   }

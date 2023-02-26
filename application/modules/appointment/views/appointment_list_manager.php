@@ -429,6 +429,7 @@ div.cls_006{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
                 <option value="Reschedule">Reschedule</option>
                 <option value="Follow Up">Follow Up</option>
                 <option value="Closed">Closed</option>
+                <option value="Sold">Sold</option>
               </select>
            </div>
              <div class="col-sm-3 inline-block">

@@ -1045,6 +1045,8 @@ class Account extends MY_Controller {
 
                                       'user_id' => $result->user_id,
                                       'extension_number' => $result->extension_number,
+                                      'rc_number' => $result->rc_number,
+
 
                                       'real_name' => ucfirst($result->real_name),
                                       'sub_name' => ucfirst($result->sub_name),
@@ -1241,6 +1243,7 @@ class Account extends MY_Controller {
                                       'user_id' => $result->user_id,
 
                                       'extension_number' => $result->extension_number,
+                                      'rc_number' => $result->rc_number,
 
                                       'real_name' => ucfirst($result->real_name),
                                       'sub_name' => ucfirst($result->sub_name),

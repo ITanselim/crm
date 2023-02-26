@@ -450,6 +450,7 @@
                     <option <?php if ($row['appt_status'] == 'Open') echo ' selected="selected"'; ?>>Open</option>
                     <option <?php if ($row['appt_status'] == 'Follow Up') echo ' selected="selected"'; ?>>Follow Up</option>
                     <option <?php if ($row['appt_status'] == 'Closed') echo ' selected="selected"'; ?>>Closed</option>
+                    <option <?php if ($row['appt_status'] == 'Sold') echo ' selected="selected"'; ?>>Sold</option>
               </select>
             </div></td>
           </tr>
