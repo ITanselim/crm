@@ -1158,7 +1158,7 @@ public function get_phone(){
 
                 $prevdate = date('Y-m-d', strtotime($record->startTime));
 
-                  if($record->from->name == $user_charge || modules::run("dashboard/formatPhoneNumber",($record->to->phoneNumber)) == $this->session->userdata['userlogin']['rc_number'] ){
+                  if($record->from->name == $user_charge || modules::run("dashboard/formatPhoneNumber",(!empty($record->from->phoneNumber) ? (array)$record->from->phoneNumber : "")) == $this->session->userdata['userlogin']['rc_number'] ){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
@@ -1194,7 +1194,7 @@ public function get_phone(){
               if (!empty($recordt->from->name)) {         
 
                 $prevdate = date('Y-m-d', strtotime($recordt->startTime));
-                  if($recordt->from->name == $user_charge || modules::run("dashboard/formatPhoneNumber",($recordt->to->phoneNumber)) == $this->session->userdata['userlogin']['rc_number']){
+                  if($recordt->from->name == $user_charge || modules::run("dashboard/formatPhoneNumber",(!empty($recordt->from->phoneNumber) ? (array)$recordt->from->phoneNumber : "")) == $this->session->userdata['userlogin']['rc_number']){
 
                         $get_extension_number = $this->session->userdata['userlogin']['extension_number'];
 
@@ -5857,7 +5857,9 @@ function searchForId($name, $array) {
 
     } 
 
-  
+   public function update_pipe(){ 
+     
+   }
 
      public function update_lead(){
 

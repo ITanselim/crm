@@ -6669,59 +6669,93 @@ columns: [
 });
 
 
+   $(document).on("change", "input[name='pipe']", function () {
+          var checkbox = $(this);
+        var checked = checkbox.prop('checked');
+      
+      $.ajax({
+
+         type: "POST",
+
+         url: base_url +  "dashboard/pipe",
+
+         dataType: 'json',
+
+         data: $("#update_lead_form").serialize(),
+
+         success: function(res) {
+
+          if (res.response=="success"){
+
+
+
+
+
+          }
+
+           else{
+
+
+            }
+
+        },
+
+     });
+});
+
 
 
 $(document).on('click',' #status_lead_form #recyle_lead',function(e) {
-$("#loader").css("display", "block");
 
+    $("#loader").css("display", "block");
 
-$.ajax({
+    $.ajax({
 
-   type: "POST",
+       type: "POST",
 
-   url: base_url +  "dashboard/get_recycle_lead",
+       url: base_url +  "dashboard/get_recycle_lead",
 
-   dataType: 'json',
+       dataType: 'json',
 
-   data: $("#status_lead_form").serialize(),
+       data: $("#status_lead_form").serialize(),
 
-   success: function(res) {
+       success: function(res) {
 
-  if (res.response=="success"){
+      if (res.response=="success"){
 
-      $("#status_lead_form .alert-danger").removeClass("alert-danger").addClass("alert-success");
+          $("#status_lead_form .alert-danger").removeClass("alert-danger").addClass("alert-success");
 
-      $("#status_lead_form .alert-success").css("display", "block");
+          $("#status_lead_form .alert-success").css("display", "block");
 
-      $("#status_lead_form .alert-success p").html(res.message);
+          $("#status_lead_form .alert-success p").html(res.message);
 
-      setTimeout(function(){
-           $("#loader").css("display", "none");
-            location.reload();
+          setTimeout(function(){
+               $("#loader").css("display", "none");
+                location.reload();
 
-          }, 2000);
+              }, 2000);
 
-  }
+      }
 
-   else{
+       else{
 
-      $("#status_lead_form .alert-success").removeClass("alert-success").addClass("alert-danger");
+          $("#status_lead_form .alert-success").removeClass("alert-success").addClass("alert-danger");
 
-      $("#status_lead_form .alert-danger").css("display", "block");
+          $("#status_lead_form .alert-danger").css("display", "block");
 
-      $("#status_lead_form .alert-danger p").html(res.message);
+          $("#status_lead_form .alert-danger p").html(res.message);
 
-      setTimeout(function(){
-            $("#loader").css("display", "none");
+          setTimeout(function(){
+                $("#loader").css("display", "none");
 
-              $("#status_lead_form .alert-danger").css("display", "none");
+                  $("#status_lead_form .alert-danger").css("display", "none");
 
-          },4000);
+              },4000);
 
- }
+     }
 
-},
+    },
 
-});
+    });
 
 });

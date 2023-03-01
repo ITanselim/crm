@@ -1968,7 +1968,7 @@ function CalculateTimeAverage(test_table) {
        var numRows = api.rows( {search:'applied'} ).count();
 
         api.columns(".average_time").each(function (index) {
-         var column_point = api.column(index,{page:'current'});
+         var column_point = api.column(index,{search:'applied'});
 
          var sum_hours_estimated = column_point.data()
                 .reduce( function (a, b) {

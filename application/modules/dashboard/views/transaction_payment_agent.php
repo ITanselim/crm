@@ -477,7 +477,7 @@
                         <label for="validationCustom04">Contact Number</label>
                          <input type="text" id="contact_number" class="form-control" readonly style="height:50px;"  name="contact_number" placeholder="Contact Number" required><a  class ="contact_number call" href="#"><i class="fa fa-phone fa-3x" style="position: absolute;top: 25px; right: 6px; font-size:4em;" aria-hidden="true"></i></a>
                       </div>
-                      <div class="col mb-4">
+                      <div class="col mb-3">
                         <label for="validationCustom04">Area Code</label>
                          <input type="text" id="area_code" class="form-control" style="height:50px;"  name="area_code" placeholder="Area Code" required>
                       </div>

@@ -2410,7 +2410,7 @@ function CalculateTableSummary(otable) {
 
             // Total over all pages
          api.columns(".sumamount").each(function (index) {
-         var column = api.column(index,{page:'current'});
+         var column = api.column(index,{search:'applied'});
 
            var sum = column 
                 .data()
@@ -2694,7 +2694,7 @@ $('#updatereportform .project_status  option, #updatereportform .interior_design
        var numRows = api.rows( {search:'applied'} ).count();
 
         api.columns(".average_time").each(function (index) {
-         var column_point = api.column(index,{page:'current'});
+         var column_point = api.column(index,{search:'applied'});
 
          var sum_hours_estimated = column_point 
                 .data()
