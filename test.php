@@ -1,7 +1,6 @@
 <?php
 
 echo phpinfo();
-cccccc
-tewst
+echo "test";
 
 ?>
